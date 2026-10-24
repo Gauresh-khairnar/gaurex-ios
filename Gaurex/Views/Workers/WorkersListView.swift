@@ -14,6 +14,8 @@ public struct WorkersListView: View {
     @State private var selectedStatus: EmploymentStatus? = nil
     @State private var showingAddSheet = false
     @State private var showingAttendanceSheet = false
+    @State private var workerToDelete: Worker? = nil
+    @State private var showingDeleteWorkerAlert = false
     
     public init() {}
     
@@ -120,6 +122,20 @@ public struct WorkersListView: View {
                                         WorkerRowCard(worker: worker)
                                     }
                                     .buttonStyle(.plain)
+                                    .contextMenu {
+                                        NavigationLink {
+                                            WorkerDetailView(worker: worker)
+                                        } label: {
+                                            Label("View Profile", systemImage: "person.crop.circle")
+                                        }
+                                        
+                                        Button(role: .destructive) {
+                                            workerToDelete = worker
+                                            showingDeleteWorkerAlert = true
+                                        } label: {
+                                            Label("Delete Team Member", systemImage: "trash")
+                                        }
+                                    }
                                 }
                             }
                             .padding(.horizontal, 16)
@@ -130,6 +146,18 @@ public struct WorkersListView: View {
                 }
                 
                 ToastOverlay(toast: $store.activeToast)
+            }
+            .confirmationDialog("Delete Team Member?", isPresented: $showingDeleteWorkerAlert, titleVisibility: .visible) {
+                Button("Delete Team Member", role: .destructive) {
+                    if let w = workerToDelete {
+                        withAnimation {
+                            store.deleteWorker(id: w.id)
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to permanently delete '\(workerToDelete?.name ?? "this worker")'? This action cannot be undone.")
             }
             .navigationTitle("Workers & Payroll")
             .navigationBarTitleDisplayMode(.large)

@@ -13,6 +13,8 @@ public struct ClientsListView: View {
     @State private var searchText: String = ""
     @State private var selectedStatusFilter: ClientStatus? = nil
     @State private var showingAddSheet = false
+    @State private var clientToDelete: Client? = nil
+    @State private var showingDeleteClientAlert = false
     @State private var sortOption: ClientSortOption = .newest
     @State private var selectedViewMode: Int = 0 // 0: CRM Clients, 1: Sales Pipeline
     
@@ -131,6 +133,34 @@ public struct ClientsListView: View {
                                             ClientCardView(client: client)
                                         }
                                         .buttonStyle(.plain)
+                                        .contextMenu {
+                                            NavigationLink {
+                                                ClientDetailView(client: client)
+                                            } label: {
+                                                Label("View Details", systemImage: "eye")
+                                            }
+                                            
+                                            if client.status == .archived {
+                                                Button {
+                                                    store.restoreClient(id: client.id)
+                                                } label: {
+                                                    Label("Restore Client", systemImage: "arrow.uturn.backward.circle")
+                                                }
+                                            } else {
+                                                Button {
+                                                    store.archiveClient(id: client.id)
+                                                } label: {
+                                                    Label("Archive Client", systemImage: "archivebox")
+                                                }
+                                            }
+                                            
+                                            Button(role: .destructive) {
+                                                clientToDelete = client
+                                                showingDeleteClientAlert = true
+                                            } label: {
+                                                Label("Delete Client Permanently", systemImage: "trash")
+                                            }
+                                        }
                                     }
                                 }
                                 .padding(.horizontal, 16)
@@ -142,6 +172,18 @@ public struct ClientsListView: View {
                 }
                 
                 ToastOverlay(toast: $store.activeToast)
+            }
+            .confirmationDialog("Delete Client Permanently?", isPresented: $showingDeleteClientAlert, titleVisibility: .visible) {
+                Button("Delete Client Permanently", role: .destructive) {
+                    if let c = clientToDelete {
+                        withAnimation {
+                            store.deleteClient(id: c.id)
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to permanently delete '\(clientToDelete?.name ?? "this client")'? This action cannot be undone.")
             }
             .navigationTitle("Clients & CRM")
             .navigationBarTitleDisplayMode(.large)

@@ -16,6 +16,7 @@ public struct ClientDetailView: View {
     @State private var showingEditSheet = false
     @State private var showingCreateInvoiceSheet = false
     @State private var showingDeleteConfirmation = false
+    @State private var showingPermanentDeleteConfirmation = false
     @State private var showingRecordPaymentSheet = false
     @State private var paymentAmount: Double = 0.0
     @State private var paymentRef: String = ""
@@ -252,11 +253,17 @@ public struct ClientDetailView: View {
                             Label("Restore to Active", systemImage: "arrow.uturn.backward.circle")
                         }
                     } else {
-                        Button(role: .destructive) {
+                        Button {
                             showingDeleteConfirmation = true
                         } label: {
                             Label("Archive Client", systemImage: "archivebox")
                         }
+                    }
+                    
+                    Button(role: .destructive) {
+                        showingPermanentDeleteConfirmation = true
+                    } label: {
+                        Label("Delete Client Permanently", systemImage: "trash")
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -277,6 +284,15 @@ public struct ClientDetailView: View {
             Button("Cancel", role: .cancel) {}
         } message: {
             Text("Archiving will preserve existing invoices and payment records while removing the client from active rosters.")
+        }
+        .confirmationDialog("Delete Client Permanently?", isPresented: $showingPermanentDeleteConfirmation, titleVisibility: .visible) {
+            Button("Delete Client Permanently", role: .destructive) {
+                store.deleteClient(id: currentClient.id)
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to permanently delete '\(currentClient.name)'? This action cannot be undone.")
         }
     }
 }

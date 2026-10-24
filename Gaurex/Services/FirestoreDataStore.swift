@@ -525,9 +525,28 @@ public final class FirestoreDataStore: ObservableObject {
         if let idx = packages.firstIndex(where: { $0.id == pkg.id }) { packages[idx] = pkg; savePackages() }
     }
     
+    public func deletePackage(id: String) {
+        if let idx = packages.firstIndex(where: { $0.id == id }) {
+            let name = packages[idx].name
+            packages.remove(at: idx)
+            savePackages()
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "Package", entityId: id, description: "Permanently deleted package: \(name)")
+            showToast(title: "Package Removed")
+        }
+    }
+    
     public func addWorker(_ worker: Worker) { workers.insert(worker, at: 0); saveWorkers(); showToast(title: "Team Member Added") }
     public func updateWorker(_ worker: Worker) {
         if let idx = workers.firstIndex(where: { $0.id == worker.id }) { workers[idx] = worker; saveWorkers() }
+    }
+    public func deleteWorker(id: String) {
+        if let idx = workers.firstIndex(where: { $0.id == id }) {
+            let name = workers[idx].name
+            workers.remove(at: idx)
+            saveWorkers()
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "Worker", entityId: id, description: "Permanently deleted team member: \(name)")
+            showToast(title: "Team Member Removed")
+        }
     }
     public func addPayrollRecord(_ record: PayrollRecord) {
         payrollRecords.insert(record, at: 0); savePayroll(); showToast(title: "Salary Slip Disbursed")
@@ -537,6 +556,36 @@ public final class FirestoreDataStore: ObservableObject {
         expenses.insert(exp, at: 0)
         saveExpenses()
         showToast(title: "Expense Logged")
+    }
+    public func deleteExpense(id: String) {
+        if let idx = expenses.firstIndex(where: { $0.id == id }) {
+            let title = expenses[idx].title
+            let amt = expenses[idx].amount
+            expenses.remove(at: idx)
+            saveExpenses()
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "Expense", entityId: id, description: "Permanently deleted expense: \(title) (-\(amt))")
+            showToast(title: "Expense Removed")
+        }
+    }
+    public func deleteInvoice(id: String) {
+        if let idx = invoices.firstIndex(where: { $0.id == id }) {
+            let num = invoices[idx].invoiceNumber
+            let clientId = invoices[idx].clientId
+            invoices.remove(at: idx)
+            saveInvoices()
+            recalculateClientFinancials(clientId: clientId)
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "Invoice", entityId: id, description: "Permanently deleted invoice #\(num)")
+            showToast(title: "Invoice #\(num) Deleted")
+        }
+    }
+    public func deleteDocument(id: String) {
+        if let idx = vaultDocuments.firstIndex(where: { $0.id == id }) {
+            let title = vaultDocuments[idx].title
+            vaultDocuments.remove(at: idx)
+            saveDocuments()
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "Document", entityId: id, description: "Permanently deleted document: \(title)")
+            showToast(title: "Document Removed")
+        }
     }
     
     // MARK: - Computed Real-Time Business Metrics

@@ -10,6 +10,9 @@ public struct PackageManagementView: View {
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
     @State private var showingAddSheet = false
+    @State private var selectedPackage: ServicePackage? = nil
+    @State private var packageToDelete: ServicePackage? = nil
+    @State private var showingDeletePackageAlert = false
     
     public init() {}
     
@@ -69,6 +72,14 @@ public struct PackageManagementView: View {
                                     }
                                 }
                                 .buttonStyle(.plain)
+                                .contextMenu {
+                                    Button(role: .destructive) {
+                                        packageToDelete = pkg
+                                        showingDeletePackageAlert = true
+                                    } label: {
+                                        Label("Delete Package", systemImage: "trash")
+                                    }
+                                }
                             }
                         }
                         .padding(.horizontal, 16)
@@ -92,6 +103,18 @@ public struct PackageManagementView: View {
         }
         .sheet(isPresented: $showingAddSheet) {
             AddEditPackageView()
+        }
+        .confirmationDialog("Delete Package?", isPresented: $showingDeletePackageAlert, titleVisibility: .visible) {
+            Button("Delete Package", role: .destructive) {
+                if let p = packageToDelete {
+                    withAnimation {
+                        store.deletePackage(id: p.id)
+                    }
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to permanently delete '\(packageToDelete?.name ?? "this package")'?")
         }
     }
 }

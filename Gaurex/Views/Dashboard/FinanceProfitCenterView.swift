@@ -13,6 +13,8 @@ public struct FinanceProfitCenterView: View {
     
     @State private var showingAddExpenseSheet = false
     @State private var selectedExpenseCategory: ExpenseCategory? = nil
+    @State private var expenseToDelete: Expense? = nil
+    @State private var showingDeleteExpenseAlert = false
     
     public init() {}
     
@@ -185,6 +187,28 @@ public struct FinanceProfitCenterView: View {
                                                         .font(.system(size: 10))
                                                         .foregroundColor(.secondary)
                                                 }
+                                                
+                                                Button(role: .destructive) {
+                                                    expenseToDelete = exp
+                                                    showingDeleteExpenseAlert = true
+                                                } label: {
+                                                    Image(systemName: "trash")
+                                                        .font(.system(size: 11))
+                                                        .foregroundColor(.red.opacity(0.85))
+                                                        .padding(6)
+                                                        .background(Color.red.opacity(0.08))
+                                                        .clipShape(Circle())
+                                                }
+                                                .buttonStyle(.plain)
+                                                .padding(.leading, 6)
+                                            }
+                                        }
+                                        .contextMenu {
+                                            Button(role: .destructive) {
+                                                expenseToDelete = exp
+                                                showingDeleteExpenseAlert = true
+                                            } label: {
+                                                Label("Delete Expense", systemImage: "trash")
                                             }
                                         }
                                     }
@@ -207,6 +231,18 @@ public struct FinanceProfitCenterView: View {
             }
             .sheet(isPresented: $showingAddExpenseSheet) {
                 AddExpenseSheet()
+            }
+            .confirmationDialog("Delete Expense?", isPresented: $showingDeleteExpenseAlert, titleVisibility: .visible) {
+                Button("Delete Expense", role: .destructive) {
+                    if let exp = expenseToDelete {
+                        withAnimation {
+                            store.deleteExpense(id: exp.id)
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to permanently delete '\(expenseToDelete?.title ?? "this expense")'?")
             }
         }
     }

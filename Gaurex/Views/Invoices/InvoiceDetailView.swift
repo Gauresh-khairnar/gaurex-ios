@@ -14,6 +14,7 @@ public struct InvoiceDetailView: View {
     
     @State private var showingPDFPreview = false
     @State private var showingRecordPaymentSheet = false
+    @State private var showingDeleteInvoiceAlert = false
     @State private var paymentAmount: Double = 0.0
     @State private var paymentMethod: PaymentMethod = .bankTransfer
     @State private var paymentReference: String = ""
@@ -293,6 +294,24 @@ public struct InvoiceDetailView: View {
                         .padding(.horizontal, 16)
                     }
                     
+                    // Delete Invoice Option
+                    Button(role: .destructive) {
+                        showingDeleteInvoiceAlert = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "trash.fill")
+                            Text("Permanently Delete Invoice")
+                        }
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.red)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
+                        .background(Color.red.opacity(0.08))
+                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 16)
+                    
                     // Bottom Spacer
                     Spacer().frame(height: 80)
                 }
@@ -301,6 +320,15 @@ public struct InvoiceDetailView: View {
         }
         .navigationTitle(currentInvoice.invoiceNumber)
         .navigationBarTitleDisplayMode(.inline)
+        .confirmationDialog("Delete Invoice?", isPresented: $showingDeleteInvoiceAlert, titleVisibility: .visible) {
+            Button("Delete Invoice Permanently", role: .destructive) {
+                store.deleteInvoice(id: currentInvoice.id)
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to permanently delete invoice #\(currentInvoice.invoiceNumber)? This will remove it from financial calculations.")
+        }
         .sheet(isPresented: $showingPDFPreview) {
             let client = associatedClient ?? Client(name: currentInvoice.clientName, companyName: "", email: currentInvoice.clientEmail, phone: "")
             let pdf = PDFGeneratorService.shared.generateInvoicePDF(invoice: currentInvoice, client: client, business: store.settings)

@@ -14,6 +14,8 @@ public struct DocumentVaultView: View {
     @State private var selectedCategory: DocumentCategory? = nil
     @State private var searchText = ""
     @State private var showingExtractor = false
+    @State private var docToDelete: VaultDocument? = nil
+    @State private var showingDeleteDocAlert = false
     
     public init() {}
     
@@ -102,9 +104,32 @@ public struct DocumentVaultView: View {
                                             
                                             Spacer()
                                             
-                                            Text(doc.createdAt, style: .date)
-                                                .font(.system(size: 10))
-                                                .foregroundColor(.secondary)
+                                            VStack(alignment: .trailing, spacing: 4) {
+                                                Text(doc.createdAt, style: .date)
+                                                    .font(.system(size: 10))
+                                                    .foregroundColor(.secondary)
+                                                
+                                                Button(role: .destructive) {
+                                                    docToDelete = doc
+                                                    showingDeleteDocAlert = true
+                                                } label: {
+                                                    Image(systemName: "trash")
+                                                        .font(.system(size: 11))
+                                                        .foregroundColor(.red.opacity(0.85))
+                                                        .padding(5)
+                                                        .background(Color.red.opacity(0.08))
+                                                        .clipShape(Circle())
+                                                }
+                                                .buttonStyle(.plain)
+                                            }
+                                        }
+                                    }
+                                    .contextMenu {
+                                        Button(role: .destructive) {
+                                            docToDelete = doc
+                                            showingDeleteDocAlert = true
+                                        } label: {
+                                            Label("Delete Document", systemImage: "trash")
                                         }
                                     }
                                 }
@@ -118,6 +143,18 @@ public struct DocumentVaultView: View {
             }
             .navigationTitle("Document Vault")
             .navigationBarTitleDisplayMode(.inline)
+            .confirmationDialog("Delete Document?", isPresented: $showingDeleteDocAlert, titleVisibility: .visible) {
+                Button("Delete Document", role: .destructive) {
+                    if let d = docToDelete {
+                        withAnimation {
+                            store.deleteDocument(id: d.id)
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to permanently delete '\(docToDelete?.title ?? "this document")'?")
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) { Button("Close") { dismiss() } }
                 ToolbarItem(placement: .navigationBarTrailing) {

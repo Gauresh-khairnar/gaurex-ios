@@ -14,6 +14,7 @@ public struct WorkerDetailView: View {
     
     @State private var showingEditSheet = false
     @State private var showingGenerateSlipSheet = false
+    @State private var showingDeleteConfirmation = false
     @State private var showSensitiveBankDetails = false
     
     public init(worker: Worker) {
@@ -200,8 +201,28 @@ public struct WorkerDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Edit") {
-                    showingEditSheet = true
+                Menu {
+                    Button {
+                        showingEditSheet = true
+                    } label: {
+                        Label("Edit Profile", systemImage: "pencil")
+                    }
+                    
+                    Button {
+                        showingGenerateSlipSheet = true
+                    } label: {
+                        Label("Generate Salary Slip", systemImage: "doc.text.fill")
+                    }
+                    
+                    Divider()
+                    
+                    Button(role: .destructive) {
+                        showingDeleteConfirmation = true
+                    } label: {
+                        Label("Delete Team Member", systemImage: "trash")
+                    }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
             }
         }
@@ -210,6 +231,15 @@ public struct WorkerDetailView: View {
         }
         .sheet(isPresented: $showingGenerateSlipSheet) {
             GenerateSalarySlipView(worker: currentWorker)
+        }
+        .confirmationDialog("Delete Team Member?", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
+            Button("Delete Team Member", role: .destructive) {
+                store.deleteWorker(id: currentWorker.id)
+                dismiss()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to permanently delete '\(currentWorker.name)'? This action cannot be undone.")
         }
     }
 }
