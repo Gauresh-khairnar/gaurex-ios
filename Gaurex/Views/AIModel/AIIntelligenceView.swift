@@ -13,14 +13,19 @@ public struct AIIntelligenceView: View {
     
     @State private var inputText: String = ""
     @State private var showingSettingsSheet = false
+    @State private var showingVoiceSheet = false
+    @State private var showingDocumentExtraction = false
     
-    let suggestedPrompts = [
-        "What is our collected revenue this month?",
+    let allExecutivePrompts = [
+        "How much money did we actually collect this month?",
+        "What are our total recorded expenses?",
         "Which invoices are overdue?",
-        "Summarize this month's business performance.",
-        "Which clients have the highest outstanding balances?",
-        "What revenue target should we pursue next month?",
-        "Which packages generate the most revenue?"
+        "Which deals need follow-up today?",
+        "What tasks are overdue?",
+        "How much payroll is due this month?",
+        "Are we on track to reach our revenue target?",
+        "What should I prioritize today?",
+        "Generate this week's business performance report."
     ]
     
     public init() {}
@@ -64,54 +69,86 @@ public struct AIIntelligenceView: View {
                 theme.backgroundColor.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Executive AI Disclaimer
-                    HStack(spacing: 8) {
-                        Image(systemName: "sparkles")
-                            .foregroundColor(theme.accentColor)
-                            .font(.system(size: 13))
-                        Text("Connected to GAUREX Intelligence Engine. Contextualized to real financial ledger.")
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.secondary)
+                    // Header Assistant Mode Bar
+                    HStack(spacing: 10) {
+                        Button {
+                            showingVoiceSheet = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "mic.fill")
+                                Text("Voice Mode")
+                            }
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(theme.cardBackground)
+                            .clipShape(Capsule())
+                            .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
+                        }
+                        .buttonStyle(.plain)
+                        .tactilePress()
+                        
+                        Button {
+                            showingDocumentExtraction = true
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "doc.viewfinder.fill")
+                                Text("Scan / Extract")
+                            }
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(theme.cardBackground)
+                            .clipShape(Capsule())
+                            .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
+                        }
+                        .buttonStyle(.plain)
+                        .tactilePress()
+                        
                         Spacer()
+                        
+                        Text("Ledger Grounded")
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(.green)
                     }
                     .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(theme.cardBackground.opacity(0.6))
+                    .padding(.vertical, 6)
                     
                     // Messages Chat Area
                     ScrollViewReader { proxy in
                         ScrollView {
                             VStack(spacing: 14) {
-                                // Welcome Intro Card
                                 GlassCard {
                                     VStack(alignment: .leading, spacing: 8) {
                                         HStack {
                                             Image(systemName: "brain.head.profile")
                                                 .font(.system(size: 18))
                                                 .foregroundColor(theme.accentColor)
-                                            Text("GAUREX Executive Copilot")
+                                            Text("GAUREX AI Business Advisor")
                                                 .font(.system(size: 15, weight: .bold))
                                             Spacer()
                                             OwnerBadge()
                                         }
-                                        Text("Ask natural language queries regarding collected revenue, overdue balances, client pipeline, payroll disbursements, and operational forecasts.")
+                                        Text("Ask natural language queries regarding collected revenue, recorded expenses, sales pipeline loss points, employee payroll, and daily priorities.")
                                             .font(.system(size: 13))
                                             .foregroundColor(.secondary)
                                     }
                                 }
                                 .padding(.horizontal, 16)
-                                .padding(.top, 8)
+                                .padding(.top, 6)
                                 
                                 // Suggested Quick Questions
                                 VStack(alignment: .leading, spacing: 8) {
-                                    Text("QUICK EXECUTIVE INQUIRIES")
-                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                    Text("STRATEGIC INQUIRIES")
+                                        .font(TypographyTokens.sectionHeader)
                                         .foregroundColor(.secondary)
                                         .padding(.horizontal, 16)
                                     
                                     ScrollView(.horizontal, showsIndicators: false) {
                                         HStack(spacing: 8) {
-                                            ForEach(suggestedPrompts, id: \.self) { prompt in
+                                            ForEach(allExecutivePrompts, id: \.self) { prompt in
                                                 Button {
                                                     sendMessage(text: prompt)
                                                 } label: {
@@ -125,6 +162,7 @@ public struct AIIntelligenceView: View {
                                                         .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
                                                 }
                                                 .buttonStyle(.plain)
+                                                .tactilePress(scale: 0.95)
                                             }
                                         }
                                         .padding(.horizontal, 16)
@@ -141,7 +179,7 @@ public struct AIIntelligenceView: View {
                                     HStack(spacing: 8) {
                                         ProgressView()
                                             .progressViewStyle(CircularProgressViewStyle())
-                                        Text("Analyzing real-time financial records...")
+                                        Text("Querying authorized business records...")
                                             .font(.system(size: 12))
                                             .foregroundColor(.secondary)
                                         Spacer()
@@ -156,7 +194,7 @@ public struct AIIntelligenceView: View {
                         }
                         .onChange(of: store.aiMessages.count) { _ in
                             if let lastId = store.aiMessages.last?.id {
-                                withAnimation {
+                                withAnimation(MotionTokens.interactiveSpring) {
                                     proxy.scrollTo(lastId, anchor: .bottom)
                                 }
                             }
@@ -167,7 +205,7 @@ public struct AIIntelligenceView: View {
                     VStack(spacing: 0) {
                         Divider().background(theme.glassBorderColor)
                         HStack(spacing: 10) {
-                            TextField("Ask business intelligence assistant...", text: $inputText)
+                            TextField("Ask business advisor...", text: $inputText)
                                 .textFieldStyle(.plain)
                                 .font(.system(size: 14))
                                 .padding(.horizontal, 14)
@@ -191,7 +229,7 @@ public struct AIIntelligenceView: View {
                     }
                 }
             }
-            .navigationTitle("AI Intelligence")
+            .navigationTitle("AI Advisor")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -204,6 +242,12 @@ public struct AIIntelligenceView: View {
             }
             .sheet(isPresented: $showingSettingsSheet) {
                 AISettingsSheet()
+            }
+            .sheet(isPresented: $showingVoiceSheet) {
+                VoiceAssistantOverlay()
+            }
+            .sheet(isPresented: $showingDocumentExtraction) {
+                DocumentExtractionView()
             }
         }
     }
@@ -245,8 +289,8 @@ public struct AIMessageBubble: View {
                         Image(systemName: "sparkles")
                             .font(.system(size: 12))
                             .foregroundColor(theme.accentColor)
-                        Text("GAUREX INTELLIGENCE")
-                            .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        Text("GAUREX ADVISOR")
+                            .font(TypographyTokens.code)
                             .foregroundColor(.secondary)
                         if message.isForecastEstimate {
                             Text("• ESTIMATE")
@@ -263,7 +307,7 @@ public struct AIMessageBubble: View {
                     if let rec = message.actionRecommendation {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("EXECUTIVE RECOMMENDATION")
-                                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                                .font(TypographyTokens.code)
                                 .foregroundColor(theme.accentColor)
                             Text(rec)
                                 .font(.system(size: 12, weight: .medium))
@@ -285,108 +329,6 @@ public struct AIMessageBubble: View {
             }
         }
         .padding(.horizontal, 16)
-    }
-}
-
-public struct AISettingsSheet: View {
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject private var store = FirestoreDataStore.shared
-    
-    @State private var provider: String = "gemini"
-    @State private var modelName: String = "gemini-1.5-pro"
-    @State private var apiKeyInput: String = ""
-    @State private var testStatus: String? = nil
-    @State private var isTesting = false
-    
-    let providers = [
-        ("gemini", "Google Gemini (Gemini 1.5 Pro)"),
-        ("openai", "OpenAI (GPT-4o)"),
-        ("anthropic", "Anthropic (Claude 3.5 Sonnet)"),
-        ("custom", "GAUREX Private Backend")
-    ]
-    
-    public var body: some View {
-        NavigationStack {
-            Form {
-                Section(header: Text("Model Provider Configuration")) {
-                    Picker("Provider", selection: $provider) {
-                        ForEach(providers, id: \.0) { p in
-                            Text(p.1).tag(p.0)
-                        }
-                    }
-                    
-                    TextField("Model ID (e.g. gemini-1.5-pro)", text: $modelName)
-                }
-                
-                Section(header: Text("Encrypted API Key (Keychain Vault)")) {
-                    SecureField("Paste Secret API Key", text: $apiKeyInput)
-                        .textInputAutocapitalization(.never)
-                    
-                    Text("API keys are never stored in plaintext or logged. Keys are isolated in the iOS Hardware Keychain.")
-                        .font(.system(size: 11))
-                        .foregroundColor(.secondary)
-                }
-                
-                Section {
-                    Button {
-                        testConnection()
-                    } label: {
-                        HStack {
-                            Text("Test Provider Connectivity")
-                            if isTesting {
-                                Spacer()
-                                ProgressView()
-                            }
-                        }
-                    }
-                    
-                    if let status = testStatus {
-                        Text(status)
-                            .font(.system(size: 12))
-                            .foregroundColor(.secondary)
-                    }
-                }
-            }
-            .navigationTitle("AI Model Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        saveSettings()
-                    }
-                    .fontWeight(.bold)
-                }
-            }
-            .onAppear {
-                provider = store.settings.aiProvider
-                modelName = store.settings.aiModelName
-                apiKeyInput = KeychainService.shared.readSecret(key: "gaurex_ai_api_key") ?? ""
-            }
-        }
-    }
-    
-    private func testConnection() {
-        isTesting = true
-        testStatus = "Validating TLS handshake and model credentials..."
-        if !apiKeyInput.isEmpty {
-            _ = KeychainService.shared.saveSecret(key: "gaurex_ai_api_key", value: apiKeyInput)
-        }
-        AIService.shared.testConnection(provider: provider, model: modelName) { success, msg in
-            isTesting = false
-            testStatus = msg
-        }
-    }
-    
-    private func saveSettings() {
-        store.settings.aiProvider = provider
-        store.settings.aiModelName = modelName
-        store.saveSettings()
-        if !apiKeyInput.isEmpty {
-            _ = KeychainService.shared.saveSecret(key: "gaurex_ai_api_key", value: apiKeyInput)
-        }
-        dismiss()
+        .transition(.opacity.combined(with: .scale(scale: 0.98)))
     }
 }

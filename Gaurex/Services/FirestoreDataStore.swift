@@ -10,7 +10,7 @@ import Combine
 public final class FirestoreDataStore: ObservableObject {
     public static let shared = FirestoreDataStore()
     
-    // Published State
+    // Core Published Collections
     @Published public var clients: [Client] = []
     @Published public var packages: [BusinessPackage] = []
     @Published public var invoices: [Invoice] = []
@@ -22,9 +22,23 @@ public final class FirestoreDataStore: ObservableObject {
     @Published public var settings: BusinessSettings = BusinessSettings()
     @Published public var aiMessages: [AIMessage] = []
     
-    // Filter State
+    // Extended Enterprise Collections (Master Prompt 03)
+    @Published public var tasks: [BusinessTask] = []
+    @Published public var salesLeads: [SalesLead] = []
+    @Published public var attendanceRecords: [AttendanceRecord] = []
+    @Published public var leaveRequests: [LeaveRequest] = []
+    @Published public var salaryHistory: [SalaryHistoryRecord] = []
+    @Published public var vaultDocuments: [VaultDocument] = []
+    @Published public var businessGoals: [BusinessGoal] = []
+    @Published public var reminders: [SmartReminder] = []
+    @Published public var integrations: [IntegrationItem] = []
+    @Published public var activeCurrency: SupportedCurrency = .inr
+    
+    // UI Feedback
+    @Published public var activeToast: ToastMessage? = nil
     @Published public var activeDateFilter: DateRangeFilter = .thisMonth
     
+    // Keys
     private let clientsKey = "gaurex_db_clients"
     private let packagesKey = "gaurex_db_packages"
     private let invoicesKey = "gaurex_db_invoices"
@@ -36,18 +50,27 @@ public final class FirestoreDataStore: ObservableObject {
     private let settingsKey = "gaurex_db_settings"
     private let aiMessagesKey = "gaurex_db_ai_messages"
     
+    private let tasksKey = "gaurex_db_tasks"
+    private let leadsKey = "gaurex_db_leads"
+    private let attendanceKey = "gaurex_db_attendance"
+    private let leavesKey = "gaurex_db_leaves"
+    private let salaryHistKey = "gaurex_db_salary_hist"
+    private let documentsKey = "gaurex_db_documents"
+    private let goalsKey = "gaurex_db_goals"
+    private let integrationsKey = "gaurex_db_integrations"
+    
     private init() {
         loadData()
-        seedInitialPackagesIfEmpty()
+        seedInitialDataIfEmpty()
     }
     
-    // MARK: - Initial Packages Setup
-    private func seedInitialPackagesIfEmpty() {
+    private func seedInitialDataIfEmpty() {
+        // Initial Packages
         if packages.isEmpty {
             packages = [
                 BusinessPackage(
                     name: "Enterprise Custom Software",
-                    description: "End-to-end full-stack web & backend application architecture, microservices, and high-availability deployment.",
+                    description: "Full-stack web & backend architecture, microservices, and high-availability deployment.",
                     category: .softwareDevelopment,
                     basePrice: 450000.0,
                     billingType: .oneTime,
@@ -84,22 +107,54 @@ public final class FirestoreDataStore: ObservableObject {
             ]
             savePackages()
         }
+        
+        // Initial Goals for Founder Gauresh Khairnar
+        if businessGoals.isEmpty {
+            businessGoals = [
+                BusinessGoal(
+                    title: "Monthly Revenue Target",
+                    metricType: .monthlyRevenue,
+                    targetValue: 1000000.0,
+                    currentValue: 0.0,
+                    blockers: ["Pending enterprise contract signatures"],
+                    recommendedActions: ["Close negotiation with active pipeline leads"]
+                ),
+                BusinessGoal(
+                    title: "New Client Acquisitions",
+                    metricType: .newClients,
+                    targetValue: 4.0,
+                    currentValue: 0.0,
+                    blockers: ["Lead follow-ups pending"],
+                    recommendedActions: ["Schedule discovery meetings for newly inbound leads"]
+                ),
+                BusinessGoal(
+                    title: "Monthly Operating Budget",
+                    metricType: .expenseBudget,
+                    targetValue: 200000.0,
+                    currentValue: 0.0,
+                    blockers: [],
+                    recommendedActions: ["Maintain cloud infrastructure within allocated limits"]
+                )
+            ]
+            saveGoals()
+        }
+        
+        // Initial Integrations Catalog
+        if integrations.isEmpty {
+            integrations = [
+                IntegrationItem(provider: .gmail, isConnected: false, statusDescription: "Connect Google Workspace for email sync"),
+                IntegrationItem(provider: .googleCalendar, isConnected: false, statusDescription: "Sync meetings and project delivery deadlines"),
+                IntegrationItem(provider: .outlook, isConnected: false, statusDescription: "Microsoft 365 Exchange integration"),
+                IntegrationItem(provider: .stripe, isConnected: false, statusDescription: "International corporate payment processing"),
+                IntegrationItem(provider: .razorpay, isConnected: false, statusDescription: "Indian domestic UPI and NEFT gateway"),
+                IntegrationItem(provider: .cloudStorage, isConnected: true, connectedAccountEmail: "cloud@gaurex.com", statusDescription: "Connected to AWS S3 & Cloud Storage"),
+                IntegrationItem(provider: .gemini, isConnected: true, connectedAccountEmail: "gauresh@gaurex.com", statusDescription: "Gemini 1.5 Pro connected via Keychain")
+            ]
+            saveIntegrations()
+        }
     }
     
     // MARK: - Persistence
-    public func saveData() {
-        saveClients()
-        savePackages()
-        saveInvoices()
-        savePayments()
-        saveWorkers()
-        savePayroll()
-        saveExpenses()
-        saveProjects()
-        saveSettings()
-        saveAIMessages()
-    }
-    
     private func loadData() {
         let decoder = JSONDecoder()
         if let data = UserDefaults.standard.data(forKey: clientsKey), let val = try? decoder.decode([Client].self, from: data) { clients = val }
@@ -112,61 +167,59 @@ public final class FirestoreDataStore: ObservableObject {
         if let data = UserDefaults.standard.data(forKey: projectsKey), let val = try? decoder.decode([Project].self, from: data) { projects = val }
         if let data = UserDefaults.standard.data(forKey: settingsKey), let val = try? decoder.decode(BusinessSettings.self, from: data) { settings = val }
         if let data = UserDefaults.standard.data(forKey: aiMessagesKey), let val = try? decoder.decode([AIMessage].self, from: data) { aiMessages = val }
+        
+        if let data = UserDefaults.standard.data(forKey: tasksKey), let val = try? decoder.decode([BusinessTask].self, from: data) { tasks = val }
+        if let data = UserDefaults.standard.data(forKey: leadsKey), let val = try? decoder.decode([SalesLead].self, from: data) { salesLeads = val }
+        if let data = UserDefaults.standard.data(forKey: attendanceKey), let val = try? decoder.decode([AttendanceRecord].self, from: data) { attendanceRecords = val }
+        if let data = UserDefaults.standard.data(forKey: leavesKey), let val = try? decoder.decode([LeaveRequest].self, from: data) { leaveRequests = val }
+        if let data = UserDefaults.standard.data(forKey: salaryHistKey), let val = try? decoder.decode([SalaryHistoryRecord].self, from: data) { salaryHistory = val }
+        if let data = UserDefaults.standard.data(forKey: documentsKey), let val = try? decoder.decode([VaultDocument].self, from: data) { vaultDocuments = val }
+        if let data = UserDefaults.standard.data(forKey: goalsKey), let val = try? decoder.decode([BusinessGoal].self, from: data) { businessGoals = val }
+        if let data = UserDefaults.standard.data(forKey: integrationsKey), let val = try? decoder.decode([IntegrationItem].self, from: data) { integrations = val }
     }
     
-    public func saveClients() {
-        if let data = try? JSONEncoder().encode(clients) { UserDefaults.standard.set(data, forKey: clientsKey) }
-    }
-    public func savePackages() {
-        if let data = try? JSONEncoder().encode(packages) { UserDefaults.standard.set(data, forKey: packagesKey) }
-    }
-    public func saveInvoices() {
-        if let data = try? JSONEncoder().encode(invoices) { UserDefaults.standard.set(data, forKey: invoicesKey) }
-    }
-    public func savePayments() {
-        if let data = try? JSONEncoder().encode(payments) { UserDefaults.standard.set(data, forKey: paymentsKey) }
-    }
-    public func saveWorkers() {
-        if let data = try? JSONEncoder().encode(workers) { UserDefaults.standard.set(data, forKey: workersKey) }
-    }
-    public func savePayroll() {
-        if let data = try? JSONEncoder().encode(payrollRecords) { UserDefaults.standard.set(data, forKey: payrollKey) }
-    }
-    public func saveExpenses() {
-        if let data = try? JSONEncoder().encode(expenses) { UserDefaults.standard.set(data, forKey: expensesKey) }
-    }
-    public func saveProjects() {
-        if let data = try? JSONEncoder().encode(projects) { UserDefaults.standard.set(data, forKey: projectsKey) }
-    }
-    public func saveSettings() {
-        if let data = try? JSONEncoder().encode(settings) { UserDefaults.standard.set(data, forKey: settingsKey) }
-    }
-    public func saveAIMessages() {
-        if let data = try? JSONEncoder().encode(aiMessages) { UserDefaults.standard.set(data, forKey: aiMessagesKey) }
+    public func saveClients() { if let data = try? JSONEncoder().encode(clients) { UserDefaults.standard.set(data, forKey: clientsKey) } }
+    public func savePackages() { if let data = try? JSONEncoder().encode(packages) { UserDefaults.standard.set(data, forKey: packagesKey) } }
+    public func saveInvoices() { if let data = try? JSONEncoder().encode(invoices) { UserDefaults.standard.set(data, forKey: invoicesKey) } }
+    public func savePayments() { if let data = try? JSONEncoder().encode(payments) { UserDefaults.standard.set(data, forKey: paymentsKey) } }
+    public func saveWorkers() { if let data = try? JSONEncoder().encode(workers) { UserDefaults.standard.set(data, forKey: workersKey) } }
+    public func savePayroll() { if let data = try? JSONEncoder().encode(payrollRecords) { UserDefaults.standard.set(data, forKey: payrollKey) } }
+    public func saveExpenses() { if let data = try? JSONEncoder().encode(expenses) { UserDefaults.standard.set(data, forKey: expensesKey) } }
+    public func saveProjects() { if let data = try? JSONEncoder().encode(projects) { UserDefaults.standard.set(data, forKey: projectsKey) } }
+    public func saveSettings() { if let data = try? JSONEncoder().encode(settings) { UserDefaults.standard.set(data, forKey: settingsKey) } }
+    public func saveAIMessages() { if let data = try? JSONEncoder().encode(aiMessages) { UserDefaults.standard.set(data, forKey: aiMessagesKey) } }
+    
+    public func saveTasks() { if let data = try? JSONEncoder().encode(tasks) { UserDefaults.standard.set(data, forKey: tasksKey) } }
+    public func saveLeads() { if let data = try? JSONEncoder().encode(salesLeads) { UserDefaults.standard.set(data, forKey: leadsKey) } }
+    public func saveAttendance() { if let data = try? JSONEncoder().encode(attendanceRecords) { UserDefaults.standard.set(data, forKey: attendanceKey) } }
+    public func saveLeaves() { if let data = try? JSONEncoder().encode(leaveRequests) { UserDefaults.standard.set(data, forKey: leavesKey) } }
+    public func saveSalaryHistory() { if let data = try? JSONEncoder().encode(salaryHistory) { UserDefaults.standard.set(data, forKey: salaryHistKey) } }
+    public func saveDocuments() { if let data = try? JSONEncoder().encode(vaultDocuments) { UserDefaults.standard.set(data, forKey: documentsKey) } }
+    public func saveGoals() { if let data = try? JSONEncoder().encode(businessGoals) { UserDefaults.standard.set(data, forKey: goalsKey) } }
+    public func saveIntegrations() { if let data = try? JSONEncoder().encode(integrations) { UserDefaults.standard.set(data, forKey: integrationsKey) } }
+    
+    // MARK: - Toast Banner Dispatcher
+    public func showToast(title: String, isSuccess: Bool = true) {
+        withAnimation(MotionTokens.snappySpring) {
+            self.activeToast = ToastMessage(title: title, isSuccess: isSuccess)
+        }
+        MotionTokens.notification(type: isSuccess ? .success : .error)
     }
     
-    // MARK: - Client Operations
+    // MARK: - Clients Operations
     public func addClient(_ client: Client) {
         clients.insert(client, at: 0)
         saveClients()
-        AuditLogger.shared.log(
-            actionType: "CREATE",
-            entityType: "Client",
-            entityId: client.id,
-            description: "Registered new client: \(client.name) (\(client.companyName))"
-        )
+        AuditLogger.shared.log(actionType: "CREATE", entityType: "Client", entityId: client.id, description: "Added client: \(client.name)")
+        showToast(title: "Client Saved Successfully")
     }
     
     public func updateClient(_ client: Client) {
         if let idx = clients.firstIndex(where: { $0.id == client.id }) {
             clients[idx] = client
             saveClients()
-            AuditLogger.shared.log(
-                actionType: "UPDATE",
-                entityType: "Client",
-                entityId: client.id,
-                description: "Updated profile for: \(client.name)"
-            )
+            AuditLogger.shared.log(actionType: "UPDATE", entityType: "Client", entityId: client.id, description: "Updated client: \(client.name)")
+            showToast(title: "Client Updated")
         }
     }
     
@@ -175,41 +228,12 @@ public final class FirestoreDataStore: ObservableObject {
             let name = clients[idx].name
             clients.remove(at: idx)
             saveClients()
-            AuditLogger.shared.log(
-                actionType: "DELETE",
-                entityType: "Client",
-                entityId: id,
-                description: "Archived client record: \(name)"
-            )
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "Client", entityId: id, description: "Archived client: \(name)")
+            showToast(title: "Client Archived")
         }
     }
     
-    // MARK: - Package Operations
-    public func addPackage(_ package: BusinessPackage) {
-        packages.append(package)
-        savePackages()
-        AuditLogger.shared.log(
-            actionType: "CREATE",
-            entityType: "Package",
-            entityId: package.id,
-            description: "Created service package: \(package.name)"
-        )
-    }
-    
-    public func updatePackage(_ package: BusinessPackage) {
-        if let idx = packages.firstIndex(where: { $0.id == package.id }) {
-            packages[idx] = package
-            savePackages()
-            AuditLogger.shared.log(
-                actionType: "UPDATE",
-                entityType: "Package",
-                entityId: package.id,
-                description: "Updated package: \(package.name)"
-            )
-        }
-    }
-    
-    // MARK: - Invoice & Payment Operations
+    // MARK: - Invoices & Payments Operations
     public func generateNextInvoiceNumber() -> String {
         let prefix = settings.invoicePrefix
         let num = settings.nextInvoiceNumber
@@ -222,12 +246,8 @@ public final class FirestoreDataStore: ObservableObject {
         invoices.insert(invoice, at: 0)
         saveInvoices()
         recalculateClientFinancials(clientId: invoice.clientId)
-        AuditLogger.shared.log(
-            actionType: "CREATE",
-            entityType: "Invoice",
-            entityId: invoice.id,
-            description: "Issued invoice #\(invoice.invoiceNumber) for \(invoice.clientName)"
-        )
+        AuditLogger.shared.log(actionType: "CREATE", entityType: "Invoice", entityId: invoice.id, description: "Issued invoice #\(invoice.invoiceNumber)")
+        showToast(title: "Invoice #\(invoice.invoiceNumber) Issued")
     }
     
     public func recordPayment(for invoiceId: String, amount: Double, method: PaymentMethod, reference: String, notes: String) {
@@ -245,7 +265,6 @@ public final class FirestoreDataStore: ObservableObject {
         payments.insert(payment, at: 0)
         savePayments()
         
-        // Update invoice advance/recorded paid amount and status
         var inv = invoices[idx]
         inv.paymentIds.append(payment.id)
         let totalPaid = payments.filter { $0.invoiceId == invoiceId }.reduce(0.0) { $0 + $1.amount }
@@ -260,22 +279,16 @@ public final class FirestoreDataStore: ObservableObject {
         
         invoices[idx] = inv
         saveInvoices()
-        
         recalculateClientFinancials(clientId: inv.clientId)
         
-        AuditLogger.shared.log(
-            actionType: "PAYMENT",
-            entityType: "Invoice",
-            entityId: invoiceId,
-            description: "Recorded payment of \(settings.currencySymbol)\(amount) via \(method.rawValue) for Invoice #\(inv.invoiceNumber)"
-        )
+        AuditLogger.shared.log(actionType: "PAYMENT", entityType: "Invoice", entityId: invoiceId, description: "Recorded payment of ₹\(amount) for invoice #\(inv.invoiceNumber)")
+        showToast(title: "Payment Recorded")
     }
     
     public func recalculateClientFinancials(clientId: String) {
         guard let idx = clients.firstIndex(where: { $0.id == clientId }) else { return }
         let clientInvoices = invoices.filter { $0.clientId == clientId && $0.status != .cancelled }
         let totalInvoiced = clientInvoices.reduce(0.0) { $0 + $1.totalAmount }
-        
         let clientPayments = payments.filter { $0.clientId == clientId }
         let totalCollected = clientPayments.reduce(0.0) { $0 + $1.amount }
         
@@ -285,43 +298,111 @@ public final class FirestoreDataStore: ObservableObject {
         saveClients()
     }
     
-    // MARK: - Worker & Payroll Operations
-    public func addWorker(_ worker: Worker) {
-        workers.insert(worker, at: 0)
-        saveWorkers()
-        AuditLogger.shared.log(
-            actionType: "CREATE",
-            entityType: "Worker",
-            entityId: worker.id,
-            description: "Added team member: \(worker.fullName) (\(worker.jobTitle))"
-        )
+    // MARK: - Task Operations (Today's Tasks & AI Daily Planner)
+    public func addTask(_ task: BusinessTask) {
+        tasks.insert(task, at: 0)
+        saveTasks()
+        showToast(title: "Task Added to Schedule")
     }
     
-    public func updateWorker(_ worker: Worker) {
-        if let idx = workers.firstIndex(where: { $0.id == worker.id }) {
-            workers[idx] = worker
-            saveWorkers()
-            AuditLogger.shared.log(
-                actionType: "UPDATE",
-                entityType: "Worker",
-                entityId: worker.id,
-                description: "Updated profile for: \(worker.fullName)"
-            )
+    public func updateTask(_ task: BusinessTask) {
+        if let idx = tasks.firstIndex(where: { $0.id == task.id }) {
+            tasks[idx] = task
+            saveTasks()
         }
     }
     
-    public func addPayrollRecord(_ record: PayrollRecord) {
-        payrollRecords.insert(record, at: 0)
-        savePayroll()
-        AuditLogger.shared.log(
-            actionType: "CREATE",
-            entityType: "Payroll",
-            entityId: record.id,
-            description: "Processed salary slip for \(record.workerName) [\(record.salaryMonth) \(record.salaryYear)]"
-        )
+    public func toggleTaskCompletion(id: String) {
+        if let idx = tasks.firstIndex(where: { $0.id == id }) {
+            withAnimation(MotionTokens.snappySpring) {
+                if tasks[idx].status == .completed {
+                    tasks[idx].status = .pending
+                    tasks[idx].completedAt = nil
+                } else {
+                    tasks[idx].status = .completed
+                    tasks[idx].completedAt = Date()
+                    MotionTokens.notification(type: .success)
+                }
+            }
+            saveTasks()
+        }
     }
     
-    // MARK: - Real-time Computed Business Metrics
+    // MARK: - Sales Pipeline Operations
+    public func addSalesLead(_ lead: SalesLead) {
+        salesLeads.insert(lead, at: 0)
+        saveLeads()
+        AuditLogger.shared.log(actionType: "CREATE", entityType: "SalesLead", entityId: lead.id, description: "New lead: \(lead.clientName)")
+        showToast(title: "Lead Added to Pipeline")
+    }
+    
+    public func updateSalesLead(_ lead: SalesLead) {
+        if let idx = salesLeads.firstIndex(where: { $0.id == lead.id }) {
+            salesLeads[idx] = lead
+            saveLeads()
+        }
+    }
+    
+    // MARK: - Attendance & Leave Operations
+    public func recordAttendance(workerId: String, workerName: String, status: AttendanceStatus, notes: String = "") {
+        let record = AttendanceRecord(
+            workerId: workerId,
+            workerName: workerName,
+            date: Date(),
+            status: status,
+            clockInTime: status == .present ? Date() : nil,
+            notes: notes
+        )
+        attendanceRecords.insert(record, at: 0)
+        saveAttendance()
+        showToast(title: "Attendance Recorded for \(workerName)")
+    }
+    
+    public func submitLeaveRequest(_ request: LeaveRequest) {
+        leaveRequests.insert(request, at: 0)
+        saveLeaves()
+        showToast(title: "Leave Request Submitted")
+    }
+    
+    public func processLeaveApproval(id: String, approve: Bool, comment: String = "") {
+        if let idx = leaveRequests.firstIndex(where: { $0.id == id }) {
+            leaveRequests[idx].status = approve ? .approved : .rejected
+            leaveRequests[idx].managerComment = comment
+            saveLeaves()
+            AuditLogger.shared.log(actionType: "LEAVE", entityType: "Worker", entityId: leaveRequests[idx].workerId, description: "\(approve ? "Approved" : "Rejected") leave request")
+            showToast(title: "Leave Request \(approve ? "Approved" : "Rejected")")
+        }
+    }
+    
+    // MARK: - Document Vault Operations
+    public func addVaultDocument(_ doc: VaultDocument) {
+        vaultDocuments.insert(doc, at: 0)
+        saveDocuments()
+        AuditLogger.shared.log(actionType: "UPLOAD", entityType: "Document", entityId: doc.id, description: "Imported document: \(doc.title)")
+        showToast(title: "Document Vault Updated")
+    }
+    
+    // MARK: - Packages & Workers Operations
+    public func addPackage(_ pkg: BusinessPackage) { packages.append(pkg); savePackages() }
+    public func updatePackage(_ pkg: BusinessPackage) {
+        if let idx = packages.firstIndex(where: { $0.id == pkg.id }) { packages[idx] = pkg; savePackages() }
+    }
+    
+    public func addWorker(_ worker: Worker) { workers.insert(worker, at: 0); saveWorkers(); showToast(title: "Team Member Added") }
+    public func updateWorker(_ worker: Worker) {
+        if let idx = workers.firstIndex(where: { $0.id == worker.id }) { workers[idx] = worker; saveWorkers() }
+    }
+    public func addPayrollRecord(_ record: PayrollRecord) {
+        payrollRecords.insert(record, at: 0); savePayroll(); showToast(title: "Salary Slip Disbursed")
+    }
+    
+    public func addExpense(_ exp: Expense) {
+        expenses.insert(exp, at: 0)
+        saveExpenses()
+        showToast(title: "Expense Logged")
+    }
+    
+    // MARK: - Computed Real-Time Business Metrics
     public var totalInvoicedRevenue: Double {
         invoices.filter { $0.status != .cancelled }.reduce(0.0) { $0 + $1.totalAmount }
     }
@@ -354,15 +435,41 @@ public final class FirestoreDataStore: ObservableObject {
         )
     }
     
-    public var activeClientsCount: Int {
-        clients.filter { $0.status == .active }.count
+    public var activeClientsCount: Int { clients.filter { $0.status == .active }.count }
+    public var totalWorkersCount: Int { workers.filter { $0.employmentStatus == .active || $0.employmentStatus == .probation }.count }
+    public var activeProjectsCount: Int { projects.filter { $0.status == .inProgress || $0.status == .planning }.count }
+    
+    // Today's Tasks
+    public var todayTasks: [BusinessTask] {
+        let cal = Calendar.current
+        return tasks.filter { cal.isDateInToday($0.dueDate) || ($0.status == .pending && $0.dueDate < Date()) }
     }
     
-    public var activeProjectsCount: Int {
-        projects.filter { $0.status == .inProgress || $0.status == .planning }.count
+    public var overdueTasksCount: Int {
+        tasks.filter { $0.isOverdue }.count
     }
     
-    public var totalWorkersCount: Int {
-        workers.filter { $0.employmentStatus == .active || $0.employmentStatus == .probation }.count
+    public var taskCompletionRate: Double {
+        guard !todayTasks.isEmpty else { return 1.0 }
+        let completed = todayTasks.filter { $0.status == .completed }.count
+        return Double(completed) / Double(todayTasks.count)
+    }
+    
+    // Weighted Sales Pipeline Value
+    public var weightedPipelineValue: Double {
+        FinancialCalculator.shared.calculateWeightedPipelineValue(leads: salesLeads)
+    }
+    
+    // Transparent Business Health Score
+    public var businessHealthScore: HealthScoreBreakdown {
+        let target = businessGoals.first(where: { $0.metricType == .monthlyRevenue })?.targetValue ?? 1000000.0
+        return FinancialCalculator.shared.calculateBusinessHealthScore(
+            revenueCollected: revenueCollected,
+            monthlyTarget: target,
+            overdueCount: overdueInvoicesCount,
+            pipelineValue: weightedPipelineValue,
+            monthlyExpenses: totalMonthlyExpenses + totalMonthlyPayrollExpenses,
+            taskCompletionRate: taskCompletionRate
+        )
     }
 }

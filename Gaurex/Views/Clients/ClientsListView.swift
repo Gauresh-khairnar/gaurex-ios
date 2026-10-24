@@ -14,6 +14,7 @@ public struct ClientsListView: View {
     @State private var selectedStatusFilter: ClientStatus? = nil
     @State private var showingAddSheet = false
     @State private var sortOption: ClientSortOption = .newest
+    @State private var selectedViewMode: Int = 0 // 0: CRM Clients, 1: Sales Pipeline
     
     public enum ClientSortOption: String, CaseIterable, Identifiable {
         case newest = "Newest First"
@@ -27,8 +28,6 @@ public struct ClientsListView: View {
     
     public var filteredClients: [Client] {
         var list = store.clients
-        
-        // Search filter
         if !searchText.isEmpty {
             list = list.filter { client in
                 client.name.localizedCaseInsensitiveContains(searchText) ||
@@ -37,24 +36,15 @@ public struct ClientsListView: View {
                 client.phone.localizedCaseInsensitiveContains(searchText)
             }
         }
-        
-        // Status filter
         if let filter = selectedStatusFilter {
             list = list.filter { $0.status == filter }
         }
-        
-        // Sorting
         switch sortOption {
-        case .newest:
-            list.sort { $0.createdAt > $1.createdAt }
-        case .name:
-            list.sort { $0.name.localizedCompare($1.name) == .orderedAscending }
-        case .revenue:
-            list.sort { $0.totalCollected > $1.totalCollected }
-        case .outstanding:
-            list.sort { $0.outstandingBalance > $1.outstandingBalance }
+        case .newest: list.sort { $0.createdAt > $1.createdAt }
+        case .name: list.sort { $0.name.localizedCompare($1.name) == .orderedAscending }
+        case .revenue: list.sort { $0.totalCollected > $1.totalCollected }
+        case .outstanding: list.sort { $0.outstandingBalance > $1.outstandingBalance }
         }
-        
         return list
     }
     
@@ -64,94 +54,110 @@ public struct ClientsListView: View {
                 theme.backgroundColor.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Search & Filter Header
-                    VStack(spacing: 12) {
-                        // Search Field
-                        HStack(spacing: 8) {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.secondary)
-                            TextField("Search clients, company, email, phone...", text: $searchText)
-                                .textFieldStyle(.plain)
-                                .font(.system(size: 14))
-                            if !searchText.isEmpty {
-                                Button {
-                                    searchText = ""
-                                } label: {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                        }
-                        .padding(10)
-                        .background(theme.cardBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(theme.glassBorderColor, lineWidth: 1))
-                        .padding(.horizontal, 16)
-                        
-                        // Status Filter Pills
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                FilterChip(title: "All (\(store.clients.count))", isSelected: selectedStatusFilter == nil) {
-                                    selectedStatusFilter = nil
-                                }
-                                ForEach(ClientStatus.allCases) { status in
-                                    let count = store.clients.filter { $0.status == status }.count
-                                    FilterChip(title: "\(status.rawValue) (\(count))", isSelected: selectedStatusFilter == status) {
-                                        selectedStatusFilter = status
-                                    }
-                                }
-                            }
-                            .padding(.horizontal, 16)
-                        }
+                    // Segmented View Switcher (CRM Directory vs Sales Pipeline)
+                    Picker("View Mode", selection: $selectedViewMode) {
+                        Text("Active Clients CRM").tag(0)
+                        Text("Sales Pipeline (\(store.salesLeads.count))").tag(1)
                     }
+                    .pickerStyle(.segmented)
+                    .padding(.horizontal, 16)
                     .padding(.top, 8)
-                    .padding(.bottom, 12)
+                    .padding(.bottom, 6)
                     
-                    // Main Content
-                    if filteredClients.isEmpty {
-                        EmptyStateView(
-                            icon: "person.crop.rectangle.stack",
-                            title: searchText.isEmpty ? "No Clients Registered" : "No Matching Clients",
-                            description: searchText.isEmpty
-                                ? "Register your enterprise clients to manage contracts, packages, and invoices."
-                                : "No client records match your current search query.",
-                            actionTitle: searchText.isEmpty ? "Add First Client" : nil
-                        ) {
-                            showingAddSheet = true
-                        }
-                        .frame(maxHeight: .infinity)
-                    } else {
+                    if selectedViewMode == 1 {
                         ScrollView {
-                            LazyVStack(spacing: 12) {
-                                ForEach(filteredClients) { client in
-                                    NavigationLink {
-                                        ClientDetailView(client: client)
-                                    } label: {
-                                        ClientCardView(client: client)
+                            SalesPipelineView()
+                                .padding(.vertical, 8)
+                            Spacer().frame(height: 80)
+                        }
+                    } else {
+                        // CRM Directory View
+                        VStack(spacing: 10) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundColor(.secondary)
+                                TextField("Search clients, company, email, phone...", text: $searchText)
+                                    .textFieldStyle(.plain)
+                                    .font(.system(size: 14))
+                                if !searchText.isEmpty {
+                                    Button { searchText = "" } label: {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.secondary)
                                     }
-                                    .buttonStyle(.plain)
                                 }
                             }
+                            .padding(10)
+                            .background(theme.cardBackground)
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(theme.glassBorderColor, lineWidth: 1))
                             .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            Spacer().frame(height: 80)
+                            
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    FilterChip(title: "All (\(store.clients.count))", isSelected: selectedStatusFilter == nil) {
+                                        selectedStatusFilter = nil
+                                    }
+                                    ForEach(ClientStatus.allCases) { status in
+                                        let count = store.clients.filter { $0.status == status }.count
+                                        FilterChip(title: "\(status.rawValue) (\(count))", isSelected: selectedStatusFilter == status) {
+                                            selectedStatusFilter = status
+                                        }
+                                    }
+                                }
+                                .padding(.horizontal, 16)
+                            }
+                        }
+                        .padding(.bottom, 10)
+                        
+                        if filteredClients.isEmpty {
+                            EmptyStateView(
+                                icon: "person.crop.rectangle.stack",
+                                title: searchText.isEmpty ? "No Clients Registered" : "No Matching Clients",
+                                description: searchText.isEmpty
+                                    ? "Register enterprise clients to track deliverables, milestones, and invoice settlement."
+                                    : "No client records match the current query.",
+                                actionTitle: searchText.isEmpty ? "Add First Client" : nil
+                            ) {
+                                showingAddSheet = true
+                            }
+                            .frame(maxHeight: .infinity)
+                        } else {
+                            ScrollView {
+                                LazyVStack(spacing: 12) {
+                                    ForEach(filteredClients) { client in
+                                        NavigationLink {
+                                            ClientDetailView(client: client)
+                                        } label: {
+                                            ClientCardView(client: client)
+                                        }
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                Spacer().frame(height: 80)
+                            }
                         }
                     }
                 }
+                
+                ToastOverlay(toast: $store.activeToast)
             }
-            .navigationTitle("Clients")
+            .navigationTitle("Clients & CRM")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Menu {
-                        Picker("Sort By", selection: $sortOption) {
-                            ForEach(ClientSortOption.allCases) { opt in
-                                Text(opt.rawValue).tag(opt)
+                    if selectedViewMode == 0 {
+                        Menu {
+                            Picker("Sort By", selection: $sortOption) {
+                                ForEach(ClientSortOption.allCases) { opt in
+                                    Text(opt.rawValue).tag(opt)
+                                }
                             }
+                        } label: {
+                            Image(systemName: "arrow.up.arrow.down")
+                                .foregroundColor(.primary)
                         }
-                    } label: {
-                        Image(systemName: "arrow.up.arrow.down")
-                            .foregroundColor(.primary)
                     }
                 }
                 
@@ -194,6 +200,7 @@ public struct FilterChip: View {
                 }
         }
         .buttonStyle(.plain)
+        .tactilePress(scale: 0.95)
     }
 }
 
@@ -230,10 +237,11 @@ public struct ClientCardView: View {
                 HStack {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("TOTAL COLLECTED")
-                            .font(.system(size: 9, weight: .bold))
+                            .font(TypographyTokens.caption)
                             .foregroundColor(.secondary)
                         Text(FinancialCalculator.shared.formatCurrency(client.totalCollected))
                             .font(.system(size: 13, weight: .semibold))
+                            .monospacedDigit()
                             .foregroundColor(.primary)
                     }
                     
@@ -241,14 +249,16 @@ public struct ClientCardView: View {
                     
                     VStack(alignment: .trailing, spacing: 2) {
                         Text("BALANCE DUE")
-                            .font(.system(size: 9, weight: .bold))
+                            .font(TypographyTokens.caption)
                             .foregroundColor(.secondary)
                         Text(FinancialCalculator.shared.formatCurrency(client.outstandingBalance))
                             .font(.system(size: 13, weight: .bold))
+                            .monospacedDigit()
                             .foregroundColor(client.outstandingBalance > 0 ? .orange : .secondary)
                     }
                 }
             }
         }
+        .tactilePress(scale: MotionTokens.cardPressScale)
     }
 }

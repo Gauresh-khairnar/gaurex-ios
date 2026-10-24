@@ -12,13 +12,23 @@ struct GaurexApp: App {
     @StateObject private var theme = ThemeManager.shared
     @StateObject private var bioAuth = BiometricAuthService.shared
     
+    @State private var hasCompletedLaunchIntro = false
+    
     var body: some Scene {
         WindowGroup {
-            Group {
-                if store.settings.biometricUnlockEnabled && !bioAuth.isUnlocked {
+            ZStack {
+                if !hasCompletedLaunchIntro {
+                    AppLaunchExperienceView {
+                        withAnimation(MotionTokens.interactiveSpring) {
+                            hasCompletedLaunchIntro = true
+                        }
+                    }
+                } else if store.settings.biometricUnlockEnabled && !bioAuth.isUnlocked {
                     BiometricUnlockOverlay()
+                        .transition(.opacity)
                 } else {
                     MainTabView()
+                        .transition(.opacity)
                 }
             }
             .environmentObject(store)

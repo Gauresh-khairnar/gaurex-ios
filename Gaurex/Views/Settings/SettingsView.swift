@@ -13,7 +13,6 @@ public struct SettingsView: View {
     
     @State private var showingExportSheet = false
     @State private var exportData: Data? = nil
-    @State private var showingClearConfirmation = false
     
     public init() {}
     
@@ -58,27 +57,29 @@ public struct SettingsView: View {
                             }
                         }
                         .padding(.horizontal, 16)
+                        .tactilePress(scale: MotionTokens.cardPressScale)
                         
                         // MARK: - Appearance & Themes
                         VStack(alignment: .leading, spacing: 10) {
                             Text("APPEARANCE & THEMES")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .font(TypographyTokens.sectionHeader)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal, 16)
                             
                             GlassCard {
                                 VStack(alignment: .leading, spacing: 12) {
-                                    Text("Active Interface Theme: \(theme.currentTheme.rawValue)")
+                                    Text("Active Theme: \(theme.currentTheme.rawValue)")
                                         .font(.system(size: 13, weight: .semibold))
                                     
                                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                                         ForEach(AppTheme.allCases) { th in
                                             Button {
-                                                withAnimation(.easeInOut(duration: 0.25)) {
+                                                withAnimation(MotionTokens.interactiveSpring) {
                                                     theme.currentTheme = th
                                                     store.settings.activeThemeRaw = th.rawValue
                                                     store.saveSettings()
                                                 }
+                                                MotionTokens.selection()
                                             } label: {
                                                 HStack(spacing: 8) {
                                                     Circle()
@@ -109,6 +110,7 @@ public struct SettingsView: View {
                                                 )
                                             }
                                             .buttonStyle(.plain)
+                                            .tactilePress(scale: 0.96)
                                         }
                                     }
                                 }
@@ -116,10 +118,10 @@ public struct SettingsView: View {
                             .padding(.horizontal, 16)
                         }
                         
-                        // MARK: - Commercial Operations
+                        // MARK: - Commercial Operations & Assets
                         VStack(alignment: .leading, spacing: 10) {
                             Text("COMMERCIAL OPERATIONS")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .font(TypographyTokens.sectionHeader)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal, 16)
                             
@@ -136,25 +138,41 @@ public struct SettingsView: View {
                                     NavigationLink {
                                         BusinessSettingsView()
                                     } label: {
-                                        SettingsMenuRow(icon: "building.2.fill", title: "Business Configuration", subtitle: "GSTIN, PAN, bank details & legal terms", color: .blue)
+                                        SettingsMenuRow(icon: "building.2.fill", title: "Business Configuration", subtitle: "GSTIN, PAN, bank wiring & legal terms", color: .blue)
                                     }
                                     
                                     Divider().padding(.leading, 52).background(theme.glassBorderColor)
                                     
                                     NavigationLink {
-                                        InvoicesListView()
+                                        DocumentVaultView()
                                     } label: {
-                                        SettingsMenuRow(icon: "doc.text.fill", title: "Invoice Registry", subtitle: "\(store.invoices.count) invoices on file", color: .green)
+                                        SettingsMenuRow(icon: "folder.fill", title: "Document Vault", subtitle: "\(store.vaultDocuments.count) stored contracts, proposals & receipts", color: .teal)
+                                    }
+                                    
+                                    Divider().padding(.leading, 52).background(theme.glassBorderColor)
+                                    
+                                    NavigationLink {
+                                        MultiCurrencySettingsView()
+                                    } label: {
+                                        SettingsMenuRow(icon: "dollarsign.circle.fill", title: "Multi-Currency Management", subtitle: "Active: \(store.activeCurrency.symbol) \(store.activeCurrency.rawValue) with benchmark rates", color: .green)
+                                    }
+                                    
+                                    Divider().padding(.leading, 52).background(theme.glassBorderColor)
+                                    
+                                    NavigationLink {
+                                        IntegrationsHubView()
+                                    } label: {
+                                        SettingsMenuRow(icon: "network", title: "Integrations Hub", subtitle: "\(store.integrations.filter { $0.isConnected }.count) providers connected (Google, AWS, AI)", color: .purple)
                                     }
                                 }
                             }
                             .padding(.horizontal, 16)
                         }
                         
-                        // MARK: - Security & Authentication
+                        // MARK: - Security & Access Control
                         VStack(alignment: .leading, spacing: 10) {
                             Text("SECURITY & ACCESS CONTROL")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .font(TypographyTokens.sectionHeader)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal, 16)
                             
@@ -168,7 +186,7 @@ public struct SettingsView: View {
                                             VStack(alignment: .leading, spacing: 2) {
                                                 Text("Biometric Security (\(bioAuth.biometricTypeString))")
                                                     .font(.system(size: 14, weight: .semibold))
-                                                Text("Require authentication to unlock executive suite")
+                                                Text("Require Face ID to unlock executive dashboard")
                                                     .font(.system(size: 11))
                                                     .foregroundColor(.secondary)
                                             }
@@ -185,7 +203,7 @@ public struct SettingsView: View {
                                     NavigationLink {
                                         AuditLogsView()
                                     } label: {
-                                        SettingsMenuRow(icon: "shield.lefthalf.filled", title: "Audit Trail Ledger", subtitle: "Immutable log of all financial & admin events", color: .indigo)
+                                        SettingsMenuRow(icon: "shield.lefthalf.filled", title: "Activity Audit Trail Ledger", subtitle: "Immutable log of all financial & administrative events", color: .indigo)
                                     }
                                     
                                     Divider().padding(.leading, 52).background(theme.glassBorderColor)
@@ -200,10 +218,10 @@ public struct SettingsView: View {
                             .padding(.horizontal, 16)
                         }
                         
-                        // MARK: - Data Management & Backup
+                        // MARK: - Full Business JSON Export
                         VStack(alignment: .leading, spacing: 10) {
-                            Text("BACKUP & EXPORT")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                            Text("BACKUP & RECOVERY")
+                                .font(TypographyTokens.sectionHeader)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal, 16)
                             
@@ -212,32 +230,34 @@ public struct SettingsView: View {
                                     Button {
                                         exportBusinessData()
                                     } label: {
-                                        SettingsMenuRow(icon: "square.and.arrow.up.fill", title: "Export Full Business JSON", subtitle: "Complete ledger, clients, invoices & payroll", color: .teal)
+                                        SettingsMenuRow(icon: "square.and.arrow.up.fill", title: "Export Full Business JSON", subtitle: "Complete ledger, clients, invoices, payroll & tasks", color: .teal)
                                     }
                                 }
                             }
                             .padding(.horizontal, 16)
                         }
                         
-                        // MARK: - App Information
-                        VStack(spacing: 6) {
+                        // MARK: - App Version
+                        VStack(spacing: 4) {
                             Text("GAUREX Executive Suite v1.0.0")
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.primary)
-                            Text("Built with Native SwiftUI, Swift Charts & PDFKit\nDeveloped for Founder Gauresh Khairnar")
+                            Text("Native SwiftUI • Swift Charts • PDFKit • LocalAuthentication\nEngineered for Founder Gauresh Khairnar")
                                 .font(.system(size: 11))
                                 .foregroundColor(.secondary)
                                 .multilineTextAlignment(.center)
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.top, 10)
+                        .padding(.top, 8)
                         
                         Spacer().frame(height: 80)
                     }
                     .padding(.vertical, 12)
                 }
+                
+                ToastOverlay(toast: $store.activeToast)
             }
-            .navigationTitle("Owner Settings")
+            .navigationTitle("Owner Control Center")
             .navigationBarTitleDisplayMode(.large)
             .sheet(isPresented: $showingExportSheet) {
                 if let data = exportData {
@@ -276,39 +296,5 @@ public struct SettingsView: View {
         } catch {
             print("Failed to export backup: \(error)")
         }
-    }
-}
-
-public struct SettingsMenuRow: View {
-    public var icon: String
-    public var title: String
-    public var subtitle: String
-    public var color: Color
-    
-    public var body: some View {
-        HStack(spacing: 14) {
-            Image(systemName: icon)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundColor(color)
-                .frame(width: 24)
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(title)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(.primary)
-                Text(subtitle)
-                    .font(.system(size: 11))
-                    .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(.secondary.opacity(0.6))
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .contentShape(Rectangle())
     }
 }

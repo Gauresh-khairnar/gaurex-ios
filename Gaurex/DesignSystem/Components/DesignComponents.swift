@@ -6,6 +6,47 @@
 
 import SwiftUI
 
+// MARK: - Shimmer Skeleton Effect
+public struct ShimmerModifier: ViewModifier {
+    @State private var phase: CGFloat = -0.8
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    
+    public func body(content: Content) -> some View {
+        if reduceMotion {
+            content.opacity(0.8)
+        } else {
+            content
+                .overlay(
+                    GeometryReader { geo in
+                        LinearGradient(
+                            colors: [
+                                Color.clear,
+                                Color.white.opacity(0.20),
+                                Color.clear
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        .frame(width: geo.size.width * 1.5, height: geo.size.height)
+                        .offset(x: phase * geo.size.width)
+                    }
+                    .mask(content)
+                )
+                .onAppear {
+                    withAnimation(.linear(duration: 1.6).repeatForever(autoreverses: false)) {
+                        phase = 1.2
+                    }
+                }
+        }
+    }
+}
+
+extension View {
+    public func shimmer() -> some View {
+        self.modifier(ShimmerModifier())
+    }
+}
+
 // MARK: - Glass Card
 public struct GlassCard<Content: View>: View {
     @ObservedObject private var theme = ThemeManager.shared
@@ -70,7 +111,7 @@ public struct MetricCard: View {
                         .clipShape(Circle())
                     
                     Text(title)
-                        .font(.system(size: 12, weight: .medium))
+                        .font(TypographyTokens.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                     
@@ -92,10 +133,12 @@ public struct MetricCard: View {
                 }
                 
                 Text(value)
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .font(TypographyTokens.metricLarge)
+                    .monospacedDigit()
                     .foregroundColor(.primary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
+                    .contentTransition(.numericText())
                 
                 if let sub = subtitle {
                     Text(sub)
@@ -105,6 +148,7 @@ public struct MetricCard: View {
                 }
             }
         }
+        .tactilePress(scale: MotionTokens.cardPressScale)
     }
 }
 
@@ -137,6 +181,7 @@ public struct OwnerBadge: View {
                         .stroke(Color(red: 0.95, green: 0.77, blue: 0.25).opacity(0.4), lineWidth: 1)
                 )
         }
+        .accessibilityLabel("Founder and Owner Badge")
     }
 }
 
@@ -162,6 +207,7 @@ public struct StatusBadge: View {
                 Capsule()
                     .stroke(color.opacity(0.25), lineWidth: 0.8)
             )
+            .animation(MotionTokens.snappySpring, value: text)
     }
 }
 
@@ -191,7 +237,7 @@ public struct EmptyStateView: View {
     public var body: some View {
         VStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.system(size: 44, weight: .light))
+                .font(.system(size: 40, weight: .light))
                 .foregroundColor(.secondary.opacity(0.7))
                 .padding(20)
                 .background(theme.cardBackground)
@@ -203,7 +249,7 @@ public struct EmptyStateView: View {
             
             VStack(spacing: 6) {
                 Text(title)
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.primary)
                 
                 Text(description)
@@ -216,19 +262,21 @@ public struct EmptyStateView: View {
             if let actTitle = actionTitle, let act = action {
                 Button(action: act) {
                     Text(actTitle)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 9)
                         .background(Color.primary)
                         .clipShape(Capsule())
                 }
                 .buttonStyle(.plain)
+                .tactilePress()
                 .padding(.top, 4)
             }
         }
-        .padding(.vertical, 40)
+        .padding(.vertical, 36)
         .frame(maxWidth: .infinity)
+        .transition(.opacity.combined(with: .scale(scale: 0.96)))
     }
 }
 
@@ -256,7 +304,8 @@ public struct DateFilterBar: View {
             HStack(spacing: 8) {
                 ForEach(DateRangeFilter.allCases) { filter in
                     Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
+                        MotionTokens.selection()
+                        withAnimation(MotionTokens.interactiveSpring) {
                             selectedFilter = filter
                         }
                     } label: {
@@ -277,9 +326,58 @@ public struct DateFilterBar: View {
                             }
                     }
                     .buttonStyle(.plain)
+                    .tactilePress(scale: 0.95)
                 }
             }
             .padding(.horizontal, 16)
         }
+    }
+}
+
+// MARK: - Toast Notification Banner
+public struct ToastMessage: Identifiable, Equatable {
+    public let id = UUID()
+    public let title: String
+    public let isSuccess: Bool
+    
+    public init(title: String, isSuccess: Bool = true) {
+        self.title = title
+        self.isSuccess = isSuccess
+    }
+}
+
+public struct ToastOverlay: View {
+    @Binding public var toast: ToastMessage?
+    @ObservedObject private var theme = ThemeManager.shared
+    
+    public var body: some View {
+        VStack {
+            if let t = toast {
+                HStack(spacing: 8) {
+                    Image(systemName: t.isSuccess ? "checkmark.circle.fill" : "exclamationmark.circle.fill")
+                        .foregroundColor(t.isSuccess ? .green : .red)
+                    Text(t.title)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundColor(.primary)
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .background(.ultraThinMaterial)
+                .clipShape(Capsule())
+                .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
+                .shadow(color: Color.black.opacity(0.12), radius: 12, x: 0, y: 6)
+                .transition(.move(edge: .top).combined(with: .opacity))
+                .onAppear {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                        withAnimation(MotionTokens.snappySpring) {
+                            toast = nil
+                        }
+                    }
+                }
+            }
+            Spacer()
+        }
+        .padding(.top, 10)
+        .animation(MotionTokens.snappySpring, value: toast)
     }
 }

@@ -13,6 +13,7 @@ public struct WorkersListView: View {
     @State private var searchText: String = ""
     @State private var selectedStatus: EmploymentStatus? = nil
     @State private var showingAddSheet = false
+    @State private var showingAttendanceSheet = false
     
     public init() {}
     
@@ -38,6 +39,33 @@ public struct WorkersListView: View {
                 theme.backgroundColor.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
+                    // Header Bar with Attendance shortcut
+                    HStack {
+                        Button {
+                            showingAttendanceSheet = true
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "calendar.badge.clock")
+                                    .foregroundColor(theme.accentColor)
+                                Text("Attendance & Leaves (\(store.leaveRequests.filter { $0.status == .pending }.count) Pending)")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(.primary)
+                            }
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 8)
+                            .background(theme.cardBackground)
+                            .clipShape(Capsule())
+                            .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
+                        }
+                        .buttonStyle(.plain)
+                        .tactilePress()
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 6)
+                    .padding(.bottom, 6)
+                    
                     // Search & Filter Bar
                     VStack(spacing: 10) {
                         HStack(spacing: 8) {
@@ -68,7 +96,6 @@ public struct WorkersListView: View {
                             .padding(.horizontal, 16)
                         }
                     }
-                    .padding(.top, 8)
                     .padding(.bottom, 12)
                     
                     if filteredWorkers.isEmpty {
@@ -76,7 +103,7 @@ public struct WorkersListView: View {
                             icon: "person.badge.shield.checkmark",
                             title: searchText.isEmpty ? "No Team Members Added" : "No Matching Team Members",
                             description: searchText.isEmpty
-                                ? "Register developers, designers, and managers to coordinate client projects and disburse payroll."
+                                ? "Register engineers, designers, and managers to coordinate client projects and disburse payroll."
                                 : "No workers match the current search criteria.",
                             actionTitle: searchText.isEmpty ? "Add Worker" : nil
                         ) {
@@ -101,6 +128,8 @@ public struct WorkersListView: View {
                         }
                     }
                 }
+                
+                ToastOverlay(toast: $store.activeToast)
             }
             .navigationTitle("Workers & Payroll")
             .navigationBarTitleDisplayMode(.large)
@@ -118,6 +147,9 @@ public struct WorkersListView: View {
             .sheet(isPresented: $showingAddSheet) {
                 AddEditWorkerView()
             }
+            .sheet(isPresented: $showingAttendanceSheet) {
+                AttendanceAndLeaveView()
+            }
         }
     }
 }
@@ -129,7 +161,6 @@ public struct WorkerRowCard: View {
     public var body: some View {
         GlassCard(padding: 14) {
             HStack(spacing: 14) {
-                // Avatar Circle
                 Text(String(worker.fullName.prefix(2)).uppercased())
                     .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
@@ -143,7 +174,7 @@ public struct WorkerRowCard: View {
                             .font(.system(size: 15, weight: .bold))
                             .foregroundColor(.primary)
                         Text("(\(worker.employeeId))")
-                            .font(.system(size: 11, weight: .bold, design: .monospaced))
+                            .font(TypographyTokens.code)
                             .foregroundColor(.secondary)
                     }
                     Text("\(worker.jobTitle) • \(worker.department)")
@@ -156,6 +187,7 @@ public struct WorkerRowCard: View {
                 VStack(alignment: .trailing, spacing: 3) {
                     Text(FinancialCalculator.shared.formatCurrency(worker.monthlySalary))
                         .font(.system(size: 13, weight: .bold))
+                        .monospacedDigit()
                         .foregroundColor(.primary)
                     StatusBadge(
                         text: worker.employmentStatus.rawValue,
@@ -164,5 +196,6 @@ public struct WorkerRowCard: View {
                 }
             }
         }
+        .tactilePress(scale: MotionTokens.cardPressScale)
     }
 }

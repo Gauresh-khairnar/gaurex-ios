@@ -18,8 +18,13 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == workerId;
     }
     
-    // 1. Business Settings & Organization Core
+    // 1. Business Settings, Goals & Organization Core
     match /businessSettings/{document} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner();
+    }
+    
+    match /businessGoals/{goalId} {
       allow read: if isAuthenticated();
       allow write: if isOwner();
     }
@@ -36,6 +41,12 @@ service cloud.firestore {
       allow delete: if isOwner();
     }
     
+    match /salesLeads/{leadId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isOwner();
+    }
+    
     // 3. Service Package Catalog
     match /packages/{packageId} {
       allow read: if isAuthenticated();
@@ -46,7 +57,7 @@ service cloud.firestore {
     match /invoices/{invoiceId} {
       allow read: if isAuthenticated();
       allow create, update: if isOwner();
-      allow delete: if false; // Invoices are immutable ledgers; use status 'cancelled'
+      allow delete: if false; // Invoices are immutable ledgers
     }
     
     match /payments/{paymentId} {
@@ -55,10 +66,29 @@ service cloud.firestore {
       allow update, delete: if false; // Immutable payment audit trail
     }
     
-    // 5. Workers, Employees & Payroll (Confidential)
+    // 5. Tasks & AI Daily Planner
+    match /tasks/{taskId} {
+      allow read, create, update: if isAuthenticated();
+      allow delete: if isOwner();
+    }
+    
+    // 6. Workers, Employees, Attendance & Payroll (Confidential)
     match /workers/{workerId} {
       allow read: if isOwner() || isAssignedWorker(workerId);
       allow write: if isOwner();
+    }
+    
+    match /attendanceRecords/{attendanceId} {
+      allow read: if isOwner() || (isAuthenticated() && resource.data.workerId == request.auth.uid);
+      allow create, update: if isAuthenticated();
+      allow delete: if isOwner();
+    }
+    
+    match /leaveRequests/{leaveId} {
+      allow read: if isOwner() || (isAuthenticated() && resource.data.workerId == request.auth.uid);
+      allow create: if isAuthenticated();
+      allow update: if isOwner(); // Only Owner/Manager can approve
+      allow delete: if isOwner();
     }
     
     match /payrollRecords/{payrollId} {
@@ -66,26 +96,46 @@ service cloud.firestore {
       allow write: if isOwner();
     }
     
-    // 6. Expenses & Operating Overhead
+    match /salaryHistory/{historyId} {
+      allow read, write: if isOwner();
+    }
+    
+    // 7. Expenses & Operating Overhead
     match /expenses/{expenseId} {
       allow read, write: if isOwner();
     }
     
-    // 7. Projects & Deliverables
+    // 8. Projects & Deliverables
     match /projects/{projectId} {
       allow read: if isAuthenticated();
       allow create, update: if isAuthenticated();
       allow delete: if isOwner();
     }
     
-    // 8. Activity Audit Logs (Write-only / Append-only)
+    // 9. Document Vault
+    match /vaultDocuments/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner();
+    }
+    
+    // 10. Activity Audit Logs (Append-only)
     match /activityLogs/{logId} {
       allow read: if isOwner();
       allow create: if isAuthenticated();
-      allow update, delete: if false; // Append-only tamper-proof log
+      allow update, delete: if false;
     }
     
-    // 9. AI Conversations & Reports
+    // 11. Smart Reminders & Notifications
+    match /reminders/{reminderId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // 12. Integrations Hub
+    match /integrations/{integrationId} {
+      allow read, write: if isOwner();
+    }
+    
+    // 13. AI Conversations & Reports
     match /aiConversations/{conversationId} {
       allow read, write: if isOwner();
     }

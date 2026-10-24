@@ -9,12 +9,18 @@ import SwiftUI
 public struct DashboardView: View {
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
-    // Quick Action Sheets
+    // Quick Action & Deep Dive Sheets
     @State private var showingAddClientSheet = false
     @State private var showingCreateInvoiceSheet = false
     @State private var showingAddWorkerSheet = false
     @State private var showingAddPackageSheet = false
+    @State private var showingProfitCenter = false
+    @State private var showingVoiceAssistant = false
+    
+    @State private var headerAppeared = false
+    
     @Binding public var selectedTab: MainTab
     
     public init(selectedTab: Binding<MainTab>) {
@@ -27,22 +33,32 @@ public struct DashboardView: View {
                 theme.backgroundColor.ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 20) {
+                    VStack(alignment: .leading, spacing: 18) {
                         // MARK: - Header
                         HStack(alignment: .center) {
                             VStack(alignment: .leading, spacing: 4) {
                                 HStack(spacing: 8) {
                                     Text("GAUREX")
-                                        .font(.system(size: 24, weight: .black, design: .rounded))
+                                        .font(TypographyTokens.executiveTitle)
                                         .tracking(1.5)
                                     OwnerBadge()
                                 }
-                                Text("Executive Business Intelligence")
-                                    .font(.system(size: 13, weight: .regular))
+                                Text("Executive Business Operating System")
+                                    .font(TypographyTokens.caption)
                                     .foregroundColor(.secondary)
                             }
                             
                             Spacer()
+                            
+                            Button {
+                                showingVoiceAssistant = true
+                            } label: {
+                                Image(systemName: "waveform.circle.fill")
+                                    .font(.system(size: 28))
+                                    .foregroundColor(theme.accentColor)
+                            }
+                            .buttonStyle(.plain)
+                            .tactilePress()
                             
                             Image("GaurexLogo")
                                 .resizable()
@@ -56,6 +72,7 @@ public struct DashboardView: View {
                         }
                         .padding(.horizontal, 16)
                         .padding(.top, 8)
+                        .opacity(headerAppeared ? 1.0 : 0.0)
                         
                         // MARK: - Date Filter Bar
                         DateFilterBar(selectedFilter: $store.activeDateFilter)
@@ -82,24 +99,34 @@ public struct DashboardView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                             .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.red.opacity(0.3), lineWidth: 1))
                             .padding(.horizontal, 16)
+                            .transition(.move(edge: .top).combined(with: .opacity))
                         }
+                        
+                        // MARK: - Founder Command Center & Business Health Score
+                        FounderCommandCenterView()
+                        
+                        // MARK: - Dedicated Today's Tasks & AI Daily Planner (Module 5)
+                        TodayTasksSectionView()
                         
                         // MARK: - Executive Quick Actions Panel
                         VStack(alignment: .leading, spacing: 10) {
                             Text("EXECUTIVE COMMAND")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .font(TypographyTokens.sectionHeader)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal, 16)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 10) {
+                                    QuickActionButton(title: "Profit Center", icon: "chart.pie.fill", color: .purple) {
+                                        showingProfitCenter = true
+                                    }
                                     QuickActionButton(title: "Add Client", icon: "person.badge.plus", color: .blue) {
                                         showingAddClientSheet = true
                                     }
                                     QuickActionButton(title: "New Invoice", icon: "doc.badge.plus", color: .green) {
                                         showingCreateInvoiceSheet = true
                                     }
-                                    QuickActionButton(title: "Add Worker", icon: "person.2.badge.gearshape", color: .purple) {
+                                    QuickActionButton(title: "Add Worker", icon: "person.2.badge.gearshape", color: .teal) {
                                         showingAddWorkerSheet = true
                                     }
                                     QuickActionButton(title: "Add Package", icon: "shippingbox.fill", color: .orange) {
@@ -115,10 +142,18 @@ public struct DashboardView: View {
                         
                         // MARK: - Primary Financial Metrics Grid
                         VStack(alignment: .leading, spacing: 12) {
-                            Text("FINANCIAL POSITION")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
+                            HStack {
+                                Text("FINANCIAL POSITION")
+                                    .font(TypographyTokens.sectionHeader)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                Button("Deep Dive") {
+                                    showingProfitCenter = true
+                                }
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(theme.accentColor)
+                            }
+                            .padding(.horizontal, 16)
                             
                             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                                 MetricCard(
@@ -157,53 +192,10 @@ public struct DashboardView: View {
                             .padding(.horizontal, 16)
                         }
                         
-                        // MARK: - Operational Metrics Grid
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("OPERATIONS & WORKFORCE")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
-                            
-                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                                MetricCard(
-                                    title: "Total Clients",
-                                    value: "\(store.clients.count)",
-                                    subtitle: "\(store.activeClientsCount) active accounts",
-                                    icon: "person.2.circle.fill",
-                                    accentColor: .indigo
-                                )
-                                
-                                MetricCard(
-                                    title: "Total Workers",
-                                    value: "\(store.workers.count)",
-                                    subtitle: "\(store.totalWorkersCount) active roster",
-                                    icon: "person.badge.shield.checkmark.fill",
-                                    accentColor: .teal
-                                )
-                                
-                                MetricCard(
-                                    title: "Active Projects",
-                                    value: "\(store.activeProjectsCount)",
-                                    subtitle: "Engineering throughput",
-                                    icon: "hammer.circle.fill",
-                                    accentColor: .brown
-                                )
-                                
-                                MetricCard(
-                                    title: "Monthly Payroll",
-                                    value: FinancialCalculator.shared.formatCurrency(store.totalMonthlyPayrollExpenses, symbol: store.settings.currencySymbol),
-                                    subtitle: "Disbursed salaries",
-                                    icon: "banknote.fill",
-                                    accentColor: .cyan
-                                )
-                            }
-                            .padding(.horizontal, 16)
-                        }
-                        
                         // MARK: - Analytics Charts
                         VStack(alignment: .leading, spacing: 12) {
                             Text("BUSINESS ANALYTICS")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .font(TypographyTokens.sectionHeader)
                                 .foregroundColor(.secondary)
                                 .padding(.horizontal, 16)
                             
@@ -211,24 +203,25 @@ public struct DashboardView: View {
                                 .padding(.horizontal, 16)
                         }
                         
-                        // Bottom spacer for floating tab bar
                         Spacer().frame(height: 80)
                     }
                     .padding(.vertical, 8)
                 }
+                
+                // Toast Message Banner
+                ToastOverlay(toast: $store.activeToast)
             }
             .navigationBarHidden(true)
-            .sheet(isPresented: $showingAddClientSheet) {
-                AddEditClientView()
-            }
-            .sheet(isPresented: $showingCreateInvoiceSheet) {
-                CreateInvoiceView()
-            }
-            .sheet(isPresented: $showingAddWorkerSheet) {
-                AddEditWorkerView()
-            }
-            .sheet(isPresented: $showingAddPackageSheet) {
-                AddEditPackageView()
+            .sheet(isPresented: $showingAddClientSheet) { AddEditClientView() }
+            .sheet(isPresented: $showingCreateInvoiceSheet) { CreateInvoiceView() }
+            .sheet(isPresented: $showingAddWorkerSheet) { AddEditWorkerView() }
+            .sheet(isPresented: $showingAddPackageSheet) { AddEditPackageView() }
+            .sheet(isPresented: $showingProfitCenter) { FinanceProfitCenterView() }
+            .sheet(isPresented: $showingVoiceAssistant) { VoiceAssistantOverlay() }
+            .onAppear {
+                withAnimation(MotionTokens.interactiveSpring) {
+                    headerAppeared = true
+                }
             }
         }
     }
@@ -261,5 +254,6 @@ public struct QuickActionButton: View {
             )
         }
         .buttonStyle(.plain)
+        .tactilePress()
     }
 }
