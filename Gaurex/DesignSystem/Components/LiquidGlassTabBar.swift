@@ -66,7 +66,7 @@ public struct LiquidGlassTabBar: View {
     }
     
     private var pendingTasksCount: Int {
-        store.tasks.filter { !$0.isCompleted }.count
+        store.tasks.filter { $0.status == .pending }.count
     }
     
     public var body: some View {
