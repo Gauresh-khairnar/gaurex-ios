@@ -363,34 +363,29 @@ public struct AddEditClientView: View {
                     clientId: newClient.id,
                     clientName: newClient.name,
                     clientEmail: newClient.email,
-                    clientPhone: newClient.phone,
                     clientAddress: newClient.address,
+                    dueDate: dueDate,
                     items: invoiceItems,
                     subtotal: subtotal,
-                    discountType: isPercentageDiscount ? .percentage : .fixedAmount,
-                    discountValue: discountValue,
-                    discountAmount: discountAmount,
-                    taxRate: isTaxable ? taxRate : 0.0,
-                    taxAmount: taxAmount,
+                    discountTotal: discountAmount,
+                    taxTotal: taxAmount,
                     totalAmount: finalTotal,
-                    amountPaid: advancePayment,
-                    balanceDue: balanceDue,
-                    status: (advancePayment >= finalTotal) ? .paid : ((advancePayment > 0) ? .partiallyPaid : .issued),
-                    dueDate: dueDate,
-                    paymentTerms: paymentTerms
+                    advancePaid: 0.0,
+                    balanceDue: finalTotal,
+                    status: .issued,
+                    paymentTerms: paymentTerms,
+                    notes: "Generated automatically upon onboarding \(newClient.name)"
                 )
                 store.addInvoice(invoice)
                 
                 if advancePayment > 0 {
-                    let pmt = PaymentRecord(
-                        invoiceId: invoice.id,
-                        clientId: newClient.id,
-                        amount: advancePayment,
-                        paymentMethod: .bankTransfer,
-                        transactionReference: "ADV-\(UUID().uuidString.prefix(8).uppercased())",
+                    store.recordPayment(
+                        for: invoice.id,
+                        amount: min(advancePayment, finalTotal),
+                        method: .bankTransfer,
+                        reference: "ADV-\(UUID().uuidString.prefix(8).uppercased())",
                         notes: "Advance payment settlement for \(newClient.name)"
                     )
-                    store.recordPayment(pmt)
                 }
             }
         }
