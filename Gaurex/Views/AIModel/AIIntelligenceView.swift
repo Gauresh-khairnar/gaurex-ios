@@ -15,6 +15,7 @@ public struct AIIntelligenceView: View {
     @State private var showingSettingsSheet = false
     @State private var showingVoiceSheet = false
     @State private var showingDocumentExtraction = false
+    @State private var showingClearHistoryAlert = false
     
     let allExecutivePrompts = [
         "🚗 Fortuner 4-Month Target Status",
@@ -107,6 +108,24 @@ public struct AIIntelligenceView: View {
                         .tactilePress()
                         
                         Spacer()
+                        
+                        if !store.aiMessages.isEmpty {
+                            Button {
+                                showingClearHistoryAlert = true
+                            } label: {
+                                HStack(spacing: 3) {
+                                    Image(systemName: "trash")
+                                    Text("Clear History")
+                                }
+                                .font(.system(size: 10, weight: .semibold))
+                                .foregroundColor(.red.opacity(0.85))
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.red.opacity(0.08))
+                                .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                        }
                         
                         Text("Ledger Grounded")
                             .font(.system(size: 10, weight: .bold))
@@ -294,13 +313,37 @@ public struct AIIntelligenceView: View {
             .navigationTitle("AI Advisor")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItemGroup(placement: .navigationBarTrailing) {
+                    if !store.aiMessages.isEmpty {
+                        Button {
+                            showingClearHistoryAlert = true
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundColor(.red.opacity(0.85))
+                        }
+                        .accessibilityLabel("Clear AI History")
+                    }
+                    
                     Button {
                         showingSettingsSheet = true
                     } label: {
                         Image(systemName: "gearshape")
                     }
                 }
+            }
+            .confirmationDialog(
+                "Clear AI History",
+                isPresented: $showingClearHistoryAlert,
+                titleVisibility: .visible
+            ) {
+                Button("Clear All Messages", role: .destructive) {
+                    withAnimation {
+                        store.clearAIMessages()
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to delete all past AI conversations and inquiry history?")
             }
             .sheet(isPresented: $showingSettingsSheet) {
                 AISettingsSheet()

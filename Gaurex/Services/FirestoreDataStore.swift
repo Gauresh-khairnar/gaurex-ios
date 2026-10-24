@@ -225,6 +225,12 @@ public final class FirestoreDataStore: ObservableObject {
     public func saveSettings() { if let data = try? JSONEncoder().encode(settings) { UserDefaults.standard.set(data, forKey: settingsKey) } }
     public func saveAIMessages() { if let data = try? JSONEncoder().encode(aiMessages) { UserDefaults.standard.set(data, forKey: aiMessagesKey) } }
     
+    public func clearAIMessages() {
+        aiMessages = []
+        saveAIMessages()
+        showToast(title: "AI Chat History Cleared")
+    }
+    
     public func saveTasks() { if let data = try? JSONEncoder().encode(tasks) { UserDefaults.standard.set(data, forKey: tasksKey) } }
     public func saveLeads() { if let data = try? JSONEncoder().encode(salesLeads) { UserDefaults.standard.set(data, forKey: leadsKey) } }
     public func saveAttendance() { if let data = try? JSONEncoder().encode(attendanceRecords) { UserDefaults.standard.set(data, forKey: attendanceKey) } }
@@ -535,15 +541,21 @@ public final class FirestoreDataStore: ObservableObject {
     
     // MARK: - Computed Real-Time Business Metrics
     public var totalInvoicedRevenue: Double {
-        invoices.filter { $0.status != .cancelled }.reduce(0.0) { $0 + $1.totalAmount }
+        let invoiceSum = invoices.filter { $0.status != .cancelled }.reduce(0.0) { $0 + $1.totalAmount }
+        let clientDirectInvoiced = clients.filter { $0.status != .archived }.reduce(0.0) { $0 + $1.totalInvoiced }
+        return max(invoiceSum, clientDirectInvoiced)
     }
     
     public var revenueCollected: Double {
-        payments.filter { !$0.isRefunded }.reduce(0.0) { $0 + $1.amount }
+        let paymentSum = payments.filter { !$0.isRefunded }.reduce(0.0) { $0 + $1.amount }
+        let clientDirectCollected = clients.filter { $0.status != .archived }.reduce(0.0) { $0 + $1.totalCollected }
+        return max(paymentSum, clientDirectCollected)
     }
     
     public var outstandingPayments: Double {
-        max(0.0, totalInvoicedRevenue - revenueCollected)
+        let invoiceBalance = max(0.0, totalInvoicedRevenue - revenueCollected)
+        let clientBalance = clients.filter { $0.status != .archived }.reduce(0.0) { $0 + $1.outstandingBalance }
+        return max(invoiceBalance, clientBalance)
     }
     
     public var overdueInvoicesCount: Int {

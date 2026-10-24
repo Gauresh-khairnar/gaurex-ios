@@ -39,55 +39,7 @@ public struct TasksManagementView: View {
                 theme.backgroundColor.ignoresSafeArea()
                 
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        // MARK: - Groq AI Goal Decomposition Banner
-                        GlassCard {
-                            VStack(alignment: .leading, spacing: 10) {
-                                HStack {
-                                    HStack(spacing: 6) {
-                                        Image(systemName: "bolt.fill")
-                                            .foregroundColor(.yellow)
-                                        Text("GROQ ULTRA-FAST SCHEDULER")
-                                            .font(TypographyTokens.caption)
-                                            .foregroundColor(.secondary)
-                                    }
-                                    Spacer()
-                                    OwnerBadge()
-                                }
-                                
-                                Text("Autonomous Goal-to-Daily-Tasks Engine")
-                                    .font(.system(size: 16, weight: .bold))
-                                
-                                Text("Groq's 120B model decomposes your monthly revenue targets into precise tactical steps for today.")
-                                    .font(.system(size: 12))
-                                    .foregroundColor(.secondary)
-                                
-                                Button {
-                                    scheduleWithGroq()
-                                } label: {
-                                    HStack(spacing: 8) {
-                                        if isSchedulingWithGroq {
-                                            ProgressView()
-                                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                        } else {
-                                            Image(systemName: "sparkles")
-                                        }
-                                        Text(isSchedulingWithGroq ? "Decomposing Goals..." : "Decompose Goals into Daily Tasks with Groq AI")
-                                            .font(.system(size: 13, weight: .bold))
-                                    }
-                                    .foregroundColor(.white)
-                                    .frame(maxWidth: .infinity)
-                                    .padding(.vertical, 11)
-                                    .background(Color.primary)
-                                    .clipShape(Capsule())
-                                }
-                                .disabled(isSchedulingWithGroq)
-                                .buttonStyle(.plain)
-                                .tactilePress()
-                            }
-                        }
-                        .padding(.horizontal, 16)
-                        
+                    VStack(alignment: .leading, spacing: 14) {
                         // MARK: - Filter Tabs
                         Picker("Task Filter", selection: $selectedFilter) {
                             Text("Today (\(store.todayTasks.count))").tag(0)
@@ -97,6 +49,7 @@ public struct TasksManagementView: View {
                         }
                         .pickerStyle(.segmented)
                         .padding(.horizontal, 16)
+                        .padding(.top, 4)
                         
                         // MARK: - Task List
                         if displayedTasks.isEmpty {

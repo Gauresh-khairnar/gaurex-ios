@@ -302,6 +302,9 @@ public struct AddEditClientView: View {
             if !notesText.isEmpty {
                 updated.notes.append(ClientNote(content: notesText))
             }
+            updated.totalInvoiced = finalTotal
+            updated.totalCollected = advancePayment
+            updated.outstandingBalance = balanceDue
             store.updateClient(updated)
         } else {
             let newClient = Client(
@@ -324,6 +327,72 @@ public struct AddEditClientView: View {
                 outstandingBalance: balanceDue
             )
             store.addClient(newClient)
+            
+            // If the client has commercial terms or packages, record invoice & advance payment in the financial ledger
+            if finalTotal > 0 {
+                var invoiceItems: [InvoiceItem] = []
+                for pkgId in selectedPackageIds {
+                    if let pkg = store.packages.first(where: { $0.id == pkgId }) {
+                        invoiceItems.append(
+                            InvoiceItem(
+                                packageId: pkg.id,
+                                title: pkg.name,
+                                itemDescription: pkg.description,
+                                quantity: 1,
+                                unitPrice: pkg.basePrice,
+                                discountAmount: 0.0,
+                                taxRate: isTaxable ? taxRate : 0.0
+                            )
+                        )
+                    }
+                }
+                if invoiceItems.isEmpty {
+                    invoiceItems.append(
+                        InvoiceItem(
+                            title: "Contract Initiation Retainer",
+                            itemDescription: "Services for \(companyName.isEmpty ? name : companyName)",
+                            quantity: 1,
+                            unitPrice: taxableAmount,
+                            taxRate: isTaxable ? taxRate : 0.0
+                        )
+                    )
+                }
+                
+                let invoice = Invoice(
+                    invoiceNumber: store.generateNextInvoiceNumber(),
+                    clientId: newClient.id,
+                    clientName: newClient.name,
+                    clientEmail: newClient.email,
+                    clientPhone: newClient.phone,
+                    clientAddress: newClient.address,
+                    items: invoiceItems,
+                    subtotal: subtotal,
+                    discountType: isPercentageDiscount ? .percentage : .fixedAmount,
+                    discountValue: discountValue,
+                    discountAmount: discountAmount,
+                    taxRate: isTaxable ? taxRate : 0.0,
+                    taxAmount: taxAmount,
+                    totalAmount: finalTotal,
+                    amountPaid: advancePayment,
+                    balanceDue: balanceDue,
+                    status: (advancePayment >= finalTotal) ? .paid : ((advancePayment > 0) ? .partiallyPaid : .issued),
+                    dueDate: dueDate,
+                    paymentTerms: paymentTerms
+                )
+                store.addInvoice(invoice)
+                
+                if advancePayment > 0 {
+                    let pmt = PaymentRecord(
+                        invoiceId: invoice.id,
+                        clientId: newClient.id,
+                        amount: advancePayment,
+                        paymentMethod: .bankTransfer,
+                        transactionReference: "ADV-\(UUID().uuidString.prefix(8).uppercased())",
+                        notes: "Advance payment settlement for \(newClient.name)"
+                    )
+                    store.recordPayment(pmt)
+                }
+            }
         }
         
         dismiss()
