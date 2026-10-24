@@ -615,4 +615,38 @@ public final class FirestoreDataStore: ObservableObject {
             taskCompletionRate: taskCompletionRate
         )
     }
+    
+    // Unified AI Analysis Context
+    public var aiAnalysisContext: AIAnalysisContext {
+        let topOverdue = clients
+            .filter { $0.outstandingBalance > 0 }
+            .sorted { $0.outstandingBalance > $1.outstandingBalance }
+            .map { (name: $0.name, balance: $0.outstandingBalance) }
+        
+        let pkgBreakdown = packages.map { pkg in
+            let rev = invoices
+                .filter { $0.status == .paid }
+                .flatMap { $0.items }
+                .filter { $0.packageId == pkg.id }
+                .reduce(0.0) { $0 + $1.total }
+            return (packageName: pkg.name, revenue: rev)
+        }
+        
+        return AIAnalysisContext(
+            totalClients: clients.count,
+            activeClients: activeClientsCount,
+            totalInvoiced: totalInvoicedRevenue,
+            revenueCollected: revenueCollected,
+            outstandingPayments: outstandingPayments,
+            overdueInvoicesCount: overdueInvoicesCount,
+            totalWorkers: totalWorkersCount,
+            monthlyPayrollExpenses: totalMonthlyPayrollExpenses,
+            monthlyOperatingExpenses: totalMonthlyExpenses,
+            netOperatingIncome: netOperatingIncome,
+            activeProjectsCount: activeProjectsCount,
+            currencySymbol: settings.currencySymbol,
+            topOverdueClients: topOverdue,
+            packageRevenueBreakdown: pkgBreakdown
+        )
+    }
 }

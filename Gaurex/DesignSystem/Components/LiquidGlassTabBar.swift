@@ -59,7 +59,6 @@ public struct LiquidGlassTabBar: View {
     @Binding public var selectedTab: MainTab
     @ObservedObject private var theme = ThemeManager.shared
     @ObservedObject private var store = FirestoreDataStore.shared
-    @ObservedObject private var aiService = AIService.shared
     @State private var isExecutiveHUDVisible: Bool = true
     @Namespace private var liquidSliderNamespace
     
@@ -72,7 +71,7 @@ public struct LiquidGlassTabBar: View {
     }
     
     private var currentContext: AIAnalysisContext {
-        aiService.buildAnalysisContext()
+        store.aiAnalysisContext
     }
     
     public var body: some View {
