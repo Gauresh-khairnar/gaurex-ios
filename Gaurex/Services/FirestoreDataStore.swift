@@ -459,15 +459,6 @@ public final class FirestoreDataStore: ObservableObject {
         }
     }
     
-    public func deleteTask(id: String) {
-        if let idx = tasks.firstIndex(where: { $0.id == id }) {
-            let removed = tasks.remove(at: idx)
-            saveTasks()
-            AuditLogger.shared.log(actionType: "DELETE", entityType: "BusinessTask", entityId: id, description: "Deleted task: \(removed.title)")
-            showToast(title: "Task Deleted")
-        }
-    }
-    
     // MARK: - Sales Pipeline Operations
     public func addSalesLead(_ lead: SalesLead) {
         salesLeads.insert(lead, at: 0)
