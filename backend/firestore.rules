@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner() {
+      return isAuthenticated() && 
+        (request.auth.token.role == 'OWNER' || 
+         request.auth.token.email == 'gauresh@gaurex.com' || 
+         request.auth.uid == 'GAURESH_KHAIRNAR_OWNER_UID');
+    }
+    
+    function isAssignedWorker(workerId) {
+      return isAuthenticated() && request.auth.uid == workerId;
+    }
+    
+    // 1. Business Settings & Organization Core
+    match /businessSettings/{document} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner();
+    }
+    
+    match /organizations/{orgId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner();
+    }
+    
+    // 2. Client Management & CRM
+    match /clients/{clientId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isOwner();
+    }
+    
+    // 3. Service Package Catalog
+    match /packages/{packageId} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner();
+    }
+    
+    // 4. Invoices & Transactions (Strict Financial Control)
+    match /invoices/{invoiceId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isOwner();
+      allow delete: if false; // Invoices are immutable ledgers; use status 'cancelled'
+    }
+    
+    match /payments/{paymentId} {
+      allow read: if isOwner();
+      allow create: if isOwner();
+      allow update, delete: if false; // Immutable payment audit trail
+    }
+    
+    // 5. Workers, Employees & Payroll (Confidential)
+    match /workers/{workerId} {
+      allow read: if isOwner() || isAssignedWorker(workerId);
+      allow write: if isOwner();
+    }
+    
+    match /payrollRecords/{payrollId} {
+      allow read: if isOwner() || (isAuthenticated() && resource.data.workerId == request.auth.uid);
+      allow write: if isOwner();
+    }
+    
+    // 6. Expenses & Operating Overhead
+    match /expenses/{expenseId} {
+      allow read, write: if isOwner();
+    }
+    
+    // 7. Projects & Deliverables
+    match /projects/{projectId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isAuthenticated();
+      allow delete: if isOwner();
+    }
+    
+    // 8. Activity Audit Logs (Write-only / Append-only)
+    match /activityLogs/{logId} {
+      allow read: if isOwner();
+      allow create: if isAuthenticated();
+      allow update, delete: if false; // Append-only tamper-proof log
+    }
+    
+    // 9. AI Conversations & Reports
+    match /aiConversations/{conversationId} {
+      allow read, write: if isOwner();
+    }
+  }
+}

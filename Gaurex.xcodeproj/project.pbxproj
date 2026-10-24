@@ -1,0 +1,501 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A00000000000000000000101 /* GaurexApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000100 /* GaurexApp.swift */; };
+		A00000000000000000000103 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000102 /* ThemeManager.swift */; };
+		A00000000000000000000105 /* LiquidGlassTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000104 /* LiquidGlassTabBar.swift */; };
+		A00000000000000000000107 /* DesignComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000106 /* DesignComponents.swift */; };
+		A00000000000000000000109 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000108 /* Package.swift */; };
+		A00000000000000000000111 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000110 /* Client.swift */; };
+		A00000000000000000000113 /* Invoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000112 /* Invoice.swift */; };
+		A00000000000000000000115 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000114 /* Payment.swift */; };
+		A00000000000000000000117 /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000116 /* Worker.swift */; };
+		A00000000000000000000119 /* PayrollRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000118 /* PayrollRecord.swift */; };
+		A00000000000000000000121 /* BusinessSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000120 /* BusinessSettings.swift */; };
+		A00000000000000000000123 /* BusinessEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000122 /* BusinessEntities.swift */; };
+		A00000000000000000000125 /* FinancialCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000124 /* FinancialCalculator.swift */; };
+		A00000000000000000000127 /* PDFGeneratorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000126 /* PDFGeneratorService.swift */; };
+		A00000000000000000000129 /* SecurityServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000128 /* SecurityServices.swift */; };
+		A00000000000000000000131 /* AuditAndBackupServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000130 /* AuditAndBackupServices.swift */; };
+		A00000000000000000000133 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000132 /* AIService.swift */; };
+		A00000000000000000000135 /* FirestoreDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000134 /* FirestoreDataStore.swift */; };
+		A00000000000000000000137 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000136 /* MainTabView.swift */; };
+		A00000000000000000000139 /* ChartsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000138 /* ChartsSectionView.swift */; };
+		A00000000000000000000141 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000140 /* DashboardView.swift */; };
+		A00000000000000000000143 /* ClientsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000142 /* ClientsListView.swift */; };
+		A00000000000000000000145 /* AddEditClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000144 /* AddEditClientView.swift */; };
+		A00000000000000000000147 /* ClientDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000146 /* ClientDetailView.swift */; };
+		A00000000000000000000149 /* InvoicesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000148 /* InvoicesListView.swift */; };
+		A00000000000000000000151 /* CreateInvoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000150 /* CreateInvoiceView.swift */; };
+		A00000000000000000000153 /* PDFPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000152 /* PDFPreviewView.swift */; };
+		A00000000000000000000155 /* InvoiceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000154 /* InvoiceDetailView.swift */; };
+		A00000000000000000000157 /* WorkersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000156 /* WorkersListView.swift */; };
+		A00000000000000000000159 /* AddEditWorkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000158 /* AddEditWorkerView.swift */; };
+		A00000000000000000000161 /* GenerateSalarySlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000160 /* GenerateSalarySlipView.swift */; };
+		A00000000000000000000163 /* WorkerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000162 /* WorkerDetailView.swift */; };
+		A00000000000000000000165 /* AIIntelligenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000164 /* AIIntelligenceView.swift */; };
+		A00000000000000000000167 /* PackageManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000166 /* PackageManagementView.swift */; };
+		A00000000000000000000169 /* BusinessSettingsAndAuditViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000168 /* BusinessSettingsAndAuditViews.swift */; };
+		A00000000000000000000171 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000170 /* SettingsView.swift */; };
+		A00000000000000000000173 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000172 /* Assets.xcassets */; };
+		A00000000000000000000177 /* FinancialCalculationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000176 /* FinancialCalculationsTests.swift */; };
+		A00000000000000000000179 /* PayrollAndPDFTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000178 /* PayrollAndPDFTests.swift */; };
+		A00000000000000000000181 /* SecurityAndBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000180 /* SecurityAndBackupTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A00000000000000000000100 /* GaurexApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/App/GaurexApp.swift"; sourceTree = "<group>"; };
+		A00000000000000000000102 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/DesignSystem/Theme/ThemeManager.swift"; sourceTree = "<group>"; };
+		A00000000000000000000104 /* LiquidGlassTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/DesignSystem/Components/LiquidGlassTabBar.swift"; sourceTree = "<group>"; };
+		A00000000000000000000106 /* DesignComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/DesignSystem/Components/DesignComponents.swift"; sourceTree = "<group>"; };
+		A00000000000000000000108 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Models/Package.swift"; sourceTree = "<group>"; };
+		A00000000000000000000110 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Models/Client.swift"; sourceTree = "<group>"; };
+		A00000000000000000000112 /* Invoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Models/Invoice.swift"; sourceTree = "<group>"; };
+		A00000000000000000000114 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Models/Payment.swift"; sourceTree = "<group>"; };
+		A00000000000000000000116 /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Models/Worker.swift"; sourceTree = "<group>"; };
+		A00000000000000000000118 /* PayrollRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Models/PayrollRecord.swift"; sourceTree = "<group>"; };
+		A00000000000000000000120 /* BusinessSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Models/BusinessSettings.swift"; sourceTree = "<group>"; };
+		A00000000000000000000122 /* BusinessEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Models/BusinessEntities.swift"; sourceTree = "<group>"; };
+		A00000000000000000000124 /* FinancialCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Services/FinancialCalculator.swift"; sourceTree = "<group>"; };
+		A00000000000000000000126 /* PDFGeneratorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Services/PDFGeneratorService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000128 /* SecurityServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Services/SecurityServices.swift"; sourceTree = "<group>"; };
+		A00000000000000000000130 /* AuditAndBackupServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Services/AuditAndBackupServices.swift"; sourceTree = "<group>"; };
+		A00000000000000000000132 /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Services/AIService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000134 /* FirestoreDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Services/FirestoreDataStore.swift"; sourceTree = "<group>"; };
+		A00000000000000000000136 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/MainTabView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000138 /* ChartsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Dashboard/ChartsSectionView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000140 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Dashboard/DashboardView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000142 /* ClientsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Clients/ClientsListView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000144 /* AddEditClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Clients/AddEditClientView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000146 /* ClientDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Clients/ClientDetailView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000148 /* InvoicesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Invoices/InvoicesListView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000150 /* CreateInvoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Invoices/CreateInvoiceView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000152 /* PDFPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Invoices/PDFPreviewView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000154 /* InvoiceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Invoices/InvoiceDetailView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000156 /* WorkersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Workers/WorkersListView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000158 /* AddEditWorkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Workers/AddEditWorkerView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000160 /* GenerateSalarySlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Workers/GenerateSalarySlipView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000162 /* WorkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Workers/WorkerDetailView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000164 /* AIIntelligenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/AIModel/AIIntelligenceView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000166 /* PackageManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Settings/PackageManagementView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000168 /* BusinessSettingsAndAuditViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Settings/BusinessSettingsAndAuditViews.swift"; sourceTree = "<group>"; };
+		A00000000000000000000170 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Gaurex/Views/Settings/SettingsView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000172 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Gaurex/Assets.xcassets"; sourceTree = "<group>"; };
+		A00000000000000000000174 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Gaurex/Info.plist"; sourceTree = "<group>"; };
+		A00000000000000000000175 /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex/Gaurex.entitlements"; sourceTree = "<group>"; };
+		A00000000000000000000176 /* FinancialCalculationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GaurexTests/FinancialCalculationsTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000178 /* PayrollAndPDFTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GaurexTests/PayrollAndPDFTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000180 /* SecurityAndBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GaurexTests/SecurityAndBackupTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000182 /* Gaurex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gaurex.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000183 /* GaurexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GaurexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00000000000000000000193 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000195 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A00000000000000000000190 = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000187 /* Gaurex */,
+				A00000000000000000000188 /* GaurexTests */,
+				A00000000000000000000189 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A00000000000000000000187 /* Gaurex */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000100 /* GaurexApp.swift */,
+				A00000000000000000000102 /* ThemeManager.swift */,
+				A00000000000000000000104 /* LiquidGlassTabBar.swift */,
+				A00000000000000000000106 /* DesignComponents.swift */,
+				A00000000000000000000108 /* Package.swift */,
+				A00000000000000000000110 /* Client.swift */,
+				A00000000000000000000112 /* Invoice.swift */,
+				A00000000000000000000114 /* Payment.swift */,
+				A00000000000000000000116 /* Worker.swift */,
+				A00000000000000000000118 /* PayrollRecord.swift */,
+				A00000000000000000000120 /* BusinessSettings.swift */,
+				A00000000000000000000122 /* BusinessEntities.swift */,
+				A00000000000000000000124 /* FinancialCalculator.swift */,
+				A00000000000000000000126 /* PDFGeneratorService.swift */,
+				A00000000000000000000128 /* SecurityServices.swift */,
+				A00000000000000000000130 /* AuditAndBackupServices.swift */,
+				A00000000000000000000132 /* AIService.swift */,
+				A00000000000000000000134 /* FirestoreDataStore.swift */,
+				A00000000000000000000136 /* MainTabView.swift */,
+				A00000000000000000000138 /* ChartsSectionView.swift */,
+				A00000000000000000000140 /* DashboardView.swift */,
+				A00000000000000000000142 /* ClientsListView.swift */,
+				A00000000000000000000144 /* AddEditClientView.swift */,
+				A00000000000000000000146 /* ClientDetailView.swift */,
+				A00000000000000000000148 /* InvoicesListView.swift */,
+				A00000000000000000000150 /* CreateInvoiceView.swift */,
+				A00000000000000000000152 /* PDFPreviewView.swift */,
+				A00000000000000000000154 /* InvoiceDetailView.swift */,
+				A00000000000000000000156 /* WorkersListView.swift */,
+				A00000000000000000000158 /* AddEditWorkerView.swift */,
+				A00000000000000000000160 /* GenerateSalarySlipView.swift */,
+				A00000000000000000000162 /* WorkerDetailView.swift */,
+				A00000000000000000000164 /* AIIntelligenceView.swift */,
+				A00000000000000000000166 /* PackageManagementView.swift */,
+				A00000000000000000000168 /* BusinessSettingsAndAuditViews.swift */,
+				A00000000000000000000170 /* SettingsView.swift */,
+				A00000000000000000000172 /* Assets.xcassets */,
+				A00000000000000000000174 /* Info.plist */,
+				A00000000000000000000175 /* Gaurex.entitlements */,
+			);
+			path = Gaurex;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000188 /* GaurexTests */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000176 /* FinancialCalculationsTests.swift */,
+				A00000000000000000000178 /* PayrollAndPDFTests.swift */,
+				A00000000000000000000180 /* SecurityAndBackupTests.swift */,
+			);
+			path = GaurexTests;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000189 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000182 /* Gaurex.app */,
+				A00000000000000000000183 /* GaurexTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00000000000000000000184 /* Gaurex */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000204 /* Build configuration list for PBXNativeTarget "Gaurex" */;
+			buildPhases = (
+				A00000000000000000000191 /* Sources */,
+				A00000000000000000000193 /* Frameworks */,
+				A00000000000000000000192 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Gaurex;
+			productName = Gaurex;
+			productReference = A00000000000000000000182 /* Gaurex.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A00000000000000000000185 /* GaurexTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000205 /* Build configuration list for PBXNativeTarget "GaurexTests" */;
+			buildPhases = (
+				A00000000000000000000194 /* Sources */,
+				A00000000000000000000195 /* Frameworks */,
+				A00000000000000000000196 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GaurexTests;
+			productName = GaurexTests;
+			productReference = A00000000000000000000183 /* GaurexTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00000000000000000000186 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					A00000000000000000000184 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					A00000000000000000000185 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A00000000000000000000184;
+					};
+				};
+			};
+			buildConfigurationList = A00000000000000000000203 /* Build configuration list for PBXProject "Gaurex" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A00000000000000000000190;
+			productRefGroup = A00000000000000000000189 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00000000000000000000184 /* Gaurex */,
+				A00000000000000000000185 /* GaurexTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00000000000000000000192 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000173 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000196 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00000000000000000000191 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000101 /* GaurexApp.swift in Sources */,
+				A00000000000000000000103 /* ThemeManager.swift in Sources */,
+				A00000000000000000000105 /* LiquidGlassTabBar.swift in Sources */,
+				A00000000000000000000107 /* DesignComponents.swift in Sources */,
+				A00000000000000000000109 /* Package.swift in Sources */,
+				A00000000000000000000111 /* Client.swift in Sources */,
+				A00000000000000000000113 /* Invoice.swift in Sources */,
+				A00000000000000000000115 /* Payment.swift in Sources */,
+				A00000000000000000000117 /* Worker.swift in Sources */,
+				A00000000000000000000119 /* PayrollRecord.swift in Sources */,
+				A00000000000000000000121 /* BusinessSettings.swift in Sources */,
+				A00000000000000000000123 /* BusinessEntities.swift in Sources */,
+				A00000000000000000000125 /* FinancialCalculator.swift in Sources */,
+				A00000000000000000000127 /* PDFGeneratorService.swift in Sources */,
+				A00000000000000000000129 /* SecurityServices.swift in Sources */,
+				A00000000000000000000131 /* AuditAndBackupServices.swift in Sources */,
+				A00000000000000000000133 /* AIService.swift in Sources */,
+				A00000000000000000000135 /* FirestoreDataStore.swift in Sources */,
+				A00000000000000000000137 /* MainTabView.swift in Sources */,
+				A00000000000000000000139 /* ChartsSectionView.swift in Sources */,
+				A00000000000000000000141 /* DashboardView.swift in Sources */,
+				A00000000000000000000143 /* ClientsListView.swift in Sources */,
+				A00000000000000000000145 /* AddEditClientView.swift in Sources */,
+				A00000000000000000000147 /* ClientDetailView.swift in Sources */,
+				A00000000000000000000149 /* InvoicesListView.swift in Sources */,
+				A00000000000000000000151 /* CreateInvoiceView.swift in Sources */,
+				A00000000000000000000153 /* PDFPreviewView.swift in Sources */,
+				A00000000000000000000155 /* InvoiceDetailView.swift in Sources */,
+				A00000000000000000000157 /* WorkersListView.swift in Sources */,
+				A00000000000000000000159 /* AddEditWorkerView.swift in Sources */,
+				A00000000000000000000161 /* GenerateSalarySlipView.swift in Sources */,
+				A00000000000000000000163 /* WorkerDetailView.swift in Sources */,
+				A00000000000000000000165 /* AIIntelligenceView.swift in Sources */,
+				A00000000000000000000167 /* PackageManagementView.swift in Sources */,
+				A00000000000000000000169 /* BusinessSettingsAndAuditViews.swift in Sources */,
+				A00000000000000000000171 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000194 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000177 /* FinancialCalculationsTests.swift in Sources */,
+				A00000000000000000000179 /* PayrollAndPDFTests.swift in Sources */,
+				A00000000000000000000181 /* SecurityAndBackupTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A00000000000000000000201 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A00000000000000000000202 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A00000000000000000000197 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Gaurex/Gaurex.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = ""Gaurex/Preview Content"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Gaurex/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaurex.dashboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A00000000000000000000198 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Gaurex/Gaurex.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = ""Gaurex/Preview Content"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Gaurex/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaurex.dashboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A00000000000000000000199 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaurex.dashboardTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Gaurex.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Gaurex";
+			};
+			name = Debug;
+		};
+		A00000000000000000000200 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gaurex.dashboardTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Gaurex.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Gaurex";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A00000000000000000000203 /* Build configuration list for PBXProject "Gaurex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000201 /* Debug */,
+				A00000000000000000000202 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000204 /* Build configuration list for PBXNativeTarget "Gaurex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000197 /* Debug */,
+				A00000000000000000000198 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000205 /* Build configuration list for PBXNativeTarget "GaurexTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000199 /* Debug */,
+				A00000000000000000000200 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+	};
+	rootObject = A00000000000000000000186 /* Project object */;
+}

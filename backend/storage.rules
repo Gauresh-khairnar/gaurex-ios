@@ -1,0 +1,31 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner() {
+      return isAuthenticated() && 
+        (request.auth.token.role == 'OWNER' || 
+         request.auth.token.email == 'gauresh@gaurex.com');
+    }
+    
+    // Invoices and receipts
+    match /invoices/{invoiceId}/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner();
+    }
+    
+    match /receipts/{expenseId}/{fileName} {
+      allow read, write: if isOwner();
+    }
+    
+    // Profile pictures & logos
+    match /branding/{fileName} {
+      allow read: if true;
+      allow write: if isOwner();
+    }
+  }
+}
