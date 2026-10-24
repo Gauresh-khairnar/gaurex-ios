@@ -24,6 +24,8 @@ public struct StatusPieSlice: Identifiable {
 public struct ChartsSectionView: View {
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
+    @State private var selectedMetricName: String? = nil
+    @State private var selectedMetricValue: Double? = nil
     
     public init() {}
     
@@ -46,6 +48,35 @@ public struct ChartsSectionView: View {
                             .foregroundColor(theme.accentColor)
                     }
                     
+                    // Liquid Scrubber Tooltip
+                    if let name = selectedMetricName, let val = selectedMetricValue {
+                        HStack(spacing: 8) {
+                            Circle()
+                                .fill(theme.accentColor)
+                                .frame(width: 8, height: 8)
+                            Text(name)
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(.primary)
+                            Spacer()
+                            Text(FinancialCalculator.shared.formatCurrency(val, symbol: store.settings.currencySymbol))
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(theme.accentColor)
+                                .monospacedDigit()
+                                .contentTransition(.numericText())
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background {
+                            Capsule()
+                                .fill(.ultraThinMaterial)
+                                .overlay(
+                                    Capsule()
+                                        .stroke(Color.white.opacity(0.25), lineWidth: 0.8)
+                                )
+                        }
+                        .transition(.scale.combined(with: .opacity))
+                    }
+                    
                     if store.invoices.isEmpty && store.expenses.isEmpty {
                         VStack(spacing: 8) {
                             Image(systemName: "chart.bar.xaxis")
@@ -58,35 +89,80 @@ public struct ChartsSectionView: View {
                         .frame(maxWidth: .infinity)
                         .frame(height: 140)
                     } else {
-                        // Dynamic Swift Chart
+                        // Dynamic Swift Chart with Interactive Selection
                         Chart {
                             BarMark(
-                                x: .value("Category", "Total Invoiced"),
+                                x: .value("Category", "Invoiced"),
                                 y: .value("Amount", store.totalInvoicedRevenue)
                             )
                             .foregroundStyle(Color.blue.gradient)
+                            .opacity(selectedMetricName == nil || selectedMetricName == "Total Invoiced" ? 1.0 : 0.4)
                             
                             BarMark(
                                 x: .value("Category", "Collected"),
                                 y: .value("Amount", store.revenueCollected)
                             )
                             .foregroundStyle(Color.green.gradient)
+                            .opacity(selectedMetricName == nil || selectedMetricName == "Collected Cash" ? 1.0 : 0.4)
                             
                             BarMark(
                                 x: .value("Category", "Expenses"),
                                 y: .value("Amount", store.totalMonthlyExpenses + store.totalMonthlyPayrollExpenses)
                             )
                             .foregroundStyle(Color.red.gradient)
+                            .opacity(selectedMetricName == nil || selectedMetricName == "Operating Expenses" ? 1.0 : 0.4)
                             
                             BarMark(
                                 x: .value("Category", "Net Income"),
                                 y: .value("Amount", max(0, store.netOperatingIncome))
                             )
                             .foregroundStyle(Color.purple.gradient)
+                            .opacity(selectedMetricName == nil || selectedMetricName == "Net Operating Income" ? 1.0 : 0.4)
                         }
                         .frame(height: 180)
                         .chartYAxis {
                             AxisMarks(position: .leading)
+                        }
+                        .chartOverlay { proxy in
+                            GeometryReader { geometry in
+                                Rectangle()
+                                    .fill(Color.clear)
+                                    .contentShape(Rectangle())
+                                    .gesture(
+                                        DragGesture(minimumDistance: 0)
+                                            .onChanged { value in
+                                                let x = value.location.x - geometry[proxy.plotAreaFrame].origin.x
+                                                let width = geometry[proxy.plotAreaFrame].width
+                                                guard width > 0 else { return }
+                                                let segment = Int((x / width) * 4)
+                                                let feedback = UISelectionFeedbackGenerator()
+                                                feedback.selectionChanged()
+                                                
+                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) {
+                                                    switch segment {
+                                                    case 0:
+                                                        selectedMetricName = "Total Invoiced"
+                                                        selectedMetricValue = store.totalInvoicedRevenue
+                                                    case 1:
+                                                        selectedMetricName = "Collected Cash"
+                                                        selectedMetricValue = store.revenueCollected
+                                                    case 2:
+                                                        selectedMetricName = "Operating Expenses"
+                                                        selectedMetricValue = store.totalMonthlyExpenses + store.totalMonthlyPayrollExpenses
+                                                    default:
+                                                        selectedMetricName = "Net Operating Income"
+                                                        selectedMetricValue = max(0, store.netOperatingIncome)
+                                                    }
+                                                }
+                                            }
+                                            .onEnded { _ in
+                                                withAnimation(.easeOut(duration: 0.4).delay(2.0)) {
+                                                    selectedMetricName = nil
+                                                    selectedMetricValue = nil
+                                                }
+                                            }
+                                    )
+                            }
                         }
                     }
                 }

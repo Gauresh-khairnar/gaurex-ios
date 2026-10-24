@@ -66,9 +66,20 @@ public struct GlassCard<Content: View>: View {
                     .fill(theme.cardBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(theme.glassBorderColor, lineWidth: 1)
+                            .stroke(
+                                LinearGradient(
+                                    colors: [
+                                        Color.white.opacity(0.35),
+                                        theme.glassBorderColor,
+                                        Color.white.opacity(0.08)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 1
+                            )
                     )
-                    .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 3)
+                    .shadow(color: Color.black.opacity(0.06), radius: 10, x: 0, y: 4)
             }
     }
 }
@@ -178,9 +189,21 @@ public struct OwnerBadge: View {
                 )
                 .overlay(
                     Capsule()
-                        .stroke(Color(red: 0.95, green: 0.77, blue: 0.25).opacity(0.4), lineWidth: 1)
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    Color(red: 0.95, green: 0.77, blue: 0.25).opacity(0.8),
+                                    Color.white.opacity(0.4),
+                                    Color(red: 0.95, green: 0.77, blue: 0.25).opacity(0.2)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 1
+                        )
                 )
         }
+        .holographicShimmer()
         .accessibilityLabel("Founder and Owner Badge")
     }
 }

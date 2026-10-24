@@ -14,6 +14,8 @@ public struct MainTabView: View {
     
     public var body: some View {
         ZStack(alignment: .bottom) {
+            AuroraLivingBackground()
+            
             Group {
                 switch selectedTab {
                 case .home:

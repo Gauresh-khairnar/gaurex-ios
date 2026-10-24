@@ -31,7 +31,7 @@ public struct DashboardView: View {
     public var body: some View {
         NavigationStack {
             ZStack {
-                theme.backgroundColor.ignoresSafeArea()
+                AuroraLivingBackground()
                 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 18) {

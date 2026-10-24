@@ -146,7 +146,7 @@ public struct VoiceAssistantOverlay: View {
                     
                     Spacer()
                     
-                    // Microphone Activation Button
+                    // Microphone Activation Button with Siri-Style Harmonic Pulsing Orb
                     VStack(spacing: 12) {
                         Button {
                             if voiceService.isListening {
@@ -155,19 +155,13 @@ public struct VoiceAssistantOverlay: View {
                                 voiceService.startListening()
                             }
                         } label: {
-                            ZStack {
-                                Circle()
-                                    .fill(voiceService.isListening ? Color.red : Color.primary)
-                                    .frame(width: 72, height: 72)
-                                    .shadow(color: (voiceService.isListening ? Color.red : Color.primary).opacity(0.3), radius: 12, x: 0, y: 6)
-                                
-                                Image(systemName: voiceService.isListening ? "stop.fill" : "mic.fill")
-                                    .font(.system(size: 26, weight: .semibold))
-                                    .foregroundColor(.white)
-                            }
+                            HarmonicPulsingVoiceOrb(
+                                isListening: voiceService.isListening,
+                                isSpeaking: voiceService.isSpeaking
+                            )
                         }
                         .buttonStyle(.plain)
-                        .tactilePress(scale: 0.92)
+                        .tactilePress(scale: 0.94)
                         
                         if voiceService.isSpeaking {
                             Button {
