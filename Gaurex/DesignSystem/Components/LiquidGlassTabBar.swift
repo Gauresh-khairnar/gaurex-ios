@@ -2,6 +2,7 @@
 //  LiquidGlassTabBar.swift
 //  GAUREX Dashboard
 //  Founder & Owner: Gauresh Khairnar (OWNER)
+//  Authentic Apple iOS 18 Liquid Glass Tab Bar Primitives
 //
 
 import SwiftUI
@@ -57,10 +58,15 @@ public enum MainTab: Int, CaseIterable, Identifiable {
 public struct LiquidGlassTabBar: View {
     @Binding public var selectedTab: MainTab
     @ObservedObject private var theme = ThemeManager.shared
+    @ObservedObject private var store = FirestoreDataStore.shared
     @Namespace private var liquidSliderNamespace
     
     public init(selectedTab: Binding<MainTab>) {
         self._selectedTab = selectedTab
+    }
+    
+    private var pendingTasksCount: Int {
+        store.tasks.filter { !$0.isCompleted }.count
     }
     
     public var body: some View {
@@ -69,23 +75,27 @@ public struct LiquidGlassTabBar: View {
                 let isSelected = selectedTab == tab
                 
                 Button {
-                    let impact = UIImpactFeedbackGenerator(style: .light)
-                    impact.impactOccurred()
-                    withAnimation(.spring(response: 0.36, dampingFraction: 0.72, blendDuration: 0.15)) {
+                    let feedback = UISelectionFeedbackGenerator()
+                    feedback.selectionChanged()
+                    withAnimation(.spring(response: 0.34, dampingFraction: 0.74, blendDuration: 0.12)) {
                         selectedTab = tab
                     }
                 } label: {
                     ZStack {
-                        // Original Apple liquid slider pill
+                        // Apple Viscoelastic Liquid Slider Pill
                         if isSelected {
                             Capsule()
-                                .fill(theme.cardBackground.opacity(0.92))
+                                .fill(.thinMaterial)
+                                .overlay(
+                                    Capsule()
+                                        .fill(theme.accentColor.opacity(0.14))
+                                )
                                 .overlay(
                                     Capsule()
                                         .stroke(
                                             LinearGradient(
                                                 colors: [
-                                                    Color.white.opacity(0.40),
+                                                    Color.white.opacity(0.55),
                                                     theme.accentColor.opacity(0.35),
                                                     Color.white.opacity(0.15)
                                                 ],
@@ -95,24 +105,39 @@ public struct LiquidGlassTabBar: View {
                                             lineWidth: 1
                                         )
                                 )
-                                .overlay(
-                                    Capsule()
-                                        .fill(theme.accentColor.opacity(0.14))
-                                )
-                                .matchedGeometryEffect(id: "ORIGINAL_APPLE_LIQUID_SLIDER", in: liquidSliderNamespace)
+                                .matchedGeometryEffect(id: "APPLE_LIQUID_SLIDER_ACTIVE_PILL", in: liquidSliderNamespace)
                                 .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
                                 .shadow(color: theme.accentColor.opacity(0.15), radius: 6, x: 0, y: 1)
                         }
                         
                         VStack(spacing: 3) {
-                            Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
-                                .font(.system(size: 17, weight: isSelected ? .bold : .medium))
-                                .foregroundColor(isSelected ? theme.accentColor : Color.primary.opacity(0.65))
+                            ZStack(alignment: .topTrailing) {
+                                Group {
+                                    if #available(iOS 17.0, *) {
+                                        Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
+                                            .font(.system(size: 17, weight: isSelected ? .semibold : .medium))
+                                            .symbolEffect(.bounce, value: isSelected)
+                                            .contentTransition(.symbolEffect(.replace))
+                                    } else {
+                                        Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
+                                            .font(.system(size: 17, weight: isSelected ? .semibold : .medium))
+                                    }
+                                }
+                                .foregroundColor(isSelected ? theme.accentColor : Color(uiColor: .secondaryLabel))
                                 .scaleEffect(isSelected ? 1.08 : 1.0)
+                                
+                                // Tab badge for pending tasks
+                                if tab == .tasks && pendingTasksCount > 0 {
+                                    Circle()
+                                        .fill(theme.accentColor)
+                                        .frame(width: 6, height: 6)
+                                        .offset(x: 5, y: -2)
+                                }
+                            }
                             
                             Text(tab.title)
-                                .font(.system(size: 9, weight: isSelected ? .bold : .medium))
-                                .foregroundColor(isSelected ? theme.accentColor : Color.primary.opacity(0.65))
+                                .font(.system(size: 9.5, weight: isSelected ? .bold : .medium))
+                                .foregroundColor(isSelected ? theme.accentColor : Color(uiColor: .secondaryLabel))
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.85)
                         }
@@ -128,6 +153,7 @@ public struct LiquidGlassTabBar: View {
         .padding(.horizontal, 4)
         .padding(.vertical, 3)
         .background {
+            // Apple Native Liquid Glass Container
             Capsule()
                 .fill(.ultraThinMaterial)
                 .overlay(
@@ -135,17 +161,17 @@ public struct LiquidGlassTabBar: View {
                         .stroke(
                             LinearGradient(
                                 colors: [
-                                    Color.white.opacity(0.35),
+                                    Color.white.opacity(0.40),
                                     Color.white.opacity(0.12),
                                     Color.clear
                                 ],
                                 startPoint: .top,
                                 endPoint: .bottom
                             ),
-                            lineWidth: 1
+                            lineWidth: 0.8
                         )
                 )
-                .shadow(color: Color.black.opacity(0.16), radius: 20, x: 0, y: 8)
+                .shadow(color: Color.black.opacity(0.15), radius: 18, x: 0, y: 8)
         }
         .padding(.horizontal, 8)
         .padding(.bottom, 6)
