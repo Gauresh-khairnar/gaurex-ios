@@ -157,7 +157,7 @@ public struct WorkersListView: View {
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Are you sure you want to permanently delete '\(workerToDelete?.name ?? "this worker")'? This action cannot be undone.")
+                Text("Are you sure you want to permanently delete '\(workerToDelete?.fullName ?? "this worker")'? This action cannot be undone.")
             }
             .navigationTitle("Workers & Payroll")
             .navigationBarTitleDisplayMode(.large)

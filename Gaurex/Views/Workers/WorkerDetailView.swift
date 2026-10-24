@@ -7,6 +7,7 @@
 import SwiftUI
 
 public struct WorkerDetailView: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
     
@@ -239,7 +240,7 @@ public struct WorkerDetailView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Are you sure you want to permanently delete '\(currentWorker.name)'? This action cannot be undone.")
+            Text("Are you sure you want to permanently delete '\(currentWorker.fullName)'? This action cannot be undone.")
         }
     }
 }

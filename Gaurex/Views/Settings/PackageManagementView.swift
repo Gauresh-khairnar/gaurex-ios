@@ -10,8 +10,8 @@ public struct PackageManagementView: View {
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
     @State private var showingAddSheet = false
-    @State private var selectedPackage: ServicePackage? = nil
-    @State private var packageToDelete: ServicePackage? = nil
+    @State private var selectedPackage: BusinessPackage? = nil
+    @State private var packageToDelete: BusinessPackage? = nil
     @State private var showingDeletePackageAlert = false
     
     public init() {}

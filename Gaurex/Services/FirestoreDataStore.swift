@@ -541,7 +541,7 @@ public final class FirestoreDataStore: ObservableObject {
     }
     public func deleteWorker(id: String) {
         if let idx = workers.firstIndex(where: { $0.id == id }) {
-            let name = workers[idx].name
+            let name = workers[idx].fullName
             workers.remove(at: idx)
             saveWorkers()
             AuditLogger.shared.log(actionType: "DELETE", entityType: "Worker", entityId: id, description: "Permanently deleted team member: \(name)")

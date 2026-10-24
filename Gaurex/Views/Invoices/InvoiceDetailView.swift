@@ -7,6 +7,7 @@
 import SwiftUI
 
 public struct InvoiceDetailView: View {
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
     
