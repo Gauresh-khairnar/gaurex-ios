@@ -57,63 +57,107 @@ public enum MainTab: Int, CaseIterable, Identifiable {
 public struct LiquidGlassTabBar: View {
     @Binding public var selectedTab: MainTab
     @ObservedObject private var theme = ThemeManager.shared
-    @Namespace private var tabAnimationNamespace
     
     // 5 primary Apple-style tabs (Home, Tasks, Clients, Finance, AI Advisor)
-    private let displayTabs: [MainTab] = [.home, .tasks, .clients, .finance, .aiModel]
+    public let displayTabs: [MainTab] = [.home, .tasks, .clients, .finance, .aiModel]
+    
+    @State private var previousTabIndex: Int = 0
+    @State private var isLiquidStretching: Bool = false
+    @State private var stretchDirection: CGFloat = 1.0 // 1: right, -1: left
     
     public init(selectedTab: Binding<MainTab>) {
         self._selectedTab = selectedTab
     }
     
+    private var activeIndex: Int {
+        displayTabs.firstIndex(of: selectedTab) ?? 0
+    }
+    
     public var body: some View {
-        HStack(spacing: 0) {
-            ForEach(displayTabs) { tab in
-                let isSelected = selectedTab == tab
+        GeometryReader { geo in
+            let totalWidth = geo.size.width
+            let tabCount = CGFloat(displayTabs.count)
+            let itemWidth = totalWidth / tabCount
+            let pillWidth = itemWidth - 6
+            let pillHeight: CGFloat = 46
+            let targetX = CGFloat(activeIndex) * itemWidth + 3
+            
+            ZStack(alignment: .leading) {
+                // MARK: - Apple Liquid Slider Pill (Viscoelastic Fluid Morphing)
+                Capsule()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                theme.accentColor.opacity(0.24),
+                                theme.accentColor.opacity(0.12)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .overlay(
+                        Capsule()
+                            .stroke(
+                                LinearGradient(
+                                    colors: [
+                                        theme.accentColor.opacity(0.65),
+                                        theme.accentColor.opacity(0.25),
+                                        Color.white.opacity(0.40)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                ),
+                                lineWidth: 1.2
+                            )
+                    )
+                    .shadow(color: theme.accentColor.opacity(0.28), radius: 10, x: 0, y: 3)
+                    .frame(width: pillWidth, height: pillHeight)
+                    // Viscoelastic stretch during movement
+                    .scaleEffect(
+                        x: isLiquidStretching ? 1.24 : 1.0,
+                        y: isLiquidStretching ? 0.90 : 1.0,
+                        anchor: stretchDirection > 0 ? .leading : .trailing
+                    )
+                    .offset(x: targetX, y: 4)
+                    .animation(.interpolatingSpring(mass: 0.7, stiffness: 280, damping: 20), value: activeIndex)
+                    .animation(.spring(response: 0.28, dampingFraction: 0.65), value: isLiquidStretching)
                 
-                Button {
-                    let impact = UIImpactFeedbackGenerator(style: .light)
-                    impact.impactOccurred()
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.72)) {
-                        selectedTab = tab
-                    }
-                } label: {
-                    ZStack {
-                        // Apple-style active oval/capsule glow
-                        if isSelected {
-                            Capsule()
-                                .fill(theme.accentColor.opacity(0.18))
-                                .overlay(
-                                    Capsule()
-                                        .stroke(theme.accentColor.opacity(0.35), lineWidth: 1)
-                                )
-                                .matchedGeometryEffect(id: "ACTIVE_TAB_PILL", in: tabAnimationNamespace)
-                                .shadow(color: theme.accentColor.opacity(0.12), radius: 8, x: 0, y: 2)
-                        }
+                // MARK: - Interactive Tab Items
+                HStack(spacing: 0) {
+                    ForEach(displayTabs) { tab in
+                        let isSelected = selectedTab == tab
                         
-                        VStack(spacing: 3) {
-                            Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
-                                .font(.system(size: 19, weight: isSelected ? .semibold : .medium))
-                                .foregroundColor(isSelected ? theme.accentColor : Color.primary.opacity(0.65))
-                                .scaleEffect(isSelected ? 1.08 : 1.0)
-                            
-                            Text(tab.title)
-                                .font(.system(size: 10, weight: isSelected ? .bold : .medium))
-                                .foregroundColor(isSelected ? theme.accentColor : Color.primary.opacity(0.65))
-                                .lineLimit(1)
+                        Button {
+                            switchTab(to: tab)
+                        } label: {
+                            VStack(spacing: 3) {
+                                Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
+                                    .font(.system(size: 19, weight: isSelected ? .bold : .medium))
+                                    .foregroundColor(isSelected ? theme.accentColor : Color.primary.opacity(0.60))
+                                    .scaleEffect(isSelected ? 1.12 : 1.0)
+                                    .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSelected)
+                                
+                                Text(tab.title)
+                                    .font(.system(size: 10.5, weight: isSelected ? .bold : .medium, design: .rounded))
+                                    .foregroundColor(isSelected ? theme.accentColor : Color.primary.opacity(0.60))
+                                    .lineLimit(1)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 52)
+                            .contentShape(Rectangle())
                         }
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity)
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("\(tab.title) Tab")
                     }
-                    .frame(height: 52)
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel("\(tab.title) Tab")
             }
+            .frame(height: 54)
         }
+        .frame(height: 54)
         .padding(.horizontal, 6)
         .padding(.vertical, 4)
         .background {
+            // Apple Floating Frosted Liquid Glass Capsule
             Capsule()
                 .fill(.ultraThinMaterial)
                 .overlay(
@@ -121,8 +165,9 @@ public struct LiquidGlassTabBar: View {
                         .stroke(
                             LinearGradient(
                                 colors: [
-                                    Color.white.opacity(0.35),
-                                    Color.white.opacity(0.12),
+                                    Color.white.opacity(0.40),
+                                    Color.white.opacity(0.15),
+                                    Color.white.opacity(0.04),
                                     Color.clear
                                 ],
                                 startPoint: .top,
@@ -131,9 +176,36 @@ public struct LiquidGlassTabBar: View {
                             lineWidth: 1
                         )
                 )
-                .shadow(color: Color.black.opacity(0.14), radius: 20, x: 0, y: 8)
+                .overlay(
+                    Capsule()
+                        .stroke(Color.white.opacity(0.08), lineWidth: 0.5)
+                        .padding(1)
+                )
+                .shadow(color: Color.black.opacity(0.16), radius: 24, x: 0, y: 10)
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)
+    }
+    
+    private func switchTab(to newTab: MainTab) {
+        guard selectedTab != newTab else { return }
+        
+        let oldIdx = activeIndex
+        let newIdx = displayTabs.firstIndex(of: newTab) ?? 0
+        
+        stretchDirection = newIdx >= oldIdx ? 1.0 : -1.0
+        isLiquidStretching = true
+        
+        // Apple Taptic feedback
+        let feedback = UIImpactFeedbackGenerator(style: .medium)
+        feedback.impactOccurred()
+        
+        selectedTab = newTab
+        previousTabIndex = newIdx
+        
+        // Reset fluid stretch after slide
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            isLiquidStretching = false
+        }
     }
 }
