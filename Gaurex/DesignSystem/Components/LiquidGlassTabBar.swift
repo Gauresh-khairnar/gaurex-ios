@@ -31,7 +31,7 @@ public enum MainTab: Int, CaseIterable, Identifiable {
     
     public var iconName: String {
         switch self {
-        case .home: return "square.grid.2x2"
+        case .home: return "house"
         case .tasks: return "checklist"
         case .finance: return "chart.pie"
         case .clients: return "person.2"
@@ -43,7 +43,7 @@ public enum MainTab: Int, CaseIterable, Identifiable {
     
     public var selectedIconName: String {
         switch self {
-        case .home: return "square.grid.2x2.fill"
+        case .home: return "house.fill"
         case .tasks: return "checklist.checked"
         case .finance: return "chart.pie.fill"
         case .clients: return "person.2.fill"
@@ -59,62 +59,81 @@ public struct LiquidGlassTabBar: View {
     @ObservedObject private var theme = ThemeManager.shared
     @Namespace private var tabAnimationNamespace
     
+    // 5 primary Apple-style tabs (Home, Tasks, Clients, Finance, AI Advisor)
+    private let displayTabs: [MainTab] = [.home, .tasks, .clients, .finance, .aiModel]
+    
     public init(selectedTab: Binding<MainTab>) {
         self._selectedTab = selectedTab
     }
     
     public var body: some View {
-        HStack(spacing: 2) {
-            ForEach(MainTab.allCases) { tab in
+        HStack(spacing: 0) {
+            ForEach(displayTabs) { tab in
+                let isSelected = selectedTab == tab
+                
                 Button {
-                    MotionTokens.selection()
-                    withAnimation(MotionTokens.interactiveSpring) {
+                    let impact = UIImpactFeedbackGenerator(style: .light)
+                    impact.impactOccurred()
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.72)) {
                         selectedTab = tab
                     }
                 } label: {
-                    VStack(spacing: 3) {
-                        Image(systemName: selectedTab == tab ? tab.selectedIconName : tab.iconName)
-                            .font(.system(size: 16, weight: selectedTab == tab ? .semibold : .regular))
-                            .foregroundColor(selectedTab == tab ? theme.accentColor : .secondary)
-                            .scaleEffect(selectedTab == tab ? 1.08 : 1.0)
-                        
-                        Text(tab.title)
-                            .font(.system(size: 8.5, weight: selectedTab == tab ? .bold : .medium))
-                            .foregroundColor(selectedTab == tab ? .primary : .secondary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.8)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 7)
-                    .background {
-                        if selectedTab == tab {
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(theme.cardBackground.opacity(0.88))
-                                .matchedGeometryEffect(id: "ACTIVE_TAB_PILL", in: tabAnimationNamespace)
+                    ZStack {
+                        // Apple-style active oval/capsule glow
+                        if isSelected {
+                            Capsule()
+                                .fill(theme.accentColor.opacity(0.18))
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                        .stroke(theme.glassBorderColor, lineWidth: 1)
+                                    Capsule()
+                                        .stroke(theme.accentColor.opacity(0.35), lineWidth: 1)
                                 )
-                                .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
+                                .matchedGeometryEffect(id: "ACTIVE_TAB_PILL", in: tabAnimationNamespace)
+                                .shadow(color: theme.accentColor.opacity(0.12), radius: 8, x: 0, y: 2)
                         }
+                        
+                        VStack(spacing: 3) {
+                            Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
+                                .font(.system(size: 19, weight: isSelected ? .semibold : .medium))
+                                .foregroundColor(isSelected ? theme.accentColor : Color.primary.opacity(0.65))
+                                .scaleEffect(isSelected ? 1.08 : 1.0)
+                            
+                            Text(tab.title)
+                                .font(.system(size: 10, weight: isSelected ? .bold : .medium))
+                                .foregroundColor(isSelected ? theme.accentColor : Color.primary.opacity(0.65))
+                                .lineLimit(1)
+                        }
+                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity)
                     }
+                    .frame(height: 52)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("\(tab.title) Tab")
             }
         }
         .padding(.horizontal, 6)
-        .padding(.vertical, 5)
+        .padding(.vertical, 4)
         .background {
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
+            Capsule()
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 24, style: .continuous)
-                        .stroke(theme.glassBorderColor, lineWidth: 1)
+                    Capsule()
+                        .stroke(
+                            LinearGradient(
+                                colors: [
+                                    Color.white.opacity(0.35),
+                                    Color.white.opacity(0.12),
+                                    Color.clear
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ),
+                            lineWidth: 1
+                        )
                 )
-                .shadow(color: Color.black.opacity(0.12), radius: 16, x: 0, y: 8)
+                .shadow(color: Color.black.opacity(0.14), radius: 20, x: 0, y: 8)
         }
-        .padding(.horizontal, 10)
-        .padding(.bottom, 6)
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
     }
 }

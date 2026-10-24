@@ -18,6 +18,7 @@ public struct DashboardView: View {
     @State private var showingAddPackageSheet = false
     @State private var showingProfitCenter = false
     @State private var showingVoiceAssistant = false
+    @State private var showingSettingsSheet = false
     
     @State private var headerAppeared = false
     
@@ -56,6 +57,20 @@ public struct DashboardView: View {
                                 Image(systemName: "waveform.circle.fill")
                                     .font(.system(size: 28))
                                     .foregroundColor(theme.accentColor)
+                            }
+                            .buttonStyle(.plain)
+                            .tactilePress()
+                            
+                            Button {
+                                showingSettingsSheet = true
+                            } label: {
+                                Image(systemName: "slider.horizontal.3")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.primary)
+                                    .frame(width: 38, height: 38)
+                                    .background(theme.cardBackground)
+                                    .clipShape(Circle())
+                                    .overlay(Circle().stroke(theme.glassBorderColor, lineWidth: 1))
                             }
                             .buttonStyle(.plain)
                             .tactilePress()
@@ -218,6 +233,7 @@ public struct DashboardView: View {
             .sheet(isPresented: $showingAddPackageSheet) { AddEditPackageView() }
             .sheet(isPresented: $showingProfitCenter) { FinanceProfitCenterView() }
             .sheet(isPresented: $showingVoiceAssistant) { VoiceAssistantOverlay() }
+            .sheet(isPresented: $showingSettingsSheet) { SettingsView() }
             .onAppear {
                 withAnimation(MotionTokens.interactiveSpring) {
                     headerAppeared = true

@@ -125,7 +125,12 @@ public struct TodayTasksSectionView: View {
 public struct TaskRowCard: View {
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
+    @State private var showingDeleteAlert = false
     public var task: BusinessTask
+    
+    public init(task: BusinessTask) {
+        self.task = task
+    }
     
     public var body: some View {
         GlassCard(padding: 12) {
@@ -165,6 +170,45 @@ public struct TaskRowCard: View {
                 Spacer()
                 
                 StatusBadge(text: task.priority.rawValue, color: task.priority == .urgent ? .red : (task.priority == .high ? .orange : .blue))
+                
+                // Delete button
+                Button {
+                    showingDeleteAlert = true
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.system(size: 13))
+                        .foregroundColor(.red.opacity(0.75))
+                        .padding(6)
+                        .background(Color.red.opacity(0.08))
+                        .clipShape(Circle())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .confirmationDialog(
+            "Delete Task",
+            isPresented: $showingDeleteAlert,
+            titleVisibility: .visible
+        ) {
+            Button("Delete Task", role: .destructive) {
+                withAnimation {
+                    store.deleteTask(id: task.id)
+                }
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Are you sure you want to delete \"\(task.title)\"? This cannot be undone.")
+        }
+        .contextMenu {
+            Button(role: .destructive) {
+                showingDeleteAlert = true
+            } label: {
+                Label("Delete Task", systemImage: "trash")
+            }
+            Button {
+                store.toggleTaskCompletion(id: task.id)
+            } label: {
+                Label(task.status == .completed ? "Mark as Pending" : "Mark as Complete", systemImage: task.status == .completed ? "circle" : "checkmark.circle")
             }
         }
     }

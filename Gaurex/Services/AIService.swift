@@ -21,6 +21,23 @@ public struct AIAnalysisContext {
     public let currencySymbol: String
     public let topOverdueClients: [(name: String, balance: Double)]
     public let packageRevenueBreakdown: [(packageName: String, revenue: Double)]
+    
+    // Personalized Founder Target (Toyota Fortuner Milestone)
+    public let founderName: String = "Gauresh Khairnar (OWNER)"
+    public let fortunerTargetAmount: Double = 5000000.0 // ₹50,00,000 / $60,000
+    public let fortunerTargetMonthsTotal: Int = 4
+    public var fortunerRemainingAmount: Double {
+        max(0.0, fortunerTargetAmount - revenueCollected)
+    }
+    public var fortunerRequiredMonthlyRunRate: Double {
+        fortunerRemainingAmount / 4.0
+    }
+    public var fortunerRequiredDailyRunRate: Double {
+        fortunerRemainingAmount / 120.0
+    }
+    public var fortunerCompletionPercentage: Double {
+        min(1.0, max(0.0, revenueCollected / fortunerTargetAmount))
+    }
 }
 
 public final class AIService: ObservableObject {
@@ -41,7 +58,8 @@ public final class AIService: ObservableObject {
     public var defaultGroqApiKey: String {
         Self.defaultRuntimeGroqKey
     }
-    public let defaultGroqModel = "openai/gpt-oss-120b"
+    public let defaultGroqModel = "llama-3.3-70b-versatile"
+    public let fallbackGroqModel = "llama-3.1-8b-instant"
     
     private init() {
         // Ensure default Groq key is initialized in Keychain if empty
@@ -93,10 +111,19 @@ public final class AIService: ObservableObject {
         lastAnalysisError = nil
         
         let systemPrompt = """
-        You are the GAUREX Executive AI Advisor for Founder & Owner Gauresh Khairnar (OWNER).
+        You are the personal GAUREX Executive AI Advisor & Strategist built exclusively for Founder & Owner Gauresh Khairnar (OWNER).
         GAUREX is an enterprise technology development company.
         
-        Current Authentic Financial & Operational Snapshot:
+        CRITICAL FOUNDER MISSION & 4-MONTH TARGET:
+        Gauresh Khairnar has established a clear, non-negotiable target: To purchase a brand new TOYOTA FORTUNER within the next 4 months!
+        - Total Target Capital: \(context.currencySymbol)50,00,000 (₹50 Lakhs)
+        - Timeline: 4 Months (120 Days remaining)
+        - Required Monthly Pace: \(context.currencySymbol)\(String(format: "%.2f", context.fortunerRequiredMonthlyRunRate)) / month
+        - Required Daily Pace: \(context.currencySymbol)\(String(format: "%.2f", context.fortunerRequiredDailyRunRate)) / day
+        - Actual Collected Capital: \(context.currencySymbol)\(String(format: "%.2f", context.revenueCollected)) (\(String(format: "%.1f", context.fortunerCompletionPercentage * 100))% achieved)
+        - Capital Remaining to Fortuner: \(context.currencySymbol)\(String(format: "%.2f", context.fortunerRemainingAmount))
+        
+        AUTHENTIC OPERATIONAL & FINANCIAL SNAPSHOT:
         - Total Clients: \(context.totalClients) (\(context.activeClients) Active)
         - Total Invoiced Revenue: \(context.currencySymbol)\(String(format: "%.2f", context.totalInvoiced))
         - Actual Collected Revenue: \(context.currencySymbol)\(String(format: "%.2f", context.revenueCollected))
@@ -108,10 +135,11 @@ public final class AIService: ObservableObject {
         - Active Projects: \(context.activeProjectsCount)
         - Active Team Members: \(context.totalWorkers)
         
-        Rules:
-        1. Always maintain executive, concise, highly strategic tone.
-        2. Never invent fake revenue or fake clients. Clearly distinguish verified ledger facts from estimates.
-        3. Provide concrete executive recommendations.
+        EXECUTIVE COACHING DIRECTIVES:
+        1. Always address Gauresh Khairnar directly with executive sharpness, discipline, and ambitious tactical clarity.
+        2. Keep the 4-Month Toyota Fortuner milestone front-and-center. Evaluate every inquiry against what actions will generate the required \(context.currencySymbol)\(String(format: "%.0f", context.fortunerRequiredDailyRunRate))/day run-rate to secure the Fortuner on time.
+        3. Never invent fictitious numbers or imaginary clients. Ground all insights directly on the verified ledger numbers.
+        4. Provide concrete steps: which overdue accounts to collect, how many high-ticket packages (e.g. ₹5,00,000 retainers) are needed to bridge the remaining capital gap, and what Gauresh should execute today.
         """
         
         guard let url = URL(string: "https://api.groq.com/openai/v1/chat/completions") else {
@@ -315,15 +343,61 @@ public final class AIService: ObservableObject {
         var rec: String? = nil
         var isForecast = false
         
-        if lower.contains("collected revenue") || lower.contains("revenue this month") {
-            answer = "Verified ledger: GAUREX has collected **\(sym)\(String(format: "%.2f", context.revenueCollected))** from client settlements. Total invoiced pipeline is **\(sym)\(String(format: "%.2f", context.totalInvoiced))**."
-            rec = "Follow up with pending accounts to convert \(sym)\(String(format: "%.2f", context.outstandingPayments)) into liquid cash."
+        let remaining = context.fortunerRemainingAmount
+        let dailyPace = context.fortunerRequiredDailyRunRate
+        let monthlyPace = context.fortunerRequiredMonthlyRunRate
+        let pct = context.fortunerCompletionPercentage * 100.0
+        
+        if lower.contains("fortuner") || lower.contains("target") || lower.contains("4 month") || lower.contains("goal") {
+            isForecast = true
+            answer = """
+            ### 🚗 4-Month Toyota Fortuner Milestone Report
+            **Executive:** Gauresh Khairnar (OWNER)  
+            **Capital Target:** **\(sym)50,00,000** (Toyota Fortuner)  
+            **Timeline:** **4 Months (120 Days sprint)**
+            
+            ---
+            
+            #### 📊 Milestone Progress:
+            • **Collected to Date:** **\(sym)\(String(format: "%.2f", context.revenueCollected))** (\(String(format: "%.1f", pct))% reached)  
+            • **Remaining Gap:** **\(sym)\(String(format: "%.2f", remaining))**  
+            • **Required Monthly Run-Rate:** **\(sym)\(String(format: "%.2f", monthlyPace)) / month**  
+            • **Required Daily Pace:** **\(sym)\(String(format: "%.2f", dailyPace)) / day**  
+            
+            ---
+            
+            #### 🎯 Tactical Plan to Secure the Fortuner:
+            1. **Convert Outstanding Receivables:** Immediately collect **\(sym)\(String(format: "%.2f", context.outstandingPayments))** from pending client balances.
+            2. **Enterprise Package Closures:** Closing **\(max(1, Int(ceil(remaining / 500000)))) enterprise retainers** at \(sym)5,00,000 each fully bridges the capital gap.
+            3. **Daily Action Discipline:** Execute scheduled sales follow-ups today to maintain the \(sym)\(String(format: "%.0f", dailyPace))/day run-rate.
+            """
+            rec = "Collect \(sym)\(String(format: "%.2f", context.outstandingPayments)) in pending client receivables to immediately accelerate toward the Fortuner."
+        } else if lower.contains("collected revenue") || lower.contains("revenue") || lower.contains("money") {
+            answer = "Verified ledger: GAUREX has collected **\(sym)\(String(format: "%.2f", context.revenueCollected))** in actual liquid cash. Total invoiced pipeline stands at **\(sym)\(String(format: "%.2f", context.totalInvoiced))** with **\(sym)\(String(format: "%.2f", context.outstandingPayments))** pending collection."
+            rec = "Collecting outstanding balances pushes you \(sym)\(String(format: "%.2f", context.outstandingPayments)) closer to your 4-month Fortuner milestone."
         } else if lower.contains("overdue") {
             answer = "There are currently **\(context.overdueInvoicesCount)** overdue invoices totaling **\(sym)\(String(format: "%.2f", context.outstandingPayments))**."
-            rec = "Dispatch automated WhatsApp/email statements."
+            rec = "Issue immediate payment notices to recover pending funds for the Fortuner reserve."
+        } else if lower.contains("expense") || lower.contains("cost") || lower.contains("payroll") {
+            answer = "Monthly operating expenses are **\(sym)\(String(format: "%.2f", context.monthlyOperatingExpenses))** and worker payroll commitment is **\(sym)\(String(format: "%.2f", context.monthlyPayrollExpenses))**. Net operating income is **\(sym)\(String(format: "%.2f", context.netOperatingIncome))**."
+            rec = "Maintain lean operating overhead to protect profit margins for your capital targets."
+        } else if lower.contains("prioritize") || lower.contains("today") || lower.contains("plan") {
+            answer = """
+            ### 🎯 Executive Daily Battle Plan for Gauresh Khairnar:
+            1. **High-Value Client Outreach:** Contact top active prospects to pitch enterprise retainer packages.
+            2. **Cash Settlement:** Follow up on the **\(sym)\(String(format: "%.2f", context.outstandingPayments))** pending receivables.
+            3. **Daily Run-Rate:** Secure at least **\(sym)\(String(format: "%.0f", dailyPace))** today to stay on pace for the 4-month Toyota Fortuner deadline.
+            """
+            rec = "Executing these 3 priorities keeps your daily Fortuner run-rate strictly on schedule."
         } else {
-            answer = "GAUREX Executive Assistant: Active Clients: \(context.activeClients) | Collected: \(sym)\(String(format: "%.2f", context.revenueCollected)) | Net Operating Income: \(sym)\(String(format: "%.2f", context.netOperatingIncome))."
-            rec = "Ask to breakdown revenue, overdue accounts, or schedule daily goal tasks."
+            answer = """
+            **GAUREX Executive AI Advisor for Gauresh Khairnar (OWNER):**
+            • **Active Clients:** \(context.activeClients)
+            • **Collected Revenue:** \(sym)\(String(format: "%.2f", context.revenueCollected))
+            • **Net Operating Income:** \(sym)\(String(format: "%.2f", context.netOperatingIncome))
+            • **4-Month Fortuner Goal:** \(sym)50,00,000 (\(sym)\(String(format: "%.2f", remaining)) remaining at \(sym)\(String(format: "%.0f", dailyPace))/day)
+            """
+            rec = "Ask for Fortuner progress, revenue breakdowns, or daily action steps."
         }
         
         let msg = AIMessage(

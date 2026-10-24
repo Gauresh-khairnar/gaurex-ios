@@ -113,13 +113,26 @@ public final class FirestoreDataStore: ObservableObject {
             savePackages()
         }
         
-        // Initial Goals for Founder Gauresh Khairnar
+        // Initial Goals for Founder Gauresh Khairnar (OWNER)
         if businessGoals.isEmpty {
             businessGoals = [
                 BusinessGoal(
+                    title: "Toyota Fortuner Milestone (4-Month Target)",
+                    metricType: .cashCollections,
+                    targetValue: 5000000.0,
+                    currentValue: 0.0,
+                    deadline: Calendar.current.date(byAdding: .month, value: 4, to: Date()) ?? Date(),
+                    blockers: ["Requires maintaining ₹41,666/day collection pace"],
+                    recommendedActions: [
+                        "Close high-value enterprise retainer contracts (₹5L+ each)",
+                        "Convert outstanding client balances into collected cash",
+                        "Maintain ₹12,50,000 monthly collected revenue target"
+                    ]
+                ),
+                BusinessGoal(
                     title: "Monthly Revenue Target",
                     metricType: .monthlyRevenue,
-                    targetValue: 1000000.0,
+                    targetValue: 1250000.0,
                     currentValue: 0.0,
                     blockers: ["Pending enterprise contract signatures"],
                     recommendedActions: ["Close negotiation with active pipeline leads"]
@@ -141,6 +154,24 @@ public final class FirestoreDataStore: ObservableObject {
                     recommendedActions: ["Maintain cloud infrastructure within allocated limits"]
                 )
             ]
+            saveGoals()
+        } else if !businessGoals.contains(where: { $0.title.contains("Fortuner") }) {
+            businessGoals.insert(
+                BusinessGoal(
+                    title: "Toyota Fortuner Milestone (4-Month Target)",
+                    metricType: .cashCollections,
+                    targetValue: 5000000.0,
+                    currentValue: 0.0,
+                    deadline: Calendar.current.date(byAdding: .month, value: 4, to: Date()) ?? Date(),
+                    blockers: ["Requires maintaining ₹41,666/day collection pace"],
+                    recommendedActions: [
+                        "Close high-value enterprise retainer contracts (₹5L+ each)",
+                        "Convert outstanding client balances into collected cash",
+                        "Maintain ₹12,50,000 monthly collected revenue target"
+                    ]
+                ),
+                at: 0
+            )
             saveGoals()
         }
         
@@ -403,6 +434,15 @@ public final class FirestoreDataStore: ObservableObject {
         }
     }
     
+    public func deleteTask(id: String) {
+        if let idx = tasks.firstIndex(where: { $0.id == id }) {
+            let removed = tasks.remove(at: idx)
+            saveTasks()
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "BusinessTask", entityId: id, description: "Deleted task: \(removed.title)")
+            showToast(title: "Task Deleted")
+        }
+    }
+    
     public func toggleTaskCompletion(id: String) {
         if let idx = tasks.firstIndex(where: { $0.id == id }) {
             withAnimation(MotionTokens.snappySpring) {
@@ -416,6 +456,15 @@ public final class FirestoreDataStore: ObservableObject {
                 }
             }
             saveTasks()
+        }
+    }
+    
+    public func deleteTask(id: String) {
+        if let idx = tasks.firstIndex(where: { $0.id == id }) {
+            let removed = tasks.remove(at: idx)
+            saveTasks()
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "BusinessTask", entityId: id, description: "Deleted task: \(removed.title)")
+            showToast(title: "Task Deleted")
         }
     }
     

@@ -17,14 +17,13 @@ public struct AIIntelligenceView: View {
     @State private var showingDocumentExtraction = false
     
     let allExecutivePrompts = [
+        "🚗 Fortuner 4-Month Target Status",
+        "🔥 What deals will get my Fortuner fastest?",
+        "💰 Remaining run-rate needed per day for Fortuner",
         "How much money did we actually collect this month?",
-        "What are our total recorded expenses?",
-        "Which invoices are overdue?",
+        "Which invoices are overdue right now?",
         "Which deals need follow-up today?",
-        "What tasks are overdue?",
-        "How much payroll is due this month?",
-        "Are we on track to reach our revenue target?",
-        "What should I prioritize today?",
+        "What should Gauresh prioritize today?",
         "Generate this week's business performance report."
     ]
     
@@ -138,6 +137,68 @@ public struct AIIntelligenceView: View {
                                 }
                                 .padding(.horizontal, 16)
                                 .padding(.top, 6)
+                                
+                                // Fortuner 4-Month Target Sprint Tracker Card
+                                GlassCard {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        HStack {
+                                            HStack(spacing: 6) {
+                                                Image(systemName: "car.fill")
+                                                    .font(.system(size: 15))
+                                                    .foregroundColor(.yellow)
+                                                Text("4-MONTH TOYOTA FORTUNER TARGET")
+                                                    .font(TypographyTokens.caption)
+                                                    .foregroundColor(.yellow)
+                                            }
+                                            Spacer()
+                                            OwnerBadge()
+                                        }
+                                        
+                                        HStack(alignment: .firstTextBaseline) {
+                                            Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.revenueCollected))")
+                                                .font(.system(size: 20, weight: .bold))
+                                            Text("of \(currentContext.currencySymbol)50,00,000")
+                                                .font(.system(size: 12))
+                                                .foregroundColor(.secondary)
+                                            Spacer()
+                                            Text("\(String(format: "%.1f", currentContext.fortunerCompletionPercentage * 100))%")
+                                                .font(.system(size: 14, weight: .bold))
+                                                .foregroundColor(.yellow)
+                                        }
+                                        
+                                        ProgressView(value: currentContext.fortunerCompletionPercentage)
+                                            .tint(.yellow)
+                                        
+                                        HStack {
+                                            Text("Remaining: \(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.fortunerRemainingAmount))")
+                                                .font(.system(size: 11, weight: .semibold))
+                                                .foregroundColor(.secondary)
+                                            Spacer()
+                                            Text("Required: \(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.fortunerRequiredDailyRunRate))/day")
+                                                .font(.system(size: 11, weight: .bold))
+                                                .foregroundColor(theme.accentColor)
+                                        }
+                                        
+                                        Button {
+                                            sendMessage(text: "🚗 Fortuner 4-Month Target Status")
+                                        } label: {
+                                            HStack {
+                                                Text("Generate Fortuner Tactical Sprint Plan")
+                                                Spacer()
+                                                Image(systemName: "arrow.right.circle.fill")
+                                            }
+                                            .font(.system(size: 11.5, weight: .bold))
+                                            .foregroundColor(.black)
+                                            .padding(.horizontal, 12)
+                                            .padding(.vertical, 7)
+                                            .background(Color.yellow)
+                                            .clipShape(Capsule())
+                                        }
+                                        .buttonStyle(.plain)
+                                        .padding(.top, 2)
+                                    }
+                                }
+                                .padding(.horizontal, 16)
                                 
                                 // Suggested Quick Questions
                                 VStack(alignment: .leading, spacing: 8) {
