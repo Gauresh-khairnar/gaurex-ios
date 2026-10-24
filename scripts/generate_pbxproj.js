@@ -397,7 +397,6 @@ ${testSourcesBuildPhase.join('\n')}
 				CODE_SIGN_ENTITLEMENTS = Gaurex/Gaurex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "Gaurex/Preview Content";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Gaurex/Info.plist;
@@ -421,7 +420,6 @@ ${testSourcesBuildPhase.join('\n')}
 				CODE_SIGN_ENTITLEMENTS = Gaurex/Gaurex.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "Gaurex/Preview Content";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = Gaurex/Info.plist;
