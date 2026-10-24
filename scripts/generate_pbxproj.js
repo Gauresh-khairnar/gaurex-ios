@@ -92,7 +92,8 @@ for (const f of files) {
   const fId = nextId();
   const bId = nextId();
   const baseName = path.basename(f);
-  fileRefs.push(`\t\t${fId} /* ${baseName} */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "${f}"; sourceTree = "<group>"; };`);
+  const relPath = f.replace(/^Gaurex\//, '');
+  fileRefs.push(`\t\t${fId} /* ${baseName} */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "${relPath}"; sourceTree = "<group>"; };`);
   buildFiles.push(`\t\t${bId} /* ${baseName} in Sources */ = {isa = PBXBuildFile; fileRef = ${fId} /* ${baseName} */; };`);
   mainGroupChildren.push(`\t\t\t\t${fId} /* ${baseName} */,`);
   sourcesBuildPhase.push(`\t\t\t\t${bId} /* ${baseName} in Sources */,`);
@@ -101,18 +102,18 @@ for (const f of files) {
 // Assets
 const assetsFileId = nextId();
 const assetsBuildId = nextId();
-fileRefs.push(`\t\t${assetsFileId} /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Gaurex/Assets.xcassets"; sourceTree = "<group>"; };`);
+fileRefs.push(`\t\t${assetsFileId} /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };`);
 buildFiles.push(`\t\t${assetsBuildId} /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ${assetsFileId} /* Assets.xcassets */; };`);
 mainGroupChildren.push(`\t\t\t\t${assetsFileId} /* Assets.xcassets */,`);
 
 // Info.plist
 const plistId = nextId();
-fileRefs.push(`\t\t${plistId} /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Gaurex/Info.plist"; sourceTree = "<group>"; };`);
+fileRefs.push(`\t\t${plistId} /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };`);
 mainGroupChildren.push(`\t\t\t\t${plistId} /* Info.plist */,`);
 
 // Entitlements
 const entId = nextId();
-fileRefs.push(`\t\t${entId} /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex/Gaurex.entitlements"; sourceTree = "<group>"; };`);
+fileRefs.push(`\t\t${entId} /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex.entitlements"; sourceTree = "<group>"; };`);
 mainGroupChildren.push(`\t\t\t\t${entId} /* Gaurex.entitlements */,`);
 
 // Test Files
@@ -120,7 +121,8 @@ for (const tf of testFiles) {
   const fId = nextId();
   const bId = nextId();
   const baseName = path.basename(tf);
-  fileRefs.push(`\t\t${fId} /* ${baseName} */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "${tf}"; sourceTree = "<group>"; };`);
+  const relPath = tf.replace(/^GaurexTests\//, '');
+  fileRefs.push(`\t\t${fId} /* ${baseName} */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "${relPath}"; sourceTree = "<group>"; };`);
   buildFiles.push(`\t\t${bId} /* ${baseName} in Sources */ = {isa = PBXBuildFile; fileRef = ${fId} /* ${baseName} */; };`);
   testGroupChildren.push(`\t\t\t\t${fId} /* ${baseName} */,`);
   testSourcesBuildPhase.push(`\t\t\t\t${bId} /* ${baseName} in Sources */,`);
