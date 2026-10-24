@@ -298,3 +298,47 @@ public struct SettingsView: View {
         }
     }
 }
+
+public struct SettingsMenuRow: View {
+    public let icon: String
+    public let title: String
+    public let subtitle: String
+    public let color: Color
+    
+    public init(icon: String, title: String, subtitle: String, color: Color) {
+        self.icon = icon
+        self.title = title
+        self.subtitle = subtitle
+        self.color = color
+    }
+    
+    public var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(color)
+                .frame(width: 28, height: 28)
+                .background(color.opacity(0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.primary)
+                Text(subtitle)
+                    .font(.system(size: 11))
+                    .foregroundColor(.secondary)
+                    .lineLimit(1)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundColor(.secondary)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
+    }
+}

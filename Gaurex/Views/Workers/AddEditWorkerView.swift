@@ -164,8 +164,7 @@ public struct AddEditWorkerView: View {
                     workerId: existing.id,
                     workerName: fullName,
                     previousSalary: existing.monthlySalary,
-                    newSalary: monthlySalary,
-                    effectiveDate: Date(),
+                    updatedSalary: monthlySalary,
                     reason: "Executive Compensation Adjustment"
                 )
                 store.salaryHistory.insert(hist, at: 0)

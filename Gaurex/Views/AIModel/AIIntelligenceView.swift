@@ -333,3 +333,101 @@ public struct AIMessageBubble: View {
         .transition(.opacity.combined(with: .scale(scale: 0.98)))
     }
 }
+
+public struct AISettingsSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var theme: ThemeManager
+    @State private var selectedModel: String = "openai/gpt-oss-120b"
+    @State private var customApiKey: String = ""
+    @State private var statusMessage: String = ""
+    @State private var isTesting: Bool = false
+    
+    private let availableModels = [
+        "openai/gpt-oss-120b",
+        "llama-3.3-70b-versatile",
+        "llama-3.1-8b-instant",
+        "mixtral-8x7b-32768"
+    ]
+    
+    public init() {}
+    
+    public var body: some View {
+        NavigationStack {
+            Form {
+                Section(header: Text("Model Engine")) {
+                    Picker("Active Model", selection: $selectedModel) {
+                        ForEach(availableModels, id: \.self) { model in
+                            Text(model).tag(model)
+                        }
+                    }
+                }
+                
+                Section(header: Text("API Credentials"), footer: Text("Custom credentials override the built-in GAUREX enterprise AI key.")) {
+                    SecureField("Custom Groq API Key (Optional)", text: $customApiKey)
+                    
+                    Button {
+                        testConnection()
+                    } label: {
+                        HStack {
+                            Text("Test Connectivity")
+                            Spacer()
+                            if isTesting {
+                                ProgressView()
+                            }
+                        }
+                    }
+                    .disabled(isTesting)
+                    
+                    if !statusMessage.isEmpty {
+                        Text(statusMessage)
+                            .font(.system(size: 12))
+                            .foregroundColor(statusMessage.contains("Success") ? .green : .red)
+                    }
+                }
+                
+                Section(header: Text("Executive Context")) {
+                    HStack {
+                        Text("Authorized User")
+                        Spacer()
+                        Text("Gauresh Khairnar (OWNER)")
+                            .foregroundColor(.secondary)
+                    }
+                    HStack {
+                        Text("Engine")
+                        Spacer()
+                        Text("Groq Cloud Ultra-Low Latency")
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .navigationTitle("AI Intelligence Settings")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        if !customApiKey.isEmpty {
+                            _ = KeychainService.shared.saveSecret(key: "gaurex_ai_api_key", value: customApiKey)
+                        }
+                        dismiss()
+                    }
+                }
+            }
+            .onAppear {
+                if let key = KeychainService.shared.readSecret(key: "gaurex_ai_api_key"), !key.isEmpty {
+                    customApiKey = key
+                }
+            }
+        }
+    }
+    
+    private func testConnection() {
+        isTesting = true
+        statusMessage = ""
+        AIService.shared.testConnection(provider: "groq", model: selectedModel) { success, msg in
+            DispatchQueue.main.async {
+                isTesting = false
+                statusMessage = success ? "Success: Connected to Groq API" : "Error: \(msg)"
+            }
+        }
+    }
+}

@@ -13,72 +13,24 @@ function nextId() {
   return uuid(counter++);
 }
 
-const files = [
-  'Gaurex/App/GaurexApp.swift',
-  'Gaurex/App/AppLaunchExperienceView.swift',
-  'Gaurex/DesignSystem/Theme/ThemeManager.swift',
-  'Gaurex/DesignSystem/Theme/MotionTokens.swift',
-  'Gaurex/DesignSystem/Theme/TypographyTokens.swift',
-  'Gaurex/DesignSystem/Components/LiquidGlassTabBar.swift',
-  'Gaurex/DesignSystem/Components/DesignComponents.swift',
-  'Gaurex/Models/Package.swift',
-  'Gaurex/Models/Client.swift',
-  'Gaurex/Models/Invoice.swift',
-  'Gaurex/Models/Payment.swift',
-  'Gaurex/Models/Worker.swift',
-  'Gaurex/Models/PayrollRecord.swift',
-  'Gaurex/Models/BusinessSettings.swift',
-  'Gaurex/Models/BusinessEntities.swift',
-  'Gaurex/Models/Task.swift',
-  'Gaurex/Models/SalesLead.swift',
-  'Gaurex/Models/AttendanceAndLeave.swift',
-  'Gaurex/Models/DocumentVaultItem.swift',
-  'Gaurex/Models/BusinessGoal.swift',
-  'Gaurex/Models/ExtendedBusinessModels.swift',
-  'Gaurex/Services/FinancialCalculator.swift',
-  'Gaurex/Services/PDFGeneratorService.swift',
-  'Gaurex/Services/SecurityServices.swift',
-  'Gaurex/Services/AuditAndBackupServices.swift',
-  'Gaurex/Services/AIService.swift',
-  'Gaurex/Services/FirestoreDataStore.swift',
-  'Gaurex/Services/TaskPlannerService.swift',
-  'Gaurex/Services/DocumentExtractionService.swift',
-  'Gaurex/Services/VoiceAssistantService.swift',
-  'Gaurex/Services/SmartReminderService.swift',
-  'Gaurex/Views/MainTabView.swift',
-  'Gaurex/Views/Dashboard/ChartsSectionView.swift',
-  'Gaurex/Views/Dashboard/DashboardView.swift',
-  'Gaurex/Views/Dashboard/FinanceProfitCenterView.swift',
-  'Gaurex/Views/Dashboard/TodayTasksSectionView.swift',
-  'Gaurex/Views/Dashboard/FounderCommandCenterView.swift',
-  'Gaurex/Views/Clients/ClientsListView.swift',
-  'Gaurex/Views/Clients/AddEditClientView.swift',
-  'Gaurex/Views/Clients/ClientDetailView.swift',
-  'Gaurex/Views/Clients/SalesPipelineView.swift',
-  'Gaurex/Views/Invoices/InvoicesListView.swift',
-  'Gaurex/Views/Invoices/CreateInvoiceView.swift',
-  'Gaurex/Views/Invoices/PDFPreviewView.swift',
-  'Gaurex/Views/Invoices/InvoiceDetailView.swift',
-  'Gaurex/Views/Workers/WorkersListView.swift',
-  'Gaurex/Views/Workers/AddEditWorkerView.swift',
-  'Gaurex/Views/Workers/GenerateSalarySlipView.swift',
-  'Gaurex/Views/Workers/WorkerDetailView.swift',
-  'Gaurex/Views/Workers/AttendanceAndLeaveView.swift',
-  'Gaurex/Views/AIModel/AIIntelligenceView.swift',
-  'Gaurex/Views/AIModel/VoiceAssistantOverlay.swift',
-  'Gaurex/Views/Settings/PackageManagementView.swift',
-  'Gaurex/Views/Settings/BusinessSettingsAndAuditViews.swift',
-  'Gaurex/Views/Settings/DocumentVaultView.swift',
-  'Gaurex/Views/Settings/IntegrationsAndCurrencyViews.swift',
-  'Gaurex/Views/Settings/SettingsView.swift'
-];
+function scanSwiftFiles(dir) {
+  let results = [];
+  if (!fs.existsSync(dir)) return results;
+  const entries = fs.readdirSync(dir);
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry);
+    const stat = fs.statSync(fullPath);
+    if (stat.isDirectory()) {
+      results = results.concat(scanSwiftFiles(fullPath));
+    } else if (entry.endsWith('.swift')) {
+      results.push(fullPath.replace(/\\/g, '/'));
+    }
+  }
+  return results.sort();
+}
 
-const testFiles = [
-  'GaurexTests/FinancialCalculationsTests.swift',
-  'GaurexTests/PayrollAndPDFTests.swift',
-  'GaurexTests/SecurityAndBackupTests.swift',
-  'GaurexTests/ExtendedModulesTests.swift'
-];
+const files = scanSwiftFiles('Gaurex');
+const testFiles = scanSwiftFiles('GaurexTests');
 
 let buildFiles = [];
 let fileRefs = [];
@@ -505,4 +457,4 @@ ${testSourcesBuildPhase.join('\n')}
 `;
 
 fs.writeFileSync(path.join(xcodeDir, 'project.pbxproj'), pbx);
-console.log('Gaurex.xcodeproj/project.pbxproj successfully regenerated with 57 files.');
+console.log(`Gaurex.xcodeproj/project.pbxproj successfully regenerated with ${files.length} files.`);
