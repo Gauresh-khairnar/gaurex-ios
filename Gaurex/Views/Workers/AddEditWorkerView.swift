@@ -159,6 +159,20 @@ public struct AddEditWorkerView: View {
         )
         
         if let existing = workerToEdit {
+            if existing.monthlySalary != monthlySalary {
+                let hist = SalaryHistoryRecord(
+                    workerId: existing.id,
+                    workerName: fullName,
+                    previousSalary: existing.monthlySalary,
+                    newSalary: monthlySalary,
+                    effectiveDate: Date(),
+                    reason: "Executive Compensation Adjustment"
+                )
+                store.salaryHistory.insert(hist, at: 0)
+                store.saveSalaryHistory()
+                AuditLogger.shared.log(actionType: "SALARY_UPDATE", entityType: "Worker", entityId: existing.id, description: "Salary updated from \(existing.monthlySalary) to \(monthlySalary)")
+            }
+            
             var updated = existing
             updated.fullName = fullName
             updated.employeeId = employeeId

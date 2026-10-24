@@ -8,19 +8,23 @@ import SwiftUI
 
 public enum MainTab: Int, CaseIterable, Identifiable {
     case home = 0
-    case clients = 1
-    case workers = 2
-    case aiModel = 3
-    case settings = 4
+    case tasks = 1
+    case finance = 2
+    case clients = 3
+    case workers = 4
+    case aiModel = 5
+    case settings = 6
     
     public var id: Int { rawValue }
     
     public var title: String {
         switch self {
         case .home: return "Home"
+        case .tasks: return "Tasks"
+        case .finance: return "Finance"
         case .clients: return "Clients"
-        case .workers: return "Workers"
-        case .aiModel: return "AI Model"
+        case .workers: return "Team"
+        case .aiModel: return "AI Advisor"
         case .settings: return "Settings"
         }
     }
@@ -28,6 +32,8 @@ public enum MainTab: Int, CaseIterable, Identifiable {
     public var iconName: String {
         switch self {
         case .home: return "square.grid.2x2"
+        case .tasks: return "checklist"
+        case .finance: return "chart.pie"
         case .clients: return "person.2"
         case .workers: return "person.badge.shield.checkmark"
         case .aiModel: return "sparkles"
@@ -38,6 +44,8 @@ public enum MainTab: Int, CaseIterable, Identifiable {
     public var selectedIconName: String {
         switch self {
         case .home: return "square.grid.2x2.fill"
+        case .tasks: return "checklist.checked"
+        case .finance: return "chart.pie.fill"
         case .clients: return "person.2.fill"
         case .workers: return "person.badge.shield.checkmark.fill"
         case .aiModel: return "sparkles"
@@ -56,34 +64,35 @@ public struct LiquidGlassTabBar: View {
     }
     
     public var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 2) {
             ForEach(MainTab.allCases) { tab in
                 Button {
-                    let impact = UIImpactFeedbackGenerator(style: .light)
-                    impact.impactOccurred()
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.72)) {
+                    MotionTokens.selection()
+                    withAnimation(MotionTokens.interactiveSpring) {
                         selectedTab = tab
                     }
                 } label: {
-                    VStack(spacing: 4) {
+                    VStack(spacing: 3) {
                         Image(systemName: selectedTab == tab ? tab.selectedIconName : tab.iconName)
-                            .font(.system(size: 18, weight: selectedTab == tab ? .semibold : .regular))
+                            .font(.system(size: 16, weight: selectedTab == tab ? .semibold : .regular))
                             .foregroundColor(selectedTab == tab ? theme.accentColor : .secondary)
                             .scaleEffect(selectedTab == tab ? 1.08 : 1.0)
                         
                         Text(tab.title)
-                            .font(.system(size: 10, weight: selectedTab == tab ? .bold : .medium))
+                            .font(.system(size: 8.5, weight: selectedTab == tab ? .bold : .medium))
                             .foregroundColor(selectedTab == tab ? .primary : .secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 7)
                     .background {
                         if selectedTab == tab {
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .fill(theme.cardBackground.opacity(0.85))
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(theme.cardBackground.opacity(0.88))
                                 .matchedGeometryEffect(id: "ACTIVE_TAB_PILL", in: tabAnimationNamespace)
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
                                         .stroke(theme.glassBorderColor, lineWidth: 1)
                                 )
                                 .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 3)
@@ -91,20 +100,21 @@ public struct LiquidGlassTabBar: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("\(tab.title) Tab")
             }
         }
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 5)
         .background {
-            RoundedRectangle(cornerRadius: 26, style: .continuous)
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
                         .stroke(theme.glassBorderColor, lineWidth: 1)
                 )
                 .shadow(color: Color.black.opacity(0.12), radius: 16, x: 0, y: 8)
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 10)
         .padding(.bottom, 6)
     }
 }

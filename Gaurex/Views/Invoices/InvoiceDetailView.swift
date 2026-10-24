@@ -230,20 +230,40 @@ public struct InvoiceDetailView: View {
                                     GlassCard(padding: 12) {
                                         HStack {
                                             VStack(alignment: .leading, spacing: 2) {
-                                                Text(payment.paymentMethod.rawValue)
-                                                    .font(.system(size: 13, weight: .semibold))
+                                                HStack(spacing: 6) {
+                                                    Text(payment.paymentMethod.rawValue)
+                                                        .font(.system(size: 13, weight: .semibold))
+                                                    if payment.isRefunded {
+                                                        StatusBadge(text: "REFUNDED", color: .red)
+                                                    }
+                                                }
                                                 Text("Ref: \(payment.transactionReference.isEmpty ? "Direct" : payment.transactionReference)")
                                                     .font(.system(size: 11))
                                                     .foregroundColor(.secondary)
+                                                if let reason = payment.refundReason, payment.isRefunded {
+                                                    Text("Reason: \(reason)")
+                                                        .font(.system(size: 10))
+                                                        .foregroundColor(.red.opacity(0.8))
+                                                }
                                             }
                                             Spacer()
                                             VStack(alignment: .trailing, spacing: 2) {
                                                 Text(FinancialCalculator.shared.formatCurrency(payment.amount))
                                                     .font(.system(size: 13, weight: .bold))
-                                                    .foregroundColor(.green)
+                                                    .foregroundColor(payment.isRefunded ? .secondary : .green)
+                                                    .strikethrough(payment.isRefunded, color: .secondary)
                                                 Text(payment.paymentDate, style: .date)
                                                     .font(.system(size: 10))
                                                     .foregroundColor(.secondary)
+                                                
+                                                if !payment.isRefunded {
+                                                    Button("Refund") {
+                                                        store.refundPayment(paymentId: payment.id, reason: "Customer requested reversal")
+                                                    }
+                                                    .font(.system(size: 10, weight: .bold))
+                                                    .foregroundColor(.red)
+                                                    .padding(.top, 2)
+                                                }
                                             }
                                         }
                                     }
@@ -251,6 +271,26 @@ public struct InvoiceDetailView: View {
                             }
                             .padding(.horizontal, 16)
                         }
+                    }
+                    
+                    // Cancel Invoice Option
+                    if currentInvoice.status != .cancelled && currentInvoice.status != .paid {
+                        Button(role: .destructive) {
+                            store.cancelInvoice(id: currentInvoice.id, reason: "Voided by Owner")
+                        } label: {
+                            HStack {
+                                Image(systemName: "xmark.circle.fill")
+                                Text("Cancel & Void Invoice")
+                            }
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 12)
+                            .background(Color.red.opacity(0.08))
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal, 16)
                     }
                     
                     // Bottom Spacer

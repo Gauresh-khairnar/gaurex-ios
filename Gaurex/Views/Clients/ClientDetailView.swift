@@ -245,10 +245,18 @@ public struct ClientDetailView: View {
                     
                     Divider()
                     
-                    Button(role: .destructive) {
-                        showingDeleteConfirmation = true
-                    } label: {
-                        Label("Archive Client", systemImage: "archivebox")
+                    if currentClient.status == .archived {
+                        Button {
+                            store.restoreClient(id: currentClient.id)
+                        } label: {
+                            Label("Restore to Active", systemImage: "arrow.uturn.backward.circle")
+                        }
+                    } else {
+                        Button(role: .destructive) {
+                            showingDeleteConfirmation = true
+                        } label: {
+                            Label("Archive Client", systemImage: "archivebox")
+                        }
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
@@ -263,7 +271,7 @@ public struct ClientDetailView: View {
         }
         .confirmationDialog("Archive Client?", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
             Button("Archive Record", role: .destructive) {
-                store.deleteClient(id: currentClient.id)
+                store.archiveClient(id: currentClient.id)
                 dismiss()
             }
             Button("Cancel", role: .cancel) {}

@@ -240,7 +240,7 @@ public struct CreateInvoiceView: View {
         }
         
         let calc = calculation
-        let inv = Invoice(
+        var inv = Invoice(
             invoiceNumber: invoiceNumber,
             clientId: client.id,
             clientName: client.companyName.isEmpty ? client.name : "\(client.name) (\(client.companyName))",
@@ -259,6 +259,20 @@ public struct CreateInvoiceView: View {
             paymentTerms: paymentTerms,
             notes: invoiceNotes
         )
+        
+        if advancePayment > 0 {
+            let payment = PaymentRecord(
+                invoiceId: inv.id,
+                clientId: client.id,
+                amount: advancePayment,
+                paymentMethod: .bankTransfer,
+                transactionReference: "ADV-\(inv.invoiceNumber)",
+                notes: "Advance payment settled upon invoice issuance."
+            )
+            store.payments.insert(payment, at: 0)
+            store.savePayments()
+            inv.paymentIds.append(payment.id)
+        }
         
         store.addInvoice(inv)
         dismiss()

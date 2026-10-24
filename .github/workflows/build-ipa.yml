@@ -69,7 +69,9 @@ jobs:
             -configuration Release \
             -archivePath build/Gaurex.xcarchive \
             -destination 'generic/platform=iOS' \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
 
       - name: Export IPA Package
         run: |

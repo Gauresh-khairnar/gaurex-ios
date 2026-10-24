@@ -7,7 +7,7 @@
     <key>CFBundleDisplayName</key>
     <string>GAUREX</string>
     <key>CFBundleExecutable</key>
-    <string>$(EXECUTABLE_NAME)</string>
+    <string>Gaurex</string>
     <key>CFBundleIdentifier</key>
     <string>com.gaurex.dashboard</string>
     <key>CFBundleInfoDictionaryVersion</key>
@@ -20,6 +20,36 @@
     <string>1.0.0</string>
     <key>CFBundleVersion</key>
     <string>1</string>
+    <key>CFBundleIcons</key>
+    <dict>
+        <key>CFBundlePrimaryIcon</key>
+        <dict>
+            <key>CFBundleIconFiles</key>
+            <array>
+                <string>AppIcon60x60</string>
+                <string>AppIcon76x76</string>
+                <string>AppIcon</string>
+                <string>icon-1024</string>
+            </array>
+            <key>CFBundleIconName</key>
+            <string>AppIcon</string>
+        </dict>
+    </dict>
+    <key>CFBundleIcons~ipad</key>
+    <dict>
+        <key>CFBundlePrimaryIcon</key>
+        <dict>
+            <key>CFBundleIconFiles</key>
+            <array>
+                <string>AppIcon60x60</string>
+                <string>AppIcon76x76</string>
+                <string>AppIcon</string>
+                <string>icon-1024</string>
+            </array>
+            <key>CFBundleIconName</key>
+            <string>AppIcon</string>
+        </dict>
+    </dict>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSFaceIDUsageDescription</key>
@@ -28,6 +58,10 @@
     <string>Used to attach business receipts and profile photos.</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Used to upload receipts, logos, and business documents.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>GAUREX requires microphone access for hands-free executive voice commands and voice assistant processing.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>GAUREX uses speech recognition to interpret executive financial questions and schedule daily business tasks.</string>
     <key>UIApplicationSceneManifest</key>
     <dict>
         <key>UIApplicationSupportsMultipleScenes</key>

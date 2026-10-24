@@ -32,7 +32,12 @@ public final class FirestoreDataStore: ObservableObject {
     @Published public var businessGoals: [BusinessGoal] = []
     @Published public var reminders: [SmartReminder] = []
     @Published public var integrations: [IntegrationItem] = []
-    @Published public var activeCurrency: SupportedCurrency = .inr
+    @Published public var activeCurrency: SupportedCurrency = .inr {
+        didSet {
+            settings.currencySymbol = activeCurrency.symbol
+            saveSettings()
+        }
+    }
     
     // UI Feedback
     @Published public var activeToast: ToastMessage? = nil
@@ -223,13 +228,31 @@ public final class FirestoreDataStore: ObservableObject {
         }
     }
     
+    public func archiveClient(id: String) {
+        if let idx = clients.firstIndex(where: { $0.id == id }) {
+            clients[idx].status = .archived
+            saveClients()
+            AuditLogger.shared.log(actionType: "ARCHIVE", entityType: "Client", entityId: id, description: "Archived client: \(clients[idx].name)")
+            showToast(title: "Client Moved to Archive")
+        }
+    }
+    
+    public func restoreClient(id: String) {
+        if let idx = clients.firstIndex(where: { $0.id == id }) {
+            clients[idx].status = .active
+            saveClients()
+            AuditLogger.shared.log(actionType: "RESTORE", entityType: "Client", entityId: id, description: "Restored client: \(clients[idx].name)")
+            showToast(title: "Client Restored to Active CRM")
+        }
+    }
+    
     public func deleteClient(id: String) {
         if let idx = clients.firstIndex(where: { $0.id == id }) {
             let name = clients[idx].name
             clients.remove(at: idx)
             saveClients()
-            AuditLogger.shared.log(actionType: "DELETE", entityType: "Client", entityId: id, description: "Archived client: \(name)")
-            showToast(title: "Client Archived")
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "Client", entityId: id, description: "Permanently deleted client: \(name)")
+            showToast(title: "Client Removed")
         }
     }
     
@@ -252,44 +275,112 @@ public final class FirestoreDataStore: ObservableObject {
     
     public func recordPayment(for invoiceId: String, amount: Double, method: PaymentMethod, reference: String, notes: String) {
         guard let idx = invoices.firstIndex(where: { $0.id == invoiceId }) else { return }
+        let inv = invoices[idx]
+        
+        if inv.status == .cancelled {
+            showToast(title: "Cannot record payment for a cancelled invoice.", isSuccess: false)
+            return
+        }
+        
+        guard amount > 0 else {
+            showToast(title: "Payment amount must be greater than zero.", isSuccess: false)
+            return
+        }
+        
+        if inv.balanceDue <= 0.01 {
+            showToast(title: "Invoice is already paid in full.", isSuccess: false)
+            return
+        }
+        
+        // Prevent duplicate transaction reference submissions
+        let cleanRef = reference.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !cleanRef.isEmpty && payments.contains(where: { $0.transactionReference == cleanRef && !$0.isRefunded }) {
+            showToast(title: "Duplicate transaction reference detected.", isSuccess: false)
+            return
+        }
+        
+        let validAmount = min(amount, inv.balanceDue)
         
         let payment = PaymentRecord(
             invoiceId: invoiceId,
-            clientId: invoices[idx].clientId,
-            amount: amount,
+            clientId: inv.clientId,
+            amount: validAmount,
             paymentMethod: method,
-            transactionReference: reference,
+            transactionReference: cleanRef.isEmpty ? "TXN-\(UUID().uuidString.prefix(8))" : cleanRef,
             notes: notes
         )
         
         payments.insert(payment, at: 0)
         savePayments()
         
-        var inv = invoices[idx]
-        inv.paymentIds.append(payment.id)
-        let totalPaid = payments.filter { $0.invoiceId == invoiceId }.reduce(0.0) { $0 + $1.amount }
-        inv.advancePaid = totalPaid
-        inv.balanceDue = max(0.0, inv.totalAmount - totalPaid)
-        
-        if inv.balanceDue <= 0.01 {
-            inv.status = .paid
-        } else if totalPaid > 0 {
-            inv.status = .partiallyPaid
+        var updatedInv = inv
+        if !updatedInv.paymentIds.contains(payment.id) {
+            updatedInv.paymentIds.append(payment.id)
         }
         
-        invoices[idx] = inv
-        saveInvoices()
-        recalculateClientFinancials(clientId: inv.clientId)
+        let totalPaid = payments.filter { $0.invoiceId == invoiceId && !$0.isRefunded }.reduce(0.0) { $0 + $1.amount }
+        updatedInv.advancePaid = totalPaid
+        updatedInv.balanceDue = max(0.0, updatedInv.totalAmount - totalPaid)
         
-        AuditLogger.shared.log(actionType: "PAYMENT", entityType: "Invoice", entityId: invoiceId, description: "Recorded payment of ₹\(amount) for invoice #\(inv.invoiceNumber)")
-        showToast(title: "Payment Recorded")
+        if updatedInv.balanceDue <= 0.01 {
+            updatedInv.status = .paid
+        } else if totalPaid > 0 {
+            updatedInv.status = .partiallyPaid
+        }
+        
+        invoices[idx] = updatedInv
+        saveInvoices()
+        recalculateClientFinancials(clientId: updatedInv.clientId)
+        
+        AuditLogger.shared.log(actionType: "PAYMENT", entityType: "Invoice", entityId: invoiceId, description: "Recorded payment of \(settings.currencySymbol)\(validAmount) for invoice #\(updatedInv.invoiceNumber)")
+        showToast(title: "Payment Recorded Successfully")
+    }
+    
+    public func refundPayment(paymentId: String, reason: String = "Client Refund / Payment Reversal") {
+        guard let pIdx = payments.firstIndex(where: { $0.id == paymentId }) else { return }
+        payments[pIdx].isRefunded = true
+        payments[pIdx].refundReason = reason
+        savePayments()
+        
+        let invoiceId = payments[pIdx].invoiceId
+        if let invIdx = invoices.firstIndex(where: { $0.id == invoiceId }) {
+            var inv = invoices[invIdx]
+            let nonRefundedPaid = payments.filter { $0.invoiceId == invoiceId && !$0.isRefunded }.reduce(0.0) { $0 + $1.amount }
+            inv.advancePaid = nonRefundedPaid
+            inv.balanceDue = max(0.0, inv.totalAmount - nonRefundedPaid)
+            
+            if inv.balanceDue <= 0.01 {
+                inv.status = .paid
+            } else if nonRefundedPaid > 0 {
+                inv.status = .partiallyPaid
+            } else {
+                inv.status = (inv.dueDate < Date()) ? .overdue : .issued
+            }
+            
+            invoices[invIdx] = inv
+            saveInvoices()
+            recalculateClientFinancials(clientId: inv.clientId)
+        }
+        
+        AuditLogger.shared.log(actionType: "REFUND", entityType: "Payment", entityId: paymentId, description: "Refunded payment \(payments[pIdx].amount): \(reason)")
+        showToast(title: "Payment Refunded & Reversed")
+    }
+    
+    public func cancelInvoice(id: String, reason: String = "Administrative Cancellation") {
+        if let idx = invoices.firstIndex(where: { $0.id == id }) {
+            invoices[idx].status = .cancelled
+            saveInvoices()
+            recalculateClientFinancials(clientId: invoices[idx].clientId)
+            AuditLogger.shared.log(actionType: "CANCEL", entityType: "Invoice", entityId: id, description: "Cancelled invoice #\(invoices[idx].invoiceNumber): \(reason)")
+            showToast(title: "Invoice #\(invoices[idx].invoiceNumber) Cancelled")
+        }
     }
     
     public func recalculateClientFinancials(clientId: String) {
         guard let idx = clients.firstIndex(where: { $0.id == clientId }) else { return }
         let clientInvoices = invoices.filter { $0.clientId == clientId && $0.status != .cancelled }
         let totalInvoiced = clientInvoices.reduce(0.0) { $0 + $1.totalAmount }
-        let clientPayments = payments.filter { $0.clientId == clientId }
+        let clientPayments = payments.filter { $0.clientId == clientId && !$0.isRefunded }
         let totalCollected = clientPayments.reduce(0.0) { $0 + $1.amount }
         
         clients[idx].totalInvoiced = totalInvoiced
@@ -408,7 +499,7 @@ public final class FirestoreDataStore: ObservableObject {
     }
     
     public var revenueCollected: Double {
-        payments.reduce(0.0) { $0 + $1.amount }
+        payments.filter { !$0.isRefunded }.reduce(0.0) { $0 + $1.amount }
     }
     
     public var outstandingPayments: Double {

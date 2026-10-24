@@ -30,7 +30,7 @@ public struct BusinessSettings: Codable, Hashable {
     public var defaultInvoiceNotes: String
     public var biometricUnlockEnabled: Bool
     public var autoLockTimeoutMinutes: Int
-    public var aiProvider: String // "openai", "anthropic", "gemini", "custom"
+    public var aiProvider: String // "groq", "gemini", "openai", "anthropic"
     public var aiModelName: String
     public var activeThemeRaw: String
     
@@ -54,12 +54,12 @@ public struct BusinessSettings: Codable, Hashable {
         bankIfsc: String = "HDFC0000123",
         bankBranch: String = "Corporate Financial Hub",
         upiId: String = "gaurex@hdfcbank",
-        defaultPaymentTerms: String = "Payment strictly due within 15 days of invoice date. 1.5% monthly interest on delayed payments.",
+        defaultPaymentTerms: String = "Payment strictly due within 15 days of invoice date.",
         defaultInvoiceNotes: String = "Thank you for choosing GAUREX. All software intellectual property is transferred upon final payment settlement.",
         biometricUnlockEnabled: Bool = true,
         autoLockTimeoutMinutes: Int = 5,
-        aiProvider: String = "gemini",
-        aiModelName: String = "gemini-1.5-pro",
+        aiProvider: String = "groq",
+        aiModelName: String = "openai/gpt-oss-120b",
         activeThemeRaw: String = "system"
     ) {
         self.companyName = companyName

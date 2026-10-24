@@ -58,8 +58,21 @@ public final class SmartReminderService: ObservableObject {
     public func snoozeReminder(id: String, minutes: Int = 60) {
         if let idx = reminders.firstIndex(where: { $0.id == id }) {
             reminders[idx].isSnoozed = true
-            reminders[idx].triggerDate = Calendar.current.date(byAdding: .minute, value: minutes, to: Date()) ?? Date()
+            let newDate = Calendar.current.date(byAdding: .minute, value: minutes, to: Date()) ?? Date()
+            reminders[idx].triggerDate = newDate
             persist()
+            
+            if hasNotificationPermission {
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
+                let content = UNMutableNotificationContent()
+                content.title = "GAUREX: \(reminders[idx].title) (Snoozed)"
+                content.body = reminders[idx].message
+                content.sound = .default
+                let components = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: newDate)
+                let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+                let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request)
+            }
         }
     }
     
@@ -67,6 +80,9 @@ public final class SmartReminderService: ObservableObject {
         if let idx = reminders.firstIndex(where: { $0.id == id }) {
             reminders[idx].isCompleted = true
             persist()
+            
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
+            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [id])
         }
     }
     

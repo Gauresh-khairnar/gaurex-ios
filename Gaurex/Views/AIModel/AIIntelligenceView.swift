@@ -224,7 +224,8 @@ public struct AIIntelligenceView: View {
                             .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || aiService.isAnalyzing)
                         }
                         .padding(.horizontal, 16)
-                        .padding(.vertical, 8)
+                        .padding(.top, 8)
+                        .padding(.bottom, 68)
                         .background(.ultraThinMaterial)
                     }
                 }

@@ -102,4 +102,32 @@ final class ExtendedModulesTests: XCTestCase {
         XCTAssertTrue(fields.documentNumber?.contains("9988") ?? false)
         XCTAssertEqual(fields.totalAmount, 84200.0)
     }
+    
+    func testClientArchiveAndRestorePreservesRecords() {
+        let store = FirestoreDataStore.shared
+        let client = Client(name: "Client Archive Test", companyName: "Archival Inc", email: "archive@test.com", phone: "123")
+        store.addClient(client)
+        
+        // Archive
+        store.archiveClient(id: client.id)
+        let archived = store.clients.first(where: { $0.id == client.id })
+        XCTAssertEqual(archived?.status, .archived)
+        
+        // Restore
+        store.restoreClient(id: client.id)
+        let restored = store.clients.first(where: { $0.id == client.id })
+        XCTAssertEqual(restored?.status, .active)
+    }
+    
+    func testReportingCurrencySymbolSync() {
+        let store = FirestoreDataStore.shared
+        store.activeCurrency = .usd
+        XCTAssertEqual(store.settings.currencySymbol, "$")
+        
+        store.activeCurrency = .eur
+        XCTAssertEqual(store.settings.currencySymbol, "€")
+        
+        store.activeCurrency = .inr
+        XCTAssertEqual(store.settings.currencySymbol, "₹")
+    }
 }

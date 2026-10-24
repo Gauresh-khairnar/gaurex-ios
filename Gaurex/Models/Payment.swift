@@ -27,6 +27,8 @@ public struct PaymentRecord: Identifiable, Codable, Hashable {
     public var transactionReference: String
     public var notes: String
     public var recordedBy: String
+    public var isRefunded: Bool
+    public var refundReason: String?
     public var createdAt: Date
     
     public init(
@@ -39,6 +41,8 @@ public struct PaymentRecord: Identifiable, Codable, Hashable {
         transactionReference: String,
         notes: String = "",
         recordedBy: String = "Gauresh Khairnar (OWNER)",
+        isRefunded: Bool = false,
+        refundReason: String? = nil,
         createdAt: Date = Date()
     ) {
         self.id = id
@@ -50,6 +54,8 @@ public struct PaymentRecord: Identifiable, Codable, Hashable {
         self.transactionReference = transactionReference
         self.notes = notes
         self.recordedBy = recordedBy
+        self.isRefunded = isRefunded
+        self.refundReason = refundReason
         self.createdAt = createdAt
     }
 }

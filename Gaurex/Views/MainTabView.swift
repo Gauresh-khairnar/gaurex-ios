@@ -14,11 +14,14 @@ public struct MainTabView: View {
     
     public var body: some View {
         ZStack(alignment: .bottom) {
-            // Tab content container
             Group {
                 switch selectedTab {
                 case .home:
                     DashboardView(selectedTab: $selectedTab)
+                case .tasks:
+                    TasksManagementView()
+                case .finance:
+                    FinanceProfitCenterView()
                 case .clients:
                     ClientsListView()
                 case .workers:
@@ -31,7 +34,7 @@ public struct MainTabView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             
-            // Persistent Floating Liquid Glass Tab Bar
+            // Persistent Floating Liquid Glass Tab Bar (7 Tabs)
             LiquidGlassTabBar(selectedTab: $selectedTab)
         }
         .preferredColorScheme(theme.colorScheme)
@@ -66,13 +69,13 @@ public struct BiometricUnlockOverlay: View {
                 VStack(spacing: 6) {
                     HStack(spacing: 8) {
                         Text("GAUREX")
-                            .font(.system(size: 26, weight: .black, design: .rounded))
+                            .font(TypographyTokens.executiveTitle)
                             .tracking(2.0)
                         OwnerBadge()
                     }
                     
                     Text("Executive Security Vault")
-                        .font(.system(size: 13, weight: .medium))
+                        .font(TypographyTokens.caption)
                         .foregroundColor(.secondary)
                 }
                 
@@ -94,6 +97,7 @@ public struct BiometricUnlockOverlay: View {
                     .clipShape(Capsule())
                 }
                 .buttonStyle(.plain)
+                .tactilePress()
                 .padding(.horizontal, 32)
                 
                 if let err = authErrorMessage {

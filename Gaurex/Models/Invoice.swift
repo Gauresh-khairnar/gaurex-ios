@@ -54,14 +54,16 @@ public struct InvoiceItem: Identifiable, Codable, Hashable {
         self.packageId = packageId
         self.title = title
         self.itemDescription = itemDescription
-        self.quantity = quantity
-        self.unitPrice = unitPrice
-        self.discountAmount = discountAmount
-        self.taxRate = taxRate
+        self.quantity = max(1, quantity)
+        self.unitPrice = max(0.0, unitPrice)
+        self.discountAmount = max(0.0, discountAmount)
+        self.taxRate = max(0.0, taxRate)
         
-        let sub = (Double(quantity) * unitPrice) - discountAmount
-        self.subtotal = max(0.0, sub)
-        let tax = self.subtotal * (taxRate / 100.0)
+        let rawSubtotal = Double(self.quantity) * self.unitPrice
+        let clampedDiscount = min(rawSubtotal, self.discountAmount)
+        self.discountAmount = clampedDiscount
+        self.subtotal = max(0.0, rawSubtotal - clampedDiscount)
+        let tax = self.subtotal * (self.taxRate / 100.0)
         self.total = self.subtotal + tax
     }
 }
