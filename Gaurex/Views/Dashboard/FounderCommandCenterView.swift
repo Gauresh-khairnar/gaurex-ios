@@ -22,7 +22,6 @@ public struct FounderCommandCenterView: View {
                     .font(TypographyTokens.sectionHeader)
                     .foregroundColor(.secondary)
                 Spacer()
-                OwnerBadge()
             }
             .padding(.horizontal, 16)
             
@@ -95,13 +94,31 @@ public struct FounderCommandCenterView: View {
                                 .tint(goal.progressFraction >= 1.0 ? Color.green : Color.blue)
                             
                             HStack {
-                                Text("Current: \(FinancialCalculator.shared.formatCurrency(goal.currentValue, symbol: store.settings.currencySymbol))")
-                                    .font(.system(size: 10))
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text("Target: \(FinancialCalculator.shared.formatCurrency(goal.targetValue, symbol: store.settings.currencySymbol))")
-                                    .font(.system(size: 10))
-                                    .foregroundColor(.secondary)
+                                if goal.metricType == .newClients {
+                                    Text("Current: \(Int(goal.currentValue)) Clients")
+                                        .font(.system(size: 10, weight: .medium))
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                    Text("Target: \(Int(goal.targetValue)) Clients")
+                                        .font(.system(size: 10, weight: .medium))
+                                        .foregroundColor(.secondary)
+                                } else if goal.metricType == .dealsClosed {
+                                    Text("Current: \(Int(goal.currentValue)) Deals")
+                                        .font(.system(size: 10, weight: .medium))
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                    Text("Target: \(Int(goal.targetValue)) Deals")
+                                        .font(.system(size: 10, weight: .medium))
+                                        .foregroundColor(.secondary)
+                                } else {
+                                    Text("Current: \(FinancialCalculator.shared.formatCurrency(goal.currentValue, symbol: store.settings.currencySymbol))")
+                                        .font(.system(size: 10, weight: .medium))
+                                        .foregroundColor(.secondary)
+                                    Spacer()
+                                    Text("Target: \(FinancialCalculator.shared.formatCurrency(goal.targetValue, symbol: store.settings.currencySymbol))")
+                                        .font(.system(size: 10, weight: .medium))
+                                        .foregroundColor(.secondary)
+                                }
                             }
                         }
                     }

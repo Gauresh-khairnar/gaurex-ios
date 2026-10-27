@@ -12,76 +12,94 @@ public struct AuroraLivingBackground: View {
     @ObservedObject private var theme = ThemeManager.shared
     @State private var animateOrbs: Bool = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.colorScheme) private var colorScheme
     
     public init() {}
     
     public var body: some View {
         ZStack {
-            // Deep obsidian base layer
             theme.backgroundColor.ignoresSafeArea()
             
             if !reduceMotion {
-                // Ambient Breathing Glow Orb 1 (Top Leading - Warm Amber / Royal Gold)
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [
-                                theme.accentColor.opacity(0.18),
-                                theme.accentColor.opacity(0.06),
-                                Color.clear
-                            ],
-                            center: .center,
-                            startRadius: 20,
-                            endRadius: 220
+                if colorScheme == .light {
+                    // Pristine Light Mode Ambient Glow (Subtle Champagne Light)
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [
+                                    theme.accentColor.opacity(0.06),
+                                    Color.orange.opacity(0.03),
+                                    Color.clear
+                                ],
+                                center: .center,
+                                startRadius: 40,
+                                endRadius: 260
+                            )
                         )
-                    )
-                    .frame(width: 380, height: 380)
-                    .offset(
-                        x: animateOrbs ? -80 : -140,
-                        y: animateOrbs ? -160 : -220
-                    )
-                    .blur(radius: 50)
-                
-                // Ambient Breathing Glow Orb 2 (Center Trailing - Executive Midnight Cyan)
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [
-                                Color(red: 0.18, green: 0.42, blue: 0.88).opacity(0.12),
-                                Color.purple.opacity(0.05),
-                                Color.clear
-                            ],
-                            center: .center,
-                            startRadius: 30,
-                            endRadius: 260
+                        .frame(width: 420, height: 420)
+                        .offset(x: animateOrbs ? -40 : -90, y: animateOrbs ? -120 : -180)
+                        .blur(radius: 60)
+                } else {
+                    // Executive Dark Mode Ambient Breathing Aurora
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [
+                                    theme.accentColor.opacity(0.18),
+                                    theme.accentColor.opacity(0.06),
+                                    Color.clear
+                                ],
+                                center: .center,
+                                startRadius: 20,
+                                endRadius: 220
+                            )
                         )
-                    )
-                    .frame(width: 440, height: 440)
-                    .offset(
-                        x: animateOrbs ? 140 : 80,
-                        y: animateOrbs ? 60 : 140
-                    )
-                    .blur(radius: 65)
-                
-                // Ambient Breathing Glow Orb 3 (Bottom - Deep Obsidian Wine)
-                Circle()
-                    .fill(
-                        RadialGradient(
-                            colors: [
-                                Color(red: 0.45, green: 0.25, blue: 0.75).opacity(0.08),
-                                Color.clear
-                            ],
-                            center: .center,
-                            startRadius: 40,
-                            endRadius: 280
+                        .frame(width: 380, height: 380)
+                        .offset(
+                            x: animateOrbs ? -80 : -140,
+                            y: animateOrbs ? -160 : -220
                         )
-                    )
-                    .frame(width: 420, height: 420)
-                    .offset(
-                        x: animateOrbs ? -40 : 40,
-                        y: animateOrbs ? 320 : 380
-                    )
-                    .blur(radius: 70)
+                        .blur(radius: 50)
+                    
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [
+                                    Color(red: 0.18, green: 0.42, blue: 0.88).opacity(0.12),
+                                    Color.purple.opacity(0.05),
+                                    Color.clear
+                                ],
+                                center: .center,
+                                startRadius: 30,
+                                endRadius: 260
+                            )
+                        )
+                        .frame(width: 440, height: 440)
+                        .offset(
+                            x: animateOrbs ? 140 : 80,
+                            y: animateOrbs ? 60 : 140
+                        )
+                        .blur(radius: 65)
+                    
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                colors: [
+                                    Color(red: 0.45, green: 0.25, blue: 0.75).opacity(0.08),
+                                    Color.clear
+                                ],
+                                center: .center,
+                                startRadius: 40,
+                                endRadius: 280
+                            )
+                        )
+                        .frame(width: 420, height: 420)
+                        .offset(
+                            x: animateOrbs ? -40 : 40,
+                            y: animateOrbs ? 320 : 380
+                        )
+                        .blur(radius: 70)
+                }
             }
         }
         .onAppear {

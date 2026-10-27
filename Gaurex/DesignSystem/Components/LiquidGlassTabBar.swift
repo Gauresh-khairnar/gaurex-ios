@@ -2,7 +2,8 @@
 //  LiquidGlassTabBar.swift
 //  GAUREX Dashboard
 //  Founder & Owner: Gauresh Khairnar (OWNER)
-//  Apple Music Style Navigation Bar & Executive HUD in GAUREX Luxury Aesthetic
+//  Genuine Apple Native Liquid Glass Floating Tab Bar
+//  Faithful Native Swift/SwiftUI Port of Liquid Glass Bottom Bar Specifications
 //
 
 import SwiftUI
@@ -59,8 +60,9 @@ public struct LiquidGlassTabBar: View {
     @Binding public var selectedTab: MainTab
     @ObservedObject private var theme = ThemeManager.shared
     @ObservedObject private var store = FirestoreDataStore.shared
-    @State private var isExecutiveHUDVisible: Bool = true
     @Namespace private var liquidSliderNamespace
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var pressedTab: MainTab? = nil
     
     public init(selectedTab: Binding<MainTab>) {
         self._selectedTab = selectedTab
@@ -70,270 +72,153 @@ public struct LiquidGlassTabBar: View {
         store.tasks.filter { $0.status == .pending }.count
     }
     
-    private var currentContext: AIAnalysisContext {
-        store.aiAnalysisContext
-    }
-    
     public var body: some View {
-        VStack(spacing: 5) {
-            // MARK: - Apple Music Style Executive Now-Playing Mini-Player HUD
-            if isExecutiveHUDVisible && selectedTab != .aiModel {
-                AppleMusicExecutiveHUD(
-                    context: currentContext,
-                    onTap: {
-                        let feedback = UISelectionFeedbackGenerator()
-                        feedback.selectionChanged()
-                        withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
-                            selectedTab = .aiModel
-                        }
-                    },
-                    onDismiss: {
-                        withAnimation(.spring(response: 0.32, dampingFraction: 0.8)) {
-                            isExecutiveHUDVisible = false
-                        }
+        HStack(spacing: 0) {
+            ForEach(MainTab.allCases) { tab in
+                let isSelected = selectedTab == tab
+                
+                Button {
+                    let feedback = UISelectionFeedbackGenerator()
+                    feedback.selectionChanged()
+                    withAnimation(.spring(response: 0.34, dampingFraction: 0.74, blendDuration: 0.12)) {
+                        selectedTab = tab
                     }
-                )
-                .transition(.asymmetric(
-                    insertion: .move(edge: .bottom).combined(with: .opacity),
-                    removal: .move(edge: .bottom).combined(with: .opacity)
-                ))
-            }
-            
-            // MARK: - Apple Music Style 7-Tab Floating Liquid Glass Navigation Bar
-            HStack(spacing: 2) {
-                ForEach(MainTab.allCases) { tab in
-                    let isSelected = selectedTab == tab
-                    
-                    Button {
-                        let feedback = UISelectionFeedbackGenerator()
-                        feedback.selectionChanged()
-                        withAnimation(.spring(response: 0.34, dampingFraction: 0.74, blendDuration: 0.12)) {
-                            selectedTab = tab
+                } label: {
+                    ZStack {
+                        // Liquid Glass Viscoelastic Sliding Selection Pill
+                        if isSelected {
+                            Capsule()
+                                .fill(
+                                    colorScheme == .dark
+                                        ? Color.white.opacity(0.12)
+                                        : Color.black.opacity(0.06)
+                                )
+                                .overlay(
+                                    Capsule()
+                                        .fill(theme.accentColor.opacity(colorScheme == .dark ? 0.20 : 0.12))
+                                )
+                                .overlay(
+                                    Capsule()
+                                        .stroke(
+                                            theme.accentColor.opacity(colorScheme == .dark ? 0.35 : 0.22),
+                                            lineWidth: 0.8
+                                        )
+                                )
+                                .matchedGeometryEffect(id: "LIQUID_GLASS_SELECTION_PILL", in: liquidSliderNamespace)
+                                .padding(.horizontal, 2)
+                                .padding(.vertical, 4)
                         }
-                    } label: {
-                        ZStack {
-                            // Apple Viscoelastic Liquid Slider Pill
-                            if isSelected {
-                                Capsule()
-                                    .fill(.thinMaterial)
-                                    .overlay(
-                                        Capsule()
-                                            .fill(theme.accentColor.opacity(0.14))
-                                    )
-                                    .overlay(
-                                        Capsule()
-                                            .stroke(
-                                                LinearGradient(
-                                                    colors: [
-                                                        Color.white.opacity(0.55),
-                                                        theme.accentColor.opacity(0.35),
-                                                        Color.white.opacity(0.15)
-                                                    ],
-                                                    startPoint: .topLeading,
-                                                    endPoint: .bottomTrailing
-                                                ),
-                                                lineWidth: 1
-                                            )
-                                    )
-                                    .matchedGeometryEffect(id: "APPLE_LIQUID_SLIDER_ACTIVE_PILL", in: liquidSliderNamespace)
-                                    .shadow(color: Color.black.opacity(0.12), radius: 8, x: 0, y: 3)
-                                    .shadow(color: theme.accentColor.opacity(0.16), radius: 6, x: 0, y: 1)
-                            }
-                            
-                            VStack(spacing: 3) {
-                                ZStack(alignment: .topTrailing) {
-                                    Group {
-                                        if #available(iOS 17.0, *) {
-                                            Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
-                                                .font(.system(size: 17, weight: isSelected ? .semibold : .medium))
-                                                .symbolEffect(.bounce, value: isSelected)
-                                                .contentTransition(.symbolEffect(.replace))
-                                        } else {
-                                            Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
-                                                .font(.system(size: 17, weight: isSelected ? .semibold : .medium))
-                                        }
-                                    }
-                                    .foregroundColor(isSelected ? theme.accentColor : Color(uiColor: .secondaryLabel))
-                                    .scaleEffect(isSelected ? 1.08 : 1.0)
-                                    
-                                    // Apple-style subtle notification badge dot for pending tasks
-                                    if tab == .tasks && pendingTasksCount > 0 {
-                                        Circle()
-                                            .fill(theme.accentColor)
-                                            .frame(width: 6, height: 6)
-                                            .offset(x: 5, y: -2)
+                        
+                        // Tab Item (Icon + Label)
+                        VStack(spacing: 2) {
+                            ZStack(alignment: .topTrailing) {
+                                Group {
+                                    if #available(iOS 17.0, *) {
+                                        Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
+                                            .font(.system(size: 19, weight: isSelected ? .semibold : .medium))
+                                            .symbolEffect(.bounce, value: isSelected)
+                                            .contentTransition(.symbolEffect(.replace))
+                                    } else {
+                                        Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
+                                            .font(.system(size: 19, weight: isSelected ? .semibold : .medium))
                                     }
                                 }
+                                .foregroundColor(
+                                    isSelected
+                                        ? theme.accentColor
+                                        : (colorScheme == .dark ? Color.white.opacity(0.62) : Color.black.opacity(0.60))
+                                )
                                 
-                                Text(tab.title)
-                                    .font(.system(size: 9.5, weight: isSelected ? .bold : .medium))
-                                    .foregroundColor(isSelected ? theme.accentColor : Color(uiColor: .secondaryLabel))
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.85)
+                                // Live Task Pending Badge Indicator Dot
+                                if tab == .tasks && pendingTasksCount > 0 {
+                                    Circle()
+                                        .fill(Color.red)
+                                        .frame(width: 6, height: 6)
+                                        .offset(x: 5, y: -2)
+                                }
                             }
-                            .padding(.vertical, 7)
-                            .frame(maxWidth: .infinity)
+                            
+                            Text(tab.title)
+                                .font(.system(size: 9.5, weight: isSelected ? .bold : .medium))
+                                .foregroundColor(
+                                    isSelected
+                                        ? theme.accentColor
+                                        : (colorScheme == .dark ? Color.white.opacity(0.62) : Color.black.opacity(0.60))
+                                )
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.85)
                         }
-                        .frame(height: 50)
+                        .padding(.vertical, 6)
+                        .frame(maxWidth: .infinity)
+                        .scaleEffect(pressedTab == tab ? 0.92 : 1.0)
                     }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel("\(tab.title) Tab")
+                    .frame(height: 52)
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(TabItemButtonStyle(onPress: { isPressed in
+                    withAnimation(.easeOut(duration: 0.12)) {
+                        pressedTab = isPressed ? tab : nil
+                    }
+                }))
+                .accessibilityLabel("\(tab.title) Tab")
             }
-            .padding(.horizontal, 4)
-            .padding(.vertical, 3)
-            .background {
-                // Apple Native Liquid Glass Container
-                Capsule()
-                    .fill(.ultraThinMaterial)
-                    .overlay(
-                        Capsule()
-                            .stroke(
-                                LinearGradient(
-                                    colors: [
-                                        Color.white.opacity(0.40),
-                                        Color.white.opacity(0.12),
-                                        Color.clear
-                                    ],
-                                    startPoint: .top,
-                                    endPoint: .bottom
-                                ),
-                                lineWidth: 0.8
-                            )
-                    )
-                    .shadow(color: Color.black.opacity(0.15), radius: 18, x: 0, y: 8)
-            }
-            .padding(.horizontal, 8)
-            .padding(.bottom, 6)
         }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 4)
+        .frame(height: 60)
+        // Liquid Glass Capsule Base & Refraction Material
+        .background {
+            Capsule()
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    Capsule()
+                        .fill(
+                            colorScheme == .dark
+                                ? Color.white.opacity(0.06)
+                                : Color.white.opacity(0.25)
+                        )
+                )
+        }
+        // Fresnel Specular Gradient Rim (1.0pt stroke at -45° virtual light angle)
+        .overlay {
+            Capsule()
+                .stroke(
+                    LinearGradient(
+                        colors: [
+                            Color.white.opacity(colorScheme == .dark ? 0.40 : 0.65),
+                            Color.white.opacity(colorScheme == .dark ? 0.08 : 0.15),
+                            Color.white.opacity(colorScheme == .dark ? 0.22 : 0.35)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1.0
+                )
+        }
+        // Dual Soft Floating Shadows (Contact shadow + Key light shadow)
+        .shadow(
+            color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.08),
+            radius: 8,
+            x: 0,
+            y: 4
+        )
+        .shadow(
+            color: Color.black.opacity(colorScheme == .dark ? 0.45 : 0.12),
+            radius: 20,
+            x: 0,
+            y: 10
+        )
     }
 }
 
-// MARK: - Apple Music Style Executive Now-Playing Mini-Player HUD
-public struct AppleMusicExecutiveHUD: View {
-    public var context: AIAnalysisContext
-    public var onTap: () -> Void
-    public var onDismiss: () -> Void
-    @ObservedObject private var theme = ThemeManager.shared
+// Custom ButtonStyle to capture press-down and release for the 0.92 scale feedback
+private struct TabItemButtonStyle: ButtonStyle {
+    let onPress: (Bool) -> Void
     
-    public var body: some View {
-        Button(action: onTap) {
-            HStack(spacing: 10) {
-                // Apple Music Album Artwork-style Thumbnail (Fortuner Milestone)
-                ZStack {
-                    RoundedRectangle(cornerRadius: 9, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    theme.accentColor.opacity(0.85),
-                                    Color.black.opacity(0.90)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 36, height: 36)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 9, style: .continuous)
-                                .stroke(Color.white.opacity(0.35), lineWidth: 0.8)
-                        )
-                        .shadow(color: theme.accentColor.opacity(0.3), radius: 6, x: 0, y: 2)
-                    
-                    Image(systemName: "car.side.fill")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundColor(.white)
-                }
-                
-                // Track Info / Milestone Title & Progress
-                VStack(alignment: .leading, spacing: 2) {
-                    HStack(spacing: 5) {
-                        Text("Toyota Fortuner 4M Sprint")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(.primary)
-                            .lineLimit(1)
-                        
-                        Circle()
-                            .fill(Color.green)
-                            .frame(width: 5, height: 5)
-                    }
-                    
-                    HStack(spacing: 4) {
-                        Text("\(context.currencySymbol)\(String(format: "%.0f", context.revenueCollected)) / ₹50L")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundColor(theme.accentColor)
-                        
-                        Text("•")
-                            .font(.system(size: 9))
-                            .foregroundColor(.secondary)
-                        
-                        Text("Req: \(context.currencySymbol)\(String(format: "%.0f", context.fortunerRequiredDailyRunRate))/day")
-                            .font(.system(size: 10, weight: .medium))
-                            .foregroundColor(.secondary)
-                    }
-                    .lineLimit(1)
-                    
-                    // Micro Progress Bar (like track elapsed time line)
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            Capsule()
-                                .fill(Color.primary.opacity(0.10))
-                                .frame(height: 2.5)
-                            
-                            Capsule()
-                                .fill(theme.accentColor)
-                                .frame(width: max(4, geo.size.width * CGFloat(context.fortunerCompletionPercentage)), height: 2.5)
-                        }
-                    }
-                    .frame(height: 2.5)
-                }
-                
-                Spacer(minLength: 4)
-                
-                // Apple Music Mini Controls (Ask AI & Chevron)
-                HStack(spacing: 8) {
-                    Image(systemName: "sparkles")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(theme.accentColor)
-                        .frame(width: 28, height: 28)
-                        .background(theme.accentColor.opacity(0.12))
-                        .clipShape(Circle())
-                    
-                    Button {
-                        onDismiss()
-                    } label: {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(.secondary)
-                            .frame(width: 20, height: 20)
-                            .background(Color.primary.opacity(0.06))
-                            .clipShape(Circle())
-                    }
-                    .buttonStyle(.plain)
-                }
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .onChange(of: configuration.isPressed) { newValue in
+                onPress(newValue)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background {
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
-                            .stroke(
-                                LinearGradient(
-                                    colors: [
-                                        Color.white.opacity(0.35),
-                                        Color.white.opacity(0.10)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: 0.8
-                            )
-                    )
-                    .shadow(color: Color.black.opacity(0.12), radius: 10, x: 0, y: 4)
-            }
-            .padding(.horizontal, 10)
-        }
-        .buttonStyle(.plain)
     }
 }

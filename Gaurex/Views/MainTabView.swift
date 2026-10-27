@@ -35,9 +35,14 @@ public struct MainTabView: View {
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 72)
+            }
             
             // Persistent Floating Liquid Glass Tab Bar (7 Tabs)
             LiquidGlassTabBar(selectedTab: $selectedTab)
+                .padding(.horizontal, 14)
+                .padding(.bottom, 6)
         }
         .preferredColorScheme(theme.colorScheme)
     }
