@@ -26,6 +26,7 @@ public struct AddEditClientView: View {
     @State private var leadSource: LeadSource = .directInquiry
     @State private var status: ClientStatus = .active
     @State private var selectedPackageIds: Set<String> = []
+    @State private var customDealAmount: Double = 0.0
     @State private var isPercentageDiscount: Bool = false
     @State private var discountValue: Double = 0.0
     @State private var isTaxable: Bool = true
@@ -46,9 +47,10 @@ public struct AddEditClientView: View {
     
     // Financial Calculations
     private var subtotal: Double {
-        store.packages
+        let packageSum = store.packages
             .filter { selectedPackageIds.contains($0.id) }
             .reduce(0.0) { $0 + $1.basePrice }
+        return packageSum + customDealAmount
     }
     
     private var discountAmount: Double {
@@ -147,6 +149,15 @@ public struct AddEditClientView: View {
                 
                 // Section 3: Financial Terms & Calculations
                 Section(header: Text("Pricing, Tax & Commercial Terms")) {
+                    HStack {
+                        Text("Contract / Deal Value")
+                        Spacer()
+                        TextField("0", value: $customDealAmount, format: .number)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 120)
+                    }
+                    
                     HStack {
                         Text("Subtotal")
                         Spacer()
@@ -269,6 +280,9 @@ public struct AddEditClientView: View {
         selectedPackageIds = Set(c.packageIds)
         selectedWorkerId = c.assignedWorkerId ?? ""
         notesText = c.notes.last?.content ?? ""
+        advancePayment = c.totalCollected
+        let pkgSum = store.packages.filter { Set(c.packageIds).contains($0.id) }.reduce(0.0) { $0 + $1.basePrice }
+        customDealAmount = max(0.0, c.totalInvoiced - pkgSum)
     }
     
     private func saveClientRecord() {
@@ -302,11 +316,19 @@ public struct AddEditClientView: View {
             if !notesText.isEmpty {
                 updated.notes.append(ClientNote(content: notesText))
             }
-            updated.totalInvoiced = finalTotal
-            updated.totalCollected = advancePayment
-            updated.outstandingBalance = balanceDue
+            let effectiveTotal = max(finalTotal, advancePayment)
+            let effectiveAdvance = min(advancePayment, effectiveTotal)
+            let effectiveBalance = max(0.0, effectiveTotal - effectiveAdvance)
+            
+            updated.totalInvoiced = effectiveTotal
+            updated.totalCollected = effectiveAdvance
+            updated.outstandingBalance = effectiveBalance
             store.updateClient(updated)
         } else {
+            let effectiveTotal = max(finalTotal, advancePayment)
+            let effectiveAdvance = min(advancePayment, effectiveTotal)
+            let effectiveBalance = max(0.0, effectiveTotal - effectiveAdvance)
+            
             let newClient = Client(
                 name: name,
                 companyName: companyName,
@@ -322,14 +344,14 @@ public struct AddEditClientView: View {
                 assignedWorkerName: assignedWorker?.fullName ?? "Gauresh Khairnar",
                 notes: notesList,
                 packageIds: Array(selectedPackageIds),
-                totalInvoiced: finalTotal,
-                totalCollected: advancePayment,
-                outstandingBalance: balanceDue
+                totalInvoiced: effectiveTotal,
+                totalCollected: effectiveAdvance,
+                outstandingBalance: effectiveBalance
             )
             store.addClient(newClient)
             
-            // If the client has commercial terms or packages, record invoice & advance payment in the financial ledger
-            if finalTotal > 0 {
+            // If the client has commercial terms, record invoice & advance payment in the financial ledger
+            if effectiveTotal > 0 {
                 var invoiceItems: [InvoiceItem] = []
                 for pkgId in selectedPackageIds {
                     if let pkg = store.packages.first(where: { $0.id == pkgId }) {
@@ -349,10 +371,10 @@ public struct AddEditClientView: View {
                 if invoiceItems.isEmpty {
                     invoiceItems.append(
                         InvoiceItem(
-                            title: "Contract Initiation Retainer",
+                            title: "Enterprise Retainer / Contract",
                             itemDescription: "Services for \(companyName.isEmpty ? name : companyName)",
                             quantity: 1,
-                            unitPrice: taxableAmount,
+                            unitPrice: isTaxable ? (effectiveTotal / (1.0 + (taxRate / 100.0))) : effectiveTotal,
                             taxRate: isTaxable ? taxRate : 0.0
                         )
                     )
@@ -366,25 +388,25 @@ public struct AddEditClientView: View {
                     clientAddress: newClient.address,
                     dueDate: dueDate,
                     items: invoiceItems,
-                    subtotal: subtotal,
+                    subtotal: subtotal > 0 ? subtotal : effectiveTotal,
                     discountTotal: discountAmount,
                     taxTotal: taxAmount,
-                    totalAmount: finalTotal,
-                    advancePaid: 0.0,
-                    balanceDue: finalTotal,
-                    status: .issued,
+                    totalAmount: effectiveTotal,
+                    advancePaid: effectiveAdvance,
+                    balanceDue: effectiveBalance,
+                    status: effectiveBalance == 0 ? .paid : .issued,
                     paymentTerms: paymentTerms,
                     notes: "Generated automatically upon onboarding \(newClient.name)"
                 )
                 store.addInvoice(invoice)
                 
-                if advancePayment > 0 {
+                if effectiveAdvance > 0 {
                     store.recordPayment(
                         for: invoice.id,
-                        amount: min(advancePayment, finalTotal),
+                        amount: effectiveAdvance,
                         method: .bankTransfer,
-                        reference: "ADV-\(UUID().uuidString.prefix(8).uppercased())",
-                        notes: "Advance payment settlement for \(newClient.name)"
+                        reference: "SETTLE-\(UUID().uuidString.prefix(8).uppercased())",
+                        notes: "Initial payment settlement for \(newClient.name)"
                     )
                 }
             }

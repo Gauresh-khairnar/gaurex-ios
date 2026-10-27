@@ -93,17 +93,17 @@ public struct VoiceAssistantOverlay: View {
                     // Suggested Voice Queries
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            Button("🚗 Fortuner Target") {
-                                voiceService.stopListeningAndProcess(spokenQuery: "🚗 Fortuner target status")
+                            Button("📊 Business Pulse") {
+                                voiceService.stopListeningAndProcess(spokenQuery: "Executive business summary")
                             }
                             .buttonStyle(.plain)
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(.yellow)
+                            .foregroundColor(theme.accentColor)
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
-                            .background(Color.yellow.opacity(0.12))
+                            .background(theme.accentColor.opacity(0.12))
                             .clipShape(Capsule())
-                            .overlay(Capsule().stroke(Color.yellow.opacity(0.3), lineWidth: 1))
+                            .overlay(Capsule().stroke(theme.accentColor.opacity(0.3), lineWidth: 1))
                             
                             Button("Show Overdue Invoices") {
                                 voiceService.stopListeningAndProcess(spokenQuery: "Show my overdue invoices")

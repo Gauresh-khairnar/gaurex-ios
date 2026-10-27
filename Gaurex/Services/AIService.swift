@@ -2,6 +2,7 @@
 //  AIService.swift
 //  GAUREX Dashboard
 //  Founder & Owner: Gauresh Khairnar (OWNER)
+//  Executive Chief of Staff & High-Leverage Strategic AI Engine
 //
 
 import Foundation
@@ -9,34 +10,51 @@ import Foundation
 public struct AIAnalysisContext {
     public let totalClients: Int
     public let activeClients: Int
+    public let totalWorkers: Int
     public let totalInvoiced: Double
     public let revenueCollected: Double
     public let outstandingPayments: Double
     public let overdueInvoicesCount: Int
-    public let totalWorkers: Int
-    public let monthlyPayrollExpenses: Double
     public let monthlyOperatingExpenses: Double
+    public let monthlyPayrollExpenses: Double
     public let netOperatingIncome: Double
     public let activeProjectsCount: Int
     public let currencySymbol: String
     public let topOverdueClients: [(name: String, balance: Double)]
     public let packageRevenueBreakdown: [(packageName: String, revenue: Double)]
     
-    // Personalized Founder Target (Toyota Fortuner Milestone)
     public let founderName: String = "Gauresh Khairnar (OWNER)"
-    public let fortunerTargetAmount: Double = 5000000.0 // ₹50,00,000 / $60,000
-    public let fortunerTargetMonthsTotal: Int = 4
-    public var fortunerRemainingAmount: Double {
-        max(0.0, fortunerTargetAmount - revenueCollected)
-    }
-    public var fortunerRequiredMonthlyRunRate: Double {
-        fortunerRemainingAmount / 4.0
-    }
-    public var fortunerRequiredDailyRunRate: Double {
-        fortunerRemainingAmount / 120.0
-    }
-    public var fortunerCompletionPercentage: Double {
-        min(1.0, max(0.0, revenueCollected / fortunerTargetAmount))
+    
+    public init(
+        totalClients: Int,
+        activeClients: Int,
+        totalWorkers: Int,
+        totalInvoiced: Double,
+        revenueCollected: Double,
+        outstandingPayments: Double,
+        overdueInvoicesCount: Int,
+        monthlyOperatingExpenses: Double,
+        monthlyPayrollExpenses: Double,
+        netOperatingIncome: Double,
+        activeProjectsCount: Int,
+        currencySymbol: String,
+        topOverdueClients: [(name: String, balance: Double)] = [],
+        packageRevenueBreakdown: [(packageName: String, revenue: Double)] = []
+    ) {
+        self.totalClients = totalClients
+        self.activeClients = activeClients
+        self.totalWorkers = totalWorkers
+        self.totalInvoiced = totalInvoiced
+        self.revenueCollected = revenueCollected
+        self.outstandingPayments = outstandingPayments
+        self.overdueInvoicesCount = overdueInvoicesCount
+        self.monthlyOperatingExpenses = monthlyOperatingExpenses
+        self.monthlyPayrollExpenses = monthlyPayrollExpenses
+        self.netOperatingIncome = netOperatingIncome
+        self.activeProjectsCount = activeProjectsCount
+        self.currencySymbol = currencySymbol
+        self.topOverdueClients = topOverdueClients
+        self.packageRevenueBreakdown = packageRevenueBreakdown
     }
 }
 
@@ -101,7 +119,7 @@ public final class AIService: ObservableObject {
         }.resume()
     }
     
-    /// Queries Groq AI with live business context
+    /// Queries Groq AI with live business context as Gauresh's Chief of Staff
     public func askBusinessAssistant(
         question: String,
         context: AIAnalysisContext,
@@ -110,36 +128,32 @@ public final class AIService: ObservableObject {
         isAnalyzing = true
         lastAnalysisError = nil
         
+        let overdueClientSummary = context.topOverdueClients.isEmpty
+            ? "None"
+            : context.topOverdueClients.map { "\($0.name): \(context.currencySymbol)\(String(format: "%.2f", $0.balance))" }.joined(separator: ", ")
+        
         let systemPrompt = """
-        You are the personal GAUREX Executive AI Advisor & Strategist built exclusively for Founder & Owner Gauresh Khairnar (OWNER).
-        GAUREX is an enterprise technology development company.
+        You are the personal GAUREX Chief of Staff & Strategic Executive Advisor built exclusively for Founder & Owner Gauresh Khairnar (OWNER).
+        GAUREX is an elite enterprise technology, digital architecture, and bespoke software solutions company.
         
-        CRITICAL FOUNDER MISSION & 4-MONTH TARGET:
-        Gauresh Khairnar has established a clear, non-negotiable target: To purchase a brand new TOYOTA FORTUNER within the next 4 months!
-        - Total Target Capital: \(context.currencySymbol)50,00,000 (₹50 Lakhs)
-        - Timeline: 4 Months (120 Days remaining)
-        - Required Monthly Pace: \(context.currencySymbol)\(String(format: "%.2f", context.fortunerRequiredMonthlyRunRate)) / month
-        - Required Daily Pace: \(context.currencySymbol)\(String(format: "%.2f", context.fortunerRequiredDailyRunRate)) / day
-        - Actual Collected Capital: \(context.currencySymbol)\(String(format: "%.2f", context.revenueCollected)) (\(String(format: "%.1f", context.fortunerCompletionPercentage * 100))% achieved)
-        - Capital Remaining to Fortuner: \(context.currencySymbol)\(String(format: "%.2f", context.fortunerRemainingAmount))
-        
-        AUTHENTIC OPERATIONAL & FINANCIAL SNAPSHOT:
-        - Total Clients: \(context.totalClients) (\(context.activeClients) Active)
+        CURRENT VERIFIED BUSINESS METRICS:
+        - Founder / Owner: Gauresh Khairnar
         - Total Invoiced Revenue: \(context.currencySymbol)\(String(format: "%.2f", context.totalInvoiced))
-        - Actual Collected Revenue: \(context.currencySymbol)\(String(format: "%.2f", context.revenueCollected))
-        - Outstanding Receivables: \(context.currencySymbol)\(String(format: "%.2f", context.outstandingPayments))
+        - Actual Collected Liquid Revenue: \(context.currencySymbol)\(String(format: "%.2f", context.revenueCollected))
+        - Outstanding Client Receivables: \(context.currencySymbol)\(String(format: "%.2f", context.outstandingPayments))
         - Overdue Invoices Count: \(context.overdueInvoicesCount)
-        - Operating Expenses: \(context.currencySymbol)\(String(format: "%.2f", context.monthlyOperatingExpenses))
-        - Disbursed Payroll: \(context.currencySymbol)\(String(format: "%.2f", context.monthlyPayrollExpenses))
-        - Net Operating Income: \(context.currencySymbol)\(String(format: "%.2f", context.netOperatingIncome))
-        - Active Projects: \(context.activeProjectsCount)
-        - Active Team Members: \(context.totalWorkers)
+        - Overdue Accounts: \(overdueClientSummary)
+        - Monthly Operating Expenses: \(context.currencySymbol)\(String(format: "%.2f", context.monthlyOperatingExpenses))
+        - Worker Payroll Commitments: \(context.currencySymbol)\(String(format: "%.2f", context.monthlyPayrollExpenses))
+        - Net Operating Income / Profit: \(context.currencySymbol)\(String(format: "%.2f", context.netOperatingIncome))
+        - Client Base: \(context.totalClients) total (\(context.activeClients) active contracts)
+        - Team Capacity: \(context.totalWorkers) core members across \(context.activeProjectsCount) active projects
         
-        EXECUTIVE COACHING DIRECTIVES:
-        1. Always address Gauresh Khairnar directly with executive sharpness, discipline, and ambitious tactical clarity.
-        2. Keep the 4-Month Toyota Fortuner milestone front-and-center. Evaluate every inquiry against what actions will generate the required \(context.currencySymbol)\(String(format: "%.0f", context.fortunerRequiredDailyRunRate))/day run-rate to secure the Fortuner on time.
-        3. Never invent fictitious numbers or imaginary clients. Ground all insights directly on the verified ledger numbers.
-        4. Provide concrete steps: which overdue accounts to collect, how many high-ticket packages (e.g. ₹5,00,000 retainers) are needed to bridge the remaining capital gap, and what Gauresh should execute today.
+        EXECUTIVE ADVISORY PROTOCOL:
+        1. Always address Gauresh Khairnar directly with executive sharpness, brevity, and data-driven tactical clarity.
+        2. Never give generic boilerplate. Ground your answers directly in the numbers above.
+        3. Structure responses with clean Markdown: bold headers, crisp bullet points, and actionable next steps.
+        4. Focus on cashflow acceleration, closing high-ticket deals, protecting profit margins, and team velocity.
         """
         
         guard let url = URL(string: "https://api.groq.com/openai/v1/chat/completions") else {
@@ -151,7 +165,7 @@ public final class AIService: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("Bearer \(activeApiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 15.0
+        request.timeoutInterval = 12.0
         
         let payload: [String: Any] = [
             "model": defaultGroqModel,
@@ -160,39 +174,51 @@ public final class AIService: ObservableObject {
                 ["role": "user", "content": question]
             ],
             "temperature": 0.4,
-            "max_tokens": 500
+            "max_tokens": 750
         ]
         
-        guard let httpBody = try? JSONSerialization.data(withJSONObject: payload) else {
-            fallbackLocalAssistant(question: question, context: context, completion: completion)
-            return
-        }
-        
-        request.httpBody = httpBody
+        request.httpBody = try? JSONSerialization.data(withJSONObject: payload)
         
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
+            
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.lastAnalysisError = error.localizedDescription
+                    self.fallbackLocalAssistant(question: question, context: context, completion: completion)
+                }
+                return
+            }
             
             if let data = data,
                let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                let choices = json["choices"] as? [[String: Any]],
                let firstChoice = choices.first,
-               let msg = firstChoice["message"] as? [String: Any],
-               let content = msg["content"] as? String {
+               let message = firstChoice["message"] as? [String: Any],
+               let content = message["content"] as? String {
                 
-                let isForecast = question.lowercased().contains("forecast") || question.lowercased().contains("target")
-                let aiMsg = AIMessage(
+                let isForecast = content.contains("forecast") || content.contains("projection") || content.contains("run-rate")
+                
+                // Extract an actionable recommendation if available
+                var recommendation: String? = nil
+                if let line = content.components(separatedBy: "\n").first(where: {
+                    $0.lowercased().contains("recommend") || $0.lowercased().contains("action:") || $0.lowercased().contains("next step")
+                }) {
+                    recommendation = line.replacingOccurrences(of: "**", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+                
+                let aiResponse = AIMessage(
                     sender: "assistant",
-                    content: content,
-                    actionRecommendation: "Grounded in real-time GAUREX ledger via Groq AI",
+                    content: content.trimmingCharacters(in: .whitespacesAndNewlines),
+                    actionRecommendation: recommendation,
                     isForecastEstimate: isForecast
                 )
+                
                 DispatchQueue.main.async {
                     self.isAnalyzing = false
-                    completion(aiMsg)
+                    completion(aiResponse)
                 }
             } else {
-                // Fallback to internal deterministic engine if offline
                 DispatchQueue.main.async {
                     self.fallbackLocalAssistant(question: question, context: context, completion: completion)
                 }
@@ -200,24 +226,24 @@ public final class AIService: ObservableObject {
         }.resume()
     }
     
-    /// Autonomous Goal-to-Daily-Tasks decomposition via Groq AI
-    public func scheduleDailyTasksForGoals(
-        goals: [BusinessGoal],
-        existingTasks: [BusinessTask],
+    /// Generates structured daily execution tasks tailored to current business pulse
+    public func generateSmartDayPlan(
+        context: AIAnalysisContext,
         completion: @escaping ([BusinessTask]) -> Void
     ) {
         isAnalyzing = true
         
-        let goalsSummary = goals.map {
-            "Goal: \($0.title) | Target: \($0.targetValue) | Current: \($0.currentValue) | Deadline: \(DateFormatter.localizedString(from: $0.deadline, dateStyle: .medium, timeStyle: .none))"
-        }.joined(separator: "\n")
-        
         let prompt = """
-        Founder Gauresh Khairnar has set the following business goals for GAUREX:
-        \(goalsSummary)
+        Analyze GAUREX business state for Founder Gauresh Khairnar:
+        - Collected Revenue: \(context.currencySymbol)\(context.revenueCollected)
+        - Invoiced: \(context.currencySymbol)\(context.totalInvoiced)
+        - Pending Receivables: \(context.currencySymbol)\(context.outstandingPayments)
+        - Overdue Invoices: \(context.overdueInvoicesCount)
+        - Active Clients: \(context.activeClients)
+        - Operating Expenses: \(context.currencySymbol)\(context.monthlyOperatingExpenses)
         
-        Break down these high-level business goals into 4-5 tactical, high-priority daily execution tasks for TODAY.
-        Return ONLY a JSON array of tasks with this structure:
+        Generate the 3 highest-leverage, non-negotiable executive priorities for Gauresh today to maximize revenue and cash collections.
+        Return ONLY a JSON array of tasks with this exact structure:
         [
           {
             "title": "Task title",
@@ -225,7 +251,7 @@ public final class AIService: ObservableObject {
             "category": "Sales CRM" or "Financial" or "Engineering" or "Executive",
             "priority": "Urgent" or "High" or "Medium",
             "durationMinutes": 30,
-            "aiReasoning": "Why this directly drives the goal"
+            "aiReasoning": "Why this directly drives revenue or operating efficiency"
           }
         ]
         """
@@ -240,7 +266,7 @@ public final class AIService: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("Bearer \(activeApiKey)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.timeoutInterval = 15.0
+        request.timeoutInterval = 12.0
         
         let payload: [String: Any] = [
             "model": defaultGroqModel,
@@ -267,7 +293,6 @@ public final class AIService: ObservableObject {
                let content = choices.first?["message"] as? [String: Any],
                let text = content["content"] as? String {
                 
-                // Parse JSON array from LLM response
                 if let startIdx = text.range(of: "["),
                    let endIdx = text.range(of: "]", options: .backwards) {
                     let jsonSub = String(text[startIdx.lowerBound...endIdx.upperBound])
@@ -279,7 +304,7 @@ public final class AIService: ObservableObject {
                             let cat = item["category"] as? String ?? "Executive"
                             let pRaw = item["priority"] as? String ?? "High"
                             let dur = item["durationMinutes"] as? Int ?? 30
-                            let reason = item["aiReasoning"] as? String ?? "Drives core business target"
+                            let reason = item["aiReasoning"] as? String ?? "Drives core business growth"
                             
                             let priority: TaskPriority = (pRaw == "Urgent") ? .urgent : ((pRaw == "High") ? .high : .medium)
                             
@@ -301,30 +326,41 @@ public final class AIService: ObservableObject {
                 }
             }
             
-            // Fallback generated tasks if network was offline
+            // Fallback generated tasks if offline or parse error
             if generatedTasks.isEmpty {
                 generatedTasks = [
                     BusinessTask(
-                        title: "Executive Revenue Review & Client Pitching",
-                        taskDescription: "Conduct outreach to 3 enterprise prospects to push closer to the ₹1,000,000 revenue target.",
+                        title: "Enterprise Client Outreach & Retainer Pitching",
+                        taskDescription: "Follow up with high-priority enterprise prospects to close upcoming development retainers.",
                         category: "Sales CRM",
                         priority: .urgent,
                         dueDate: Date(),
                         scheduledStartTime: slot,
                         estimatedDurationMinutes: 45,
                         isAiGenerated: true,
-                        aiReasoning: "Directly bridges the gap to Monthly Revenue Target."
+                        aiReasoning: "Converts active sales pipeline directly into collected cash."
                     ),
                     BusinessTask(
-                        title: "Milestone Delivery & Invoice Collection",
-                        taskDescription: "Review active project deliverables and request payment on issued balances.",
+                        title: "Outstanding Receivables Collection",
+                        taskDescription: "Review overdue client accounts and issue instant payment settlement reminders.",
                         category: "Financial",
                         priority: .high,
                         dueDate: Date(),
                         scheduledStartTime: calendar.date(byAdding: .minute, value: 60, to: slot),
                         estimatedDurationMinutes: 30,
                         isAiGenerated: true,
-                        aiReasoning: "Converts invoiced balance into immediate collected cash."
+                        aiReasoning: "Recovers \(context.currencySymbol)\(String(format: "%.0f", context.outstandingPayments)) in pending client receivables."
+                    ),
+                    BusinessTask(
+                        title: "Operations & Delivery Velocity Review",
+                        taskDescription: "Review project milestones across active development streams to ensure on-time delivery.",
+                        category: "Engineering",
+                        priority: .medium,
+                        dueDate: Date(),
+                        scheduledStartTime: calendar.date(byAdding: .minute, value: 120, to: slot),
+                        estimatedDurationMinutes: 30,
+                        isAiGenerated: true,
+                        aiReasoning: "Ensures client satisfaction and unlocks milestone disbursements."
                     )
                 ]
             }
@@ -343,61 +379,53 @@ public final class AIService: ObservableObject {
         var rec: String? = nil
         var isForecast = false
         
-        let remaining = context.fortunerRemainingAmount
-        let dailyPace = context.fortunerRequiredDailyRunRate
-        let monthlyPace = context.fortunerRequiredMonthlyRunRate
-        let pct = context.fortunerCompletionPercentage * 100.0
-        
-        if lower.contains("fortuner") || lower.contains("target") || lower.contains("4 month") || lower.contains("goal") {
-            isForecast = true
+        if lower.contains("revenue") || lower.contains("money") || lower.contains("cash") {
             answer = """
-            ### 🚗 4-Month Toyota Fortuner Milestone Report
-            **Executive:** Gauresh Khairnar (OWNER)  
-            **Capital Target:** **\(sym)50,00,000** (Toyota Fortuner)  
-            **Timeline:** **4 Months (120 Days sprint)**
-            
-            ---
-            
-            #### 📊 Milestone Progress:
-            • **Collected to Date:** **\(sym)\(String(format: "%.2f", context.revenueCollected))** (\(String(format: "%.1f", pct))% reached)  
-            • **Remaining Gap:** **\(sym)\(String(format: "%.2f", remaining))**  
-            • **Required Monthly Run-Rate:** **\(sym)\(String(format: "%.2f", monthlyPace)) / month**  
-            • **Required Daily Pace:** **\(sym)\(String(format: "%.2f", dailyPace)) / day**  
-            
-            ---
-            
-            #### 🎯 Tactical Plan to Secure the Fortuner:
-            1. **Convert Outstanding Receivables:** Immediately collect **\(sym)\(String(format: "%.2f", context.outstandingPayments))** from pending client balances.
-            2. **Enterprise Package Closures:** Closing **\(max(1, Int(ceil(remaining / 500000)))) enterprise retainers** at \(sym)5,00,000 each fully bridges the capital gap.
-            3. **Daily Action Discipline:** Execute scheduled sales follow-ups today to maintain the \(sym)\(String(format: "%.0f", dailyPace))/day run-rate.
+            ### 💰 Financial Health Briefing for Gauresh Khairnar (OWNER):
+            • **Collected Cash:** **\(sym)\(String(format: "%.2f", context.revenueCollected))** in verified liquid collections.
+            • **Total Invoiced:** **\(sym)\(String(format: "%.2f", context.totalInvoiced))** across all enterprise contracts.
+            • **Pending Receivables:** **\(sym)\(String(format: "%.2f", context.outstandingPayments))** awaiting collection.
+            • **Net Operating Profit:** **\(sym)\(String(format: "%.2f", context.netOperatingIncome))** after monthly expenses.
             """
-            rec = "Collect \(sym)\(String(format: "%.2f", context.outstandingPayments)) in pending client receivables to immediately accelerate toward the Fortuner."
-        } else if lower.contains("collected revenue") || lower.contains("revenue") || lower.contains("money") {
-            answer = "Verified ledger: GAUREX has collected **\(sym)\(String(format: "%.2f", context.revenueCollected))** in actual liquid cash. Total invoiced pipeline stands at **\(sym)\(String(format: "%.2f", context.totalInvoiced))** with **\(sym)\(String(format: "%.2f", context.outstandingPayments))** pending collection."
-            rec = "Collecting outstanding balances pushes you \(sym)\(String(format: "%.2f", context.outstandingPayments)) closer to your 4-month Fortuner milestone."
-        } else if lower.contains("overdue") {
-            answer = "There are currently **\(context.overdueInvoicesCount)** overdue invoices totaling **\(sym)\(String(format: "%.2f", context.outstandingPayments))**."
-            rec = "Issue immediate payment notices to recover pending funds for the Fortuner reserve."
-        } else if lower.contains("expense") || lower.contains("cost") || lower.contains("payroll") {
-            answer = "Monthly operating expenses are **\(sym)\(String(format: "%.2f", context.monthlyOperatingExpenses))** and worker payroll commitment is **\(sym)\(String(format: "%.2f", context.monthlyPayrollExpenses))**. Net operating income is **\(sym)\(String(format: "%.2f", context.netOperatingIncome))**."
-            rec = "Maintain lean operating overhead to protect profit margins for your capital targets."
-        } else if lower.contains("prioritize") || lower.contains("today") || lower.contains("plan") {
+            rec = "Prioritize collecting the \(sym)\(String(format: "%.2f", context.outstandingPayments)) in pending receivables."
+        } else if lower.contains("overdue") || lower.contains("invoice") {
             answer = """
-            ### 🎯 Executive Daily Battle Plan for Gauresh Khairnar:
-            1. **High-Value Client Outreach:** Contact top active prospects to pitch enterprise retainer packages.
-            2. **Cash Settlement:** Follow up on the **\(sym)\(String(format: "%.2f", context.outstandingPayments))** pending receivables.
-            3. **Daily Run-Rate:** Secure at least **\(sym)\(String(format: "%.0f", dailyPace))** today to stay on pace for the 4-month Toyota Fortuner deadline.
+            ### ⚠️ Outstanding Invoices Status:
+            There are currently **\(context.overdueInvoicesCount) overdue invoices** totaling **\(sym)\(String(format: "%.2f", context.outstandingPayments))**.
+            
+            **Recommended Action:** Issue WhatsApp and official email payment reminders to unlock these funds immediately.
             """
-            rec = "Executing these 3 priorities keeps your daily Fortuner run-rate strictly on schedule."
+            rec = "Dispatch invoice settlement reminders to overdue accounts today."
+        } else if lower.contains("expense") || lower.contains("cost") || lower.contains("burn") {
+            answer = """
+            ### 📊 Operational Cost Breakdown:
+            • **Monthly Operating Overhead:** **\(sym)\(String(format: "%.2f", context.monthlyOperatingExpenses))**
+            • **Team Payroll Commitment:** **\(sym)\(String(format: "%.2f", context.monthlyPayrollExpenses))**
+            • **Total Monthly Burn:** **\(sym)\(String(format: "%.2f", context.monthlyOperatingExpenses + context.monthlyPayrollExpenses))**
+            • **Net Profit Margin:** **\(context.revenueCollected > 0 ? String(format: "%.1f", (context.netOperatingIncome / context.revenueCollected) * 100) : "0")%**
+            """
+            rec = "Maintain operating expenses below 20% of monthly collections to protect net margins."
+        } else if lower.contains("plan") || lower.contains("today") || lower.contains("priority") {
+            answer = """
+            ### ⚡ Executive Day Plan for Gauresh Khairnar:
+            1. **High-Ticket Sales Outreach:** Follow up with qualified enterprise pipeline prospects.
+            2. **Receivable Recovery:** Collect on **\(sym)\(String(format: "%.2f", context.outstandingPayments))** in pending client balances.
+            3. **Delivery Quality Assurance:** Check milestone progress with active team members.
+            """
+            rec = "Execute on sales follow-ups and receivable collections to maintain high cash velocity."
         } else {
             answer = """
-            **GAUREX Executive AI Advisor for Gauresh Khairnar (OWNER):**
-            • **Active Clients:** \(context.activeClients)
-            • **Collected Revenue:** \(sym)\(String(format: "%.2f", context.revenueCollected))
+            ### 👑 GAUREX Executive Chief of Staff Briefing:
+            **Founder & Owner:** Gauresh Khairnar
+            • **Active Clients:** \(context.activeClients) (\(context.totalClients) in CRM)
+            • **Collected Cash:** \(sym)\(String(format: "%.2f", context.revenueCollected))
             • **Net Operating Income:** \(sym)\(String(format: "%.2f", context.netOperatingIncome))
-            • **4-Month Fortuner Goal:** \(sym)50,00,000 (\(sym)\(String(format: "%.2f", remaining)) remaining at \(sym)\(String(format: "%.0f", dailyPace))/day)
+            • **Pending Receivables:** \(sym)\(String(format: "%.2f", context.outstandingPayments))
+            • **Core Team:** \(context.totalWorkers) members on \(context.activeProjectsCount) active projects
+            
+            How can I assist your strategic decision-making today, Gauresh?
             """
-            rec = "Ask for Fortuner progress, revenue breakdowns, or daily action steps."
+            rec = "Ask for revenue forecasts, cashflow breakdown, or tactical day plans."
         }
         
         let msg = AIMessage(

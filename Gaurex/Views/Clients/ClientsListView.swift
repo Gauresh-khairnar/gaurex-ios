@@ -130,7 +130,10 @@ public struct ClientsListView: View {
                                         NavigationLink {
                                             ClientDetailView(client: client)
                                         } label: {
-                                            ClientCardView(client: client)
+                                            ClientCardView(client: client, onDelete: {
+                                                clientToDelete = client
+                                                showingDeleteClientAlert = true
+                                            })
                                         }
                                         .buttonStyle(.plain)
                                         .contextMenu {
@@ -249,6 +252,7 @@ public struct FilterChip: View {
 public struct ClientCardView: View {
     @ObservedObject private var theme = ThemeManager.shared
     public var client: Client
+    public var onDelete: (() -> Void)? = nil
     
     public var body: some View {
         GlassCard(padding: 14) {
@@ -268,10 +272,26 @@ public struct ClientCardView: View {
                     
                     Spacer()
                     
-                    StatusBadge(
-                        text: client.status.rawValue,
-                        color: client.status == .active ? .green : (client.status == .prospective ? .orange : .gray)
-                    )
+                    HStack(spacing: 8) {
+                        StatusBadge(
+                            text: client.status.rawValue,
+                            color: client.status == .active ? .green : (client.status == .prospective ? .orange : .gray)
+                        )
+                        
+                        if let onDelete = onDelete {
+                            Button {
+                                onDelete()
+                            } label: {
+                                Image(systemName: "trash")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(.red.opacity(0.8))
+                                    .padding(6)
+                                    .background(Color.red.opacity(0.08))
+                                    .clipShape(Circle())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
                 
                 Divider().background(theme.glassBorderColor)

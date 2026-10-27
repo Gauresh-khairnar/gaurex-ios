@@ -18,13 +18,13 @@ public struct AIIntelligenceView: View {
     @State private var showingClearHistoryAlert = false
     
     let allExecutivePrompts = [
-        "🚗 Fortuner 4-Month Target Status",
-        "🔥 What deals will get my Fortuner fastest?",
-        "💰 Remaining run-rate needed per day for Fortuner",
+        "📊 Executive Financial Briefing",
+        "💸 Outstanding Invoices & Collection Strategy",
+        "📈 Growth & Profit Optimization Plan",
+        "⚡ Priority Actions for Today",
         "How much money did we actually collect this month?",
         "Which invoices are overdue right now?",
-        "Which deals need follow-up today?",
-        "What should Gauresh prioritize today?",
+        "Which client deals need follow-up today?",
         "Generate this week's business performance report."
     ]
     
@@ -157,60 +157,72 @@ public struct AIIntelligenceView: View {
                                 .padding(.horizontal, 16)
                                 .padding(.top, 6)
                                 
-                                // Fortuner 4-Month Target Sprint Tracker Card
+                                // Executive Business Pulse Telemetry Card
                                 GlassCard {
-                                    VStack(alignment: .leading, spacing: 8) {
+                                    VStack(alignment: .leading, spacing: 10) {
                                         HStack {
                                             HStack(spacing: 6) {
-                                                Image(systemName: "car.fill")
-                                                    .font(.system(size: 15))
-                                                    .foregroundColor(.yellow)
-                                                Text("4-MONTH TOYOTA FORTUNER TARGET")
+                                                Image(systemName: "chart.line.uptrend.xyaxis")
+                                                    .font(.system(size: 14, weight: .semibold))
+                                                    .foregroundColor(theme.accentColor)
+                                                Text("EXECUTIVE BUSINESS PULSE")
                                                     .font(TypographyTokens.caption)
-                                                    .foregroundColor(.yellow)
+                                                    .foregroundColor(theme.accentColor)
                                             }
                                             Spacer()
                                             OwnerBadge()
                                         }
                                         
-                                        HStack(alignment: .firstTextBaseline) {
-                                            Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.revenueCollected))")
-                                                .font(.system(size: 20, weight: .bold))
-                                            Text("of \(currentContext.currencySymbol)50,00,000")
-                                                .font(.system(size: 12))
-                                                .foregroundColor(.secondary)
-                                            Spacer()
-                                            Text("\(String(format: "%.1f", currentContext.fortunerCompletionPercentage * 100))%")
-                                                .font(.system(size: 14, weight: .bold))
-                                                .foregroundColor(.yellow)
-                                        }
-                                        
-                                        ProgressView(value: currentContext.fortunerCompletionPercentage)
-                                            .tint(.yellow)
-                                        
-                                        HStack {
-                                            Text("Remaining: \(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.fortunerRemainingAmount))")
-                                                .font(.system(size: 11, weight: .semibold))
-                                                .foregroundColor(.secondary)
-                                            Spacer()
-                                            Text("Required: \(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.fortunerRequiredDailyRunRate))/day")
-                                                .font(.system(size: 11, weight: .bold))
-                                                .foregroundColor(theme.accentColor)
+                                        HStack(spacing: 12) {
+                                            VStack(alignment: .leading, spacing: 3) {
+                                                Text("Collected Cash")
+                                                    .font(.system(size: 10, weight: .medium))
+                                                    .foregroundColor(.secondary)
+                                                Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.revenueCollected))")
+                                                    .font(.system(size: 17, weight: .bold))
+                                                    .foregroundColor(.green)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            Divider().frame(height: 30)
+                                            
+                                            VStack(alignment: .leading, spacing: 3) {
+                                                Text("Receivables")
+                                                    .font(.system(size: 10, weight: .medium))
+                                                    .foregroundColor(.secondary)
+                                                Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.outstandingPayments))")
+                                                    .font(.system(size: 17, weight: .bold))
+                                                    .foregroundColor(.orange)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                            
+                                            Divider().frame(height: 30)
+                                            
+                                            VStack(alignment: .leading, spacing: 3) {
+                                                Text("Net Profit")
+                                                    .font(.system(size: 10, weight: .medium))
+                                                    .foregroundColor(.secondary)
+                                                Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.netOperatingIncome))")
+                                                    .font(.system(size: 17, weight: .bold))
+                                                    .foregroundColor(theme.accentColor)
+                                            }
+                                            .frame(maxWidth: .infinity, alignment: .leading)
                                         }
                                         
                                         Button {
-                                            sendMessage(text: "🚗 Fortuner 4-Month Target Status")
+                                            sendMessage(text: "📊 Executive Financial Briefing")
                                         } label: {
                                             HStack {
-                                                Text("Generate Fortuner Tactical Sprint Plan")
+                                                Image(systemName: "sparkles")
+                                                Text("Generate Strategic Executive Briefing")
                                                 Spacer()
                                                 Image(systemName: "arrow.right.circle.fill")
                                             }
                                             .font(.system(size: 11.5, weight: .bold))
-                                            .foregroundColor(.black)
+                                            .foregroundColor(.white)
                                             .padding(.horizontal, 12)
-                                            .padding(.vertical, 7)
-                                            .background(Color.yellow)
+                                            .padding(.vertical, 8)
+                                            .background(theme.accentColor)
                                             .clipShape(Capsule())
                                         }
                                         .buttonStyle(.plain)

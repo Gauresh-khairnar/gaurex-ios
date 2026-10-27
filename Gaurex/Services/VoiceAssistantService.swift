@@ -10,7 +10,7 @@ import Speech
 import AVFoundation
 
 public enum VoiceCommandIntent: Equatable {
-    case fortunerTarget
+    case businessBriefing
     case overdueInvoices
     case todayTasks
     case planMyDay
@@ -144,7 +144,7 @@ public final class VoiceAssistantService: ObservableObject {
     }
     
     public func stopListeningAndProcess(spokenQuery: String? = nil) {
-        let recognized = spokenQuery ?? (liveTranscript.isEmpty || liveTranscript.starts(with: "Listening") ? "🚗 Fortuner target status" : liveTranscript)
+        let recognized = spokenQuery ?? (liveTranscript.isEmpty || liveTranscript.starts(with: "Listening") ? "Executive business summary" : liveTranscript)
         stopListeningInternal()
         liveTranscript = recognized
         processCommand(query: recognized)
@@ -195,21 +195,18 @@ public final class VoiceAssistantService: ObservableObject {
         var requiresConfirmation = false
         var proposedAction: String? = nil
         
-        if lower.contains("fortuner") || lower.contains("target") || lower.contains("4 month") || lower.contains("goal") {
-            intent = .fortunerTarget
-            let target = 5000000.0
+        if lower.contains("briefing") || lower.contains("summary") || lower.contains("status") || lower.contains("pulse") {
+            intent = .businessBriefing
             let collected = store.revenueCollected
-            let remaining = max(0.0, target - collected)
-            let dailyRate = remaining / 120.0
-            let monthlyRate = remaining / 4.0
-            
-            responseText = "Gauresh, for your 4-month Toyota Fortuner target of \(sym)50,00,000, you have collected \(sym)\(String(format: "%.2f", collected)). Remaining gap is \(sym)\(String(format: "%.2f", remaining)). Required pace is \(sym)\(String(format: "%.0f", dailyRate)) per day or \(sym)\(String(format: "%.0f", monthlyRate)) per month."
+            let pending = store.outstandingPayments
+            let activeClients = store.clients.filter { $0.status == .active }.count
+            responseText = "Gauresh, your verified liquid revenue is \(sym)\(String(format: "%.2f", collected)). You have \(activeClients) active client contracts and \(sym)\(String(format: "%.2f", pending)) in outstanding receivables."
         } else if lower.contains("overdue") {
             intent = .overdueInvoices
             let count = store.overdueInvoicesCount
             let sum = store.outstandingPayments
             responseText = count > 0
-                ? "You have \(count) overdue invoice(s) totaling \(sym)\(String(format: "%.2f", sum)). Collecting this bridges the gap toward your Fortuner."
+                ? "You have \(count) overdue invoice(s) totaling \(sym)\(String(format: "%.2f", sum)). Recovering this will immediately boost cash on hand."
                 : "All client invoices are currently in good standing with zero overdue accounts."
         } else if lower.contains("task") || lower.contains("top three") {
             intent = .todayTasks

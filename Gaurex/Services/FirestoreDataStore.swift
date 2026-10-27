@@ -113,20 +113,23 @@ public final class FirestoreDataStore: ObservableObject {
             savePackages()
         }
         
-        // Initial Goals for Founder Gauresh Khairnar (OWNER)
+        // Ensure any legacy Fortuner goals are purged
+        businessGoals.removeAll { $0.title.contains("Fortuner") }
+        
+        // Initial Strategic Goals for Founder Gauresh Khairnar (OWNER)
         if businessGoals.isEmpty {
             businessGoals = [
                 BusinessGoal(
-                    title: "Toyota Fortuner Milestone (4-Month Target)",
+                    title: "Annual Revenue Target",
                     metricType: .cashCollections,
                     targetValue: 5000000.0,
                     currentValue: 0.0,
-                    deadline: Calendar.current.date(byAdding: .month, value: 4, to: Date()) ?? Date(),
-                    blockers: ["Requires maintaining ₹41,666/day collection pace"],
+                    deadline: Calendar.current.date(byAdding: .month, value: 12, to: Date()) ?? Date(),
+                    blockers: ["Expand enterprise software sales pipeline"],
                     recommendedActions: [
-                        "Close high-value enterprise retainer contracts (₹5L+ each)",
+                        "Close high-value enterprise retainer contracts",
                         "Convert outstanding client balances into collected cash",
-                        "Maintain ₹12,50,000 monthly collected revenue target"
+                        "Maintain steady recurring revenue growth"
                     ]
                 ),
                 BusinessGoal(
@@ -134,7 +137,7 @@ public final class FirestoreDataStore: ObservableObject {
                     metricType: .monthlyRevenue,
                     targetValue: 1250000.0,
                     currentValue: 0.0,
-                    blockers: ["Pending enterprise contract signatures"],
+                    blockers: ["Pending contract execution"],
                     recommendedActions: ["Close negotiation with active pipeline leads"]
                 ),
                 BusinessGoal(
@@ -154,24 +157,6 @@ public final class FirestoreDataStore: ObservableObject {
                     recommendedActions: ["Maintain cloud infrastructure within allocated limits"]
                 )
             ]
-            saveGoals()
-        } else if !businessGoals.contains(where: { $0.title.contains("Fortuner") }) {
-            businessGoals.insert(
-                BusinessGoal(
-                    title: "Toyota Fortuner Milestone (4-Month Target)",
-                    metricType: .cashCollections,
-                    targetValue: 5000000.0,
-                    currentValue: 0.0,
-                    deadline: Calendar.current.date(byAdding: .month, value: 4, to: Date()) ?? Date(),
-                    blockers: ["Requires maintaining ₹41,666/day collection pace"],
-                    recommendedActions: [
-                        "Close high-value enterprise retainer contracts (₹5L+ each)",
-                        "Convert outstanding client balances into collected cash",
-                        "Maintain ₹12,50,000 monthly collected revenue target"
-                    ]
-                ),
-                at: 0
-            )
             saveGoals()
         }
         

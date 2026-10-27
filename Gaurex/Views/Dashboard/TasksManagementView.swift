@@ -13,7 +13,6 @@ public struct TasksManagementView: View {
     
     @State private var selectedFilter = 0 // 0: Today, 1: Upcoming, 2: Completed, 3: Overdue
     @State private var showingAddTask = false
-    @State private var isSchedulingWithGroq = false
     
     public init() {}
     
@@ -56,7 +55,7 @@ public struct TasksManagementView: View {
                             EmptyStateView(
                                 icon: "checklist",
                                 title: "No Tasks In This View",
-                                description: "Schedule tasks or trigger the Groq AI Planner to generate goal-aligned actions.",
+                                description: "Add tasks to manage your strategic daily schedule.",
                                 actionTitle: "Add Task"
                             ) {
                                 showingAddTask = true
@@ -94,22 +93,6 @@ public struct TasksManagementView: View {
             .sheet(isPresented: $showingAddTask) {
                 AddTaskSheet()
             }
-        }
-    }
-    
-    private func scheduleWithGroq() {
-        isSchedulingWithGroq = true
-        AIService.shared.scheduleDailyTasksForGoals(
-            goals: store.businessGoals,
-            existingTasks: store.tasks
-        ) { generated in
-            self.isSchedulingWithGroq = false
-            for t in generated {
-                if !store.tasks.contains(where: { $0.title == t.title }) {
-                    store.addTask(t)
-                }
-            }
-            store.showToast(title: "Groq Scheduled \(generated.count) Strategic Goal Tasks")
         }
     }
 }
