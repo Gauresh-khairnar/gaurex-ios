@@ -51,7 +51,7 @@ public struct VoiceAssistantOverlay: View {
                                 HStack {
                                     Image(systemName: "sparkles")
                                         .foregroundColor(theme.accentColor)
-                                    Text("GAUREX Voice Engine")
+                                    Text("NEO • AI Co-Founder")
                                         .font(.system(size: 13, weight: .bold))
                                     Spacer()
                                     OwnerBadge()

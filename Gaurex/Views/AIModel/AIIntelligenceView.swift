@@ -141,15 +141,15 @@ public struct AIIntelligenceView: View {
                                 GlassCard {
                                     VStack(alignment: .leading, spacing: 8) {
                                         HStack {
-                                            Image(systemName: "brain.head.profile")
+                                            Image(systemName: "sparkles")
                                                 .font(.system(size: 18))
                                                 .foregroundColor(theme.accentColor)
-                                            Text("GAUREX AI Business Advisor")
+                                            Text("NEO • AI Co-Founder")
                                                 .font(.system(size: 15, weight: .bold))
                                             Spacer()
                                             OwnerBadge()
                                         }
-                                        Text("Ask natural language queries regarding collected revenue, recorded expenses, sales pipeline loss points, employee payroll, and daily priorities.")
+                                        Text("Autonomous executive intelligence partner trained on GAUREX live ledger, ML cashflow regression, churn classification, and predictive analytics.")
                                             .font(.system(size: 13))
                                             .foregroundColor(.secondary)
                                     }

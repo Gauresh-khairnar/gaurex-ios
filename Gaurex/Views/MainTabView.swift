@@ -44,6 +44,9 @@ public struct MainTabView: View {
                 .padding(.horizontal, 14)
                 .padding(.bottom, 6)
         }
+        .onAppear {
+            NeoCoFounderService.shared.greetFounderOnLaunch()
+        }
         .preferredColorScheme(theme.colorScheme)
     }
 }

@@ -28,13 +28,13 @@ public struct AIAnalysisContext {
     public init(
         totalClients: Int,
         activeClients: Int,
-        totalWorkers: Int,
         totalInvoiced: Double,
         revenueCollected: Double,
         outstandingPayments: Double,
         overdueInvoicesCount: Int,
-        monthlyOperatingExpenses: Double,
+        totalWorkers: Int,
         monthlyPayrollExpenses: Double,
+        monthlyOperatingExpenses: Double,
         netOperatingIncome: Double,
         activeProjectsCount: Int,
         currencySymbol: String,
@@ -43,11 +43,11 @@ public struct AIAnalysisContext {
     ) {
         self.totalClients = totalClients
         self.activeClients = activeClients
-        self.totalWorkers = totalWorkers
         self.totalInvoiced = totalInvoiced
         self.revenueCollected = revenueCollected
         self.outstandingPayments = outstandingPayments
         self.overdueInvoicesCount = overdueInvoicesCount
+        self.totalWorkers = totalWorkers
         self.monthlyOperatingExpenses = monthlyOperatingExpenses
         self.monthlyPayrollExpenses = monthlyPayrollExpenses
         self.netOperatingIncome = netOperatingIncome
