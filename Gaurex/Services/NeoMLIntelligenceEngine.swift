@@ -58,7 +58,7 @@ public final class NeoMLIntelligenceEngine {
     
     // MARK: - 1. Regression Algorithms: Cashflow & Revenue Forecasting
     /// Performs linear regression with L2 ridge stabilization on invoice settlement velocity
-    public func forecastRevenue(history: [Payment], targetGoal: Double) -> RevenueForecastResult {
+    public func forecastRevenue(history: [PaymentRecord], targetGoal: Double) -> RevenueForecastResult {
         guard !history.isEmpty else {
             let baseline = 250000.0
             return RevenueForecastResult(
