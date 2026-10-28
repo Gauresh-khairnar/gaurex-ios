@@ -23,6 +23,7 @@ public struct SettingsView: View {
     @State private var officialEmail: String = "gaurex.ai@gmail.com"
     @State private var officialPhone: String = "+91 98765 43210"
     @State private var companyName: String = "GAUREX"
+    @State private var showingResetAlert: Bool = false
     
     private let accentColors: [Color] = [
         Color(red: 0.18, green: 0.08, blue: 0.28), // Deep Royal Purple
@@ -400,6 +401,21 @@ public struct SettingsView: View {
                                         iconColor: .blue,
                                         title: "Data & Backup",
                                         subtitle: "Export full business JSON ledger snapshot"
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                Button {
+                                    showingResetAlert = true
+                                } label: {
+                                    SettingsRow(
+                                        icon: "trash.fill",
+                                        iconColor: .red,
+                                        title: "Clear All Previous Data",
+                                        subtitle: "Purge all test/mock records for clean production use",
+                                        badgeText: "Clean Slate"
                                     )
                                 }
                                 .buttonStyle(.plain)

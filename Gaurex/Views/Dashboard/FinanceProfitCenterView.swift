@@ -308,6 +308,29 @@ public struct AddExpenseSheet: View {
                 Section(header: Text("Notes")) {
                     TextField("Memo / Notes", text: $notes)
                 }
+                
+                Section {
+                    ExecutiveGoldVaultSlider(
+                        title: "Slide to Authorize Expense",
+                        subtitle: "Deducts live cashflow immediately",
+                        icon: "creditcard.fill"
+                    ) {
+                        guard !title.isEmpty, amount > 0 else { return }
+                        let exp = Expense(
+                            title: title,
+                            category: category,
+                            amount: amount,
+                            date: date,
+                            paymentMethod: paymentMethod,
+                            vendorName: vendor,
+                            notes: notes
+                        )
+                        store.addExpense(exp)
+                        dismiss()
+                    }
+                    .listRowInsets(EdgeInsets())
+                    .listRowBackground(Color.clear)
+                }
             }
             .navigationTitle("Log Expense")
             .navigationBarTitleDisplayMode(.inline)

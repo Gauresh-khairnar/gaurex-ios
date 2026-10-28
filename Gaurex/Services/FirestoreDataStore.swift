@@ -42,6 +42,7 @@ public final class FirestoreDataStore: ObservableObject {
     // UI Feedback
     @Published public var activeToast: ToastMessage? = nil
     @Published public var activeDateFilter: DateRangeFilter = .thisMonth
+    @Published public var isStealthPrivacyActive: Bool = false
     
     // Keys
     private let clientsKey = "gaurex_db_clients"
@@ -67,6 +68,65 @@ public final class FirestoreDataStore: ObservableObject {
     private init() {
         loadData()
         seedInitialDataIfEmpty()
+        
+        // One-time fresh start purge: clear all previous test/mock data
+        let cleanLaunchKey = "gaurex_clean_founder_production_v1"
+        if !UserDefaults.standard.bool(forKey: cleanLaunchKey) {
+            clearAllOperationalData()
+            UserDefaults.standard.set(true, forKey: cleanLaunchKey)
+        }
+    }
+    
+    public func toggleStealthPrivacy() {
+        MotionTokens.impact(style: .medium)
+        isStealthPrivacyActive.toggle()
+        showToast(title: isStealthPrivacyActive ? "Stealth Shield Active (Figures Hidden)" : "Privacy Shield Deactivated")
+    }
+    
+    public func formatPrivacyCurrency(_ amount: Double) -> String {
+        if isStealthPrivacyActive {
+            return "••••••"
+        }
+        return FinancialCalculator.shared.formatCurrency(amount, symbol: settings.currencySymbol)
+    }
+    
+    public func clearAllOperationalData() {
+        clients.removeAll()
+        invoices.removeAll()
+        payments.removeAll()
+        workers.removeAll()
+        payrollRecords.removeAll()
+        expenses.removeAll()
+        projects.removeAll()
+        tasks.removeAll()
+        salesLeads.removeAll()
+        attendanceRecords.removeAll()
+        leaveRequests.removeAll()
+        salaryHistory.removeAll()
+        vaultDocuments.removeAll()
+        aiMessages.removeAll()
+        
+        // Reset invoice sequential counter
+        settings.nextInvoiceNumber = 1001
+        
+        saveClients()
+        saveInvoices()
+        savePayments()
+        saveWorkers()
+        savePayroll()
+        saveExpenses()
+        saveProjects()
+        saveTasks()
+        saveLeads()
+        saveAttendance()
+        saveLeaves()
+        saveSalaryHist()
+        saveDocuments()
+        saveSettings()
+        saveAIMessages()
+        
+        AuditLogger.shared.log(actionType: "PURGE", entityType: "Database", entityId: "ALL", description: "Cleared all operational data for fresh founder launch")
+        showToast(title: "Database Ready: Clean Slate")
     }
     
     private func seedInitialDataIfEmpty() {

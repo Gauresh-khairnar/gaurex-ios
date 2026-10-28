@@ -123,6 +123,7 @@ public struct InvoicesListView: View {
 public struct InvoiceItemCard: View {
     @ObservedObject private var theme = ThemeManager.shared
     public var invoice: Invoice
+    @State private var showingWhatsAppSheet: Bool = false
     
     public var body: some View {
         GlassCard(padding: 14) {
@@ -166,6 +167,30 @@ public struct InvoiceItemCard: View {
                         Text(FinancialCalculator.shared.formatCurrency(invoice.totalAmount))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(theme.accentColor)
+                    }
+                }
+                
+                if invoice.balanceDue > 0 {
+                    HStack {
+                        Spacer()
+                        Button {
+                            showingWhatsAppSheet = true
+                        } label: {
+                            HStack(spacing: 5) {
+                                Image(systemName: "message.fill")
+                                Text("Settle via WhatsApp")
+                            }
+                            .font(.pjs(10.5, weight: .bold))
+                            .foregroundColor(Color(red: 0.15, green: 0.75, blue: 0.38))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 5)
+                            .background(Color(red: 0.15, green: 0.75, blue: 0.38).opacity(0.12))
+                            .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .sheet(isPresented: $showingWhatsAppSheet) {
+                        WhatsAppSettlerSheet(invoice: invoice)
                     }
                 }
             }

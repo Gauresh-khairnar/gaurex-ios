@@ -21,6 +21,7 @@ public struct DashboardView: View {
     @State private var showingSettingsSheet = false
     @State private var showingNewProjectSheet = false
     @State private var showingAddExpenseSheet = false
+    @State private var showingGhostSimulatorSheet = false
     
     // Opening & Micro-Animation States
     @State private var animateHeader = false
@@ -105,6 +106,23 @@ public struct DashboardView: View {
                             }
                             
                             Spacer()
+                            
+                            // Stealth Privacy Shield Button
+                            Button {
+                                store.toggleStealthPrivacy()
+                            } label: {
+                                ZStack {
+                                    Circle()
+                                        .fill(colorScheme == .dark ? Color(red: 0.18, green: 0.18, blue: 0.22) : Color.white)
+                                        .frame(width: 42, height: 42)
+                                        .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                                    
+                                    Image(systemName: store.isStealthPrivacyActive ? "eye.slash.fill" : "eye.fill")
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundColor(store.isStealthPrivacyActive ? Color.red : goldAccent)
+                                }
+                            }
+                            .buttonStyle(.plain)
                             
                             // Bell Notifications Button with Live Yellow Indicator Dot
                             Button {
@@ -232,112 +250,17 @@ public struct DashboardView: View {
                         .offset(y: animateHeader ? 0 : -15)
                         .opacity(animateHeader ? 1 : 0)
                         
-                        // MARK: - Total Revenue Card with Flowing Sparkline Wave
-                        Button {
+                        // MARK: - 3D Holographic Gyroscope Hero Card
+                        HolographicFounderHeroCard {
                             showingProfitCenter = true
-                        } label: {
-                            ZStack(alignment: .topTrailing) {
-                                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                    .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.25 : 0.05), radius: 14, x: 0, y: 4)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                            .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
-                                    )
-                                
-                                // Content
-                                HStack(alignment: .bottom) {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        HStack(spacing: 8) {
-                                            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                                .fill(Color(red: 0.24, green: 0.12, blue: 0.36).opacity(0.08))
-                                                .frame(width: 36, height: 36)
-                                                .overlay(
-                                                    Image(systemName: "chart.bar.xaxis")
-                                                        .font(.system(size: 16, weight: .semibold))
-                                                        .foregroundColor(deepPurple)
-                                                )
-                                            
-                                            Text("Net Operating Cashflow")
-                                                .font(.pjs(13, weight: .medium))
-                                                .foregroundColor(Color(uiColor: .secondaryLabel))
-                                        }
-                                        
-                                        // Real live verified store data
-                                        Text(FinancialCalculator.shared.formatCurrency(store.netOperatingRevenue, symbol: store.settings.currencySymbol))
-                                            .font(.pjs(26, weight: .bold))
-                                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                                        
-                                        HStack(spacing: 8) {
-                                            HStack(spacing: 3) {
-                                                Image(systemName: "arrow.down.left")
-                                                    .font(.system(size: 10, weight: .bold))
-                                                Text("In: \(FinancialCalculator.shared.formatCurrency(store.revenueCollected, symbol: store.settings.currencySymbol))")
-                                                    .font(.pjs(11, weight: .semibold))
-                                            }
-                                            .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
-                                            
-                                            Text("•")
-                                                .foregroundColor(Color(uiColor: .tertiaryLabel))
-                                            
-                                            HStack(spacing: 3) {
-                                                Image(systemName: "arrow.up.right")
-                                                    .font(.system(size: 10, weight: .bold))
-                                                Text("Exp: -\(FinancialCalculator.shared.formatCurrency(store.allOperationalExpenses, symbol: store.settings.currencySymbol))")
-                                                    .font(.pjs(11, weight: .semibold))
-                                            }
-                                            .foregroundColor(Color(red: 0.92, green: 0.28, blue: 0.28))
-                                        }
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    // Flowing Bezier Sparkline Chart
-                                    ZStack {
-                                        SparklineWaveShape()
-                                            .stroke(
-                                                LinearGradient(
-                                                    colors: [
-                                                        deepPurple,
-                                                        goldAccent
-                                                    ],
-                                                    startPoint: .leading,
-                                                    endPoint: .trailing
-                                                ),
-                                                lineWidth: 2.2
-                                            )
-                                            .frame(width: 130, height: 56)
-                                        
-                                        // Golden inflection node on peak
-                                        Circle()
-                                            .fill(goldAccent)
-                                            .frame(width: 8, height: 8)
-                                            .shadow(color: goldAccent.opacity(0.8), radius: sparklinePulse ? 6 : 2)
-                                            .offset(x: 15, y: -16)
-                                    }
-                                }
-                                .padding(20)
-                                
-                                // Live Pill Badge
-                                HStack(spacing: 5) {
-                                    Circle()
-                                        .fill(Color(red: 0.06, green: 0.72, blue: 0.44))
-                                        .frame(width: 6, height: 6)
-                                    Text("Live Sync")
-                                        .font(.pjs(11, weight: .bold))
-                                        .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
-                                }
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 4)
-                                .background(Color(red: 0.06, green: 0.72, blue: 0.44).opacity(0.10))
-                                .clipShape(Capsule())
-                                .padding(14)
-                            }
                         }
-                        .buttonStyle(.plain)
                         .padding(.horizontal, 24)
                         .offset(y: animateRevenueCard ? 0 : 25)
                         .opacity(animateRevenueCard ? 1 : 0)
+                        
+                        // MARK: - Founder Velocity 3-Ring Activity Center
+                        FounderVelocityRingsView()
+                            .padding(.horizontal, 24)
                         
                         // MARK: - 4-Card Metrics Grid (2x2 Spacious with Real Data)
                         LazyVGrid(columns: [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)], spacing: 14) {
@@ -449,14 +372,14 @@ public struct DashboardView: View {
                                     showingAddExpenseSheet = true
                                 }
                                 
-                                // 6. Profit Center
+                                // 6. Ghost Simulator
                                 QuickActionCardTile(
-                                    icon: "chart.line.uptrend.xyaxis",
+                                    icon: "wand.and.stars",
                                     iconColor: goldAccent,
-                                    title: "Profit Center",
-                                    subtitle: "P&L and margins"
+                                    title: "Ghost Simulator",
+                                    subtitle: "What-If war games"
                                 ) {
-                                    showingProfitCenter = true
+                                    showingGhostSimulatorSheet = true
                                 }
                             }
                             .padding(.horizontal, 24)
@@ -481,6 +404,9 @@ public struct DashboardView: View {
             }
             .sheet(isPresented: $showingAddExpenseSheet) {
                 AddExpenseSheet()
+            }
+            .sheet(isPresented: $showingGhostSimulatorSheet) {
+                GhostRunwaySimulatorSheet()
             }
             .onAppear {
                 triggerAppOpeningAnimations()
