@@ -42,6 +42,7 @@ public enum AppTheme: String, CaseIterable, Identifiable {
 
 public class ThemeManager: ObservableObject {
     public static let shared = ThemeManager()
+    public static let bezelPadding: CGFloat = 24.0
     
     @AppStorage("gaurex_selected_theme") public var currentThemeRaw: String = AppTheme.system.rawValue {
         didSet {

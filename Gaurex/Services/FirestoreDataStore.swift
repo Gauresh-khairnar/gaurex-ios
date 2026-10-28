@@ -120,7 +120,7 @@ public final class FirestoreDataStore: ObservableObject {
         saveLeads()
         saveAttendance()
         saveLeaves()
-        saveSalaryHist()
+        saveSalaryHistory()
         saveDocuments()
         saveSettings()
         saveAIMessages()

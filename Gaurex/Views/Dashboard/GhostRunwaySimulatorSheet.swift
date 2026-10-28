@@ -189,7 +189,7 @@ public struct GhostRunwaySimulatorSheet: View {
                         
                         Spacer().frame(height: 30)
                     }
-                    .padding(.horizontal, ThemeManager.bezelPadding)
+                    .padding(.horizontal, 24)
                 }
             }
             .navigationBarHidden(true)
