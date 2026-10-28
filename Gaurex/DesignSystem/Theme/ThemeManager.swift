@@ -10,6 +10,8 @@ public enum AppTheme: String, CaseIterable, Identifiable {
     case system = "System"
     case light = "Pure Light"
     case dark = "Studio Dark"
+    case purple = "Purple"
+    case gold = "Gold"
     case midnight = "Midnight Black"
     case pureWhite = "Pure White"
     case graphite = "Graphite Slate"
@@ -37,7 +39,7 @@ public class ThemeManager: ObservableObject {
         switch currentTheme {
         case .system: return nil
         case .light, .pureWhite: return .light
-        case .dark, .midnight, .graphite, .oceanBlue, .gaurexAccent: return .dark
+        case .dark, .midnight, .graphite, .oceanBlue, .gaurexAccent, .purple, .gold: return .dark
         }
     }
     
@@ -52,6 +54,10 @@ public class ThemeManager: ObservableObject {
             return Color.white
         case .dark:
             return Color(red: 0.08, green: 0.08, blue: 0.09)
+        case .purple:
+            return Color(red: 0.10, green: 0.05, blue: 0.16)
+        case .gold:
+            return Color(red: 0.08, green: 0.07, blue: 0.05)
         case .midnight:
             return Color.black
         case .graphite:
@@ -74,6 +80,10 @@ public class ThemeManager: ObservableObject {
             return Color(red: 0.98, green: 0.98, blue: 0.99)
         case .dark:
             return Color(red: 0.13, green: 0.13, blue: 0.15)
+        case .purple:
+            return Color(red: 0.16, green: 0.09, blue: 0.24)
+        case .gold:
+            return Color(red: 0.15, green: 0.13, blue: 0.09)
         case .midnight:
             return Color(red: 0.08, green: 0.08, blue: 0.09)
         case .graphite:
@@ -90,6 +100,10 @@ public class ThemeManager: ObservableObject {
         switch currentTheme {
         case .system, .light, .dark, .pureWhite, .midnight, .graphite:
             return Color.primary
+        case .purple:
+            return Color(red: 0.70, green: 0.40, blue: 0.95)
+        case .gold:
+            return Color(red: 0.90, green: 0.65, blue: 0.15)
         case .oceanBlue:
             return Color(red: 0.22, green: 0.65, blue: 0.98)
         case .gaurexAccent:

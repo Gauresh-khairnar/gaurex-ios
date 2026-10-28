@@ -2,223 +2,232 @@
 //  LiquidGlassTabBar.swift
 //  GAUREX Dashboard
 //  Founder & Owner: Gauresh Khairnar (OWNER)
-//  Genuine Apple Native Liquid Glass Floating Tab Bar
-//  Faithful Native Swift/SwiftUI Port of Liquid Glass Bottom Bar Specifications
+//  Executive 5-Tab Floating Navigation Bar with Elevated Center AI Co-Founder Button
 //
 
 import SwiftUI
 
 public enum MainTab: Int, CaseIterable, Identifiable {
     case home = 0
-    case tasks = 1
-    case finance = 2
-    case clients = 3
-    case workers = 4
-    case aiModel = 5
-    case settings = 6
+    case clients = 1
+    case aiModel = 2
+    case workers = 3
+    case settings = 4
+    case tasks = 5
+    case finance = 6
     
     public var id: Int { rawValue }
     
     public var title: String {
         switch self {
         case .home: return "Home"
+        case .clients: return "Clients"
+        case .aiModel: return "AI"
+        case .workers: return "Workers"
+        case .settings: return "Settings"
         case .tasks: return "Tasks"
         case .finance: return "Finance"
-        case .clients: return "Clients"
-        case .workers: return "Team"
-        case .aiModel: return "AI"
-        case .settings: return "Settings"
         }
     }
     
     public var iconName: String {
         switch self {
         case .home: return "house"
+        case .clients: return "person.2"
+        case .aiModel: return "sparkles"
+        case .workers: return "person"
+        case .settings: return "gearshape"
         case .tasks: return "checklist"
         case .finance: return "chart.pie"
-        case .clients: return "person.2"
-        case .workers: return "person.3"
-        case .aiModel: return "sparkles"
-        case .settings: return "gearshape"
         }
     }
     
     public var selectedIconName: String {
         switch self {
         case .home: return "house.fill"
+        case .clients: return "person.2.fill"
+        case .aiModel: return "sparkles"
+        case .workers: return "person.fill"
+        case .settings: return "gearshape.fill"
         case .tasks: return "checklist.checked"
         case .finance: return "chart.pie.fill"
-        case .clients: return "person.2.fill"
-        case .workers: return "person.3.fill"
-        case .aiModel: return "sparkles"
-        case .settings: return "gearshape.fill"
         }
+    }
+    
+    // 5 primary tabs rendered in the bottom navigation bar
+    public static var bottomBarTabs: [MainTab] {
+        [.home, .clients, .aiModel, .workers, .settings]
     }
 }
 
 public struct LiquidGlassTabBar: View {
     @Binding public var selectedTab: MainTab
     @ObservedObject private var theme = ThemeManager.shared
-    @ObservedObject private var store = FirestoreDataStore.shared
-    @Namespace private var liquidSliderNamespace
     @Environment(\.colorScheme) private var colorScheme
     @State private var pressedTab: MainTab? = nil
+    @State private var aiHaloPulse: Bool = false
     
     public init(selectedTab: Binding<MainTab>) {
         self._selectedTab = selectedTab
     }
     
-    private var pendingTasksCount: Int {
-        store.tasks.filter { $0.status == .pending }.count
-    }
+    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
     
     public var body: some View {
         HStack(spacing: 0) {
-            ForEach(MainTab.allCases) { tab in
+            ForEach(MainTab.bottomBarTabs) { tab in
                 let isSelected = selectedTab == tab
                 
-                Button {
-                    let feedback = UISelectionFeedbackGenerator()
-                    feedback.selectionChanged()
-                    withAnimation(.spring(response: 0.34, dampingFraction: 0.74, blendDuration: 0.12)) {
-                        selectedTab = tab
-                    }
-                } label: {
-                    ZStack {
-                        // Liquid Glass Viscoelastic Sliding Selection Pill
-                        if isSelected {
-                            Capsule()
-                                .fill(
-                                    colorScheme == .dark
-                                        ? Color.white.opacity(0.12)
-                                        : Color.black.opacity(0.06)
-                                )
-                                .overlay(
-                                    Capsule()
-                                        .fill(theme.accentColor.opacity(colorScheme == .dark ? 0.20 : 0.12))
-                                )
-                                .overlay(
-                                    Capsule()
-                                        .stroke(
-                                            theme.accentColor.opacity(colorScheme == .dark ? 0.35 : 0.22),
-                                            lineWidth: 0.8
-                                        )
-                                )
-                                .matchedGeometryEffect(id: "LIQUID_GLASS_SELECTION_PILL", in: liquidSliderNamespace)
-                                .padding(.horizontal, 2)
-                                .padding(.vertical, 4)
+                if tab == .aiModel {
+                    // MARK: - Center Elevated AI Co-Founder Action Button
+                    Button {
+                        let feedback = UIImpactFeedbackGenerator(style: .medium)
+                        feedback.impactOccurred()
+                        withAnimation(.spring(response: 0.35, dampingFraction: 0.72)) {
+                            selectedTab = .aiModel
                         }
-                        
-                        // Tab Item (Icon + Label)
+                    } label: {
                         VStack(spacing: 2) {
-                            ZStack(alignment: .topTrailing) {
-                                Group {
-                                    if #available(iOS 17.0, *) {
-                                        Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
-                                            .font(.system(size: 19, weight: isSelected ? .semibold : .medium))
-                                            .symbolEffect(.bounce, value: isSelected)
-                                            .contentTransition(.symbolEffect(.replace))
-                                    } else {
-                                        Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
-                                            .font(.system(size: 19, weight: isSelected ? .semibold : .medium))
-                                    }
-                                }
-                                .foregroundColor(
-                                    isSelected
-                                        ? theme.accentColor
-                                        : (colorScheme == .dark ? Color.white.opacity(0.62) : Color.black.opacity(0.60))
-                                )
+                            ZStack {
+                                // Subtle Breathing Halo Ring
+                                Circle()
+                                    .fill(
+                                        RadialGradient(
+                                            colors: [
+                                                Color(red: 0.55, green: 0.30, blue: 0.75).opacity(aiHaloPulse ? 0.35 : 0.15),
+                                                Color.clear
+                                            ],
+                                            center: .center,
+                                            startRadius: 10,
+                                            endRadius: 36
+                                        )
+                                    )
+                                    .frame(width: 62, height: 62)
                                 
-                                // Live Task Pending Badge Indicator Dot
-                                if tab == .tasks && pendingTasksCount > 0 {
-                                    Circle()
-                                        .fill(Color.red)
-                                        .frame(width: 6, height: 6)
-                                        .offset(x: 5, y: -2)
-                                }
+                                // Elevated Gradient Circle
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [
+                                                Color(red: 0.24, green: 0.10, blue: 0.36),
+                                                Color(red: 0.14, green: 0.05, blue: 0.22)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 48, height: 48)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                                    )
+                                    .shadow(
+                                        color: Color(red: 0.24, green: 0.10, blue: 0.36).opacity(0.40),
+                                        radius: 10,
+                                        x: 0,
+                                        y: 5
+                                    )
+                                
+                                Image(systemName: "sparkles")
+                                    .font(.system(size: 20, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .scaleEffect(isSelected ? 1.08 : 1.0)
                             }
                             
-                            Text(tab.title)
+                            Text("AI")
                                 .font(.system(size: 9.5, weight: isSelected ? .bold : .medium))
-                                .foregroundColor(
-                                    isSelected
-                                        ? theme.accentColor
-                                        : (colorScheme == .dark ? Color.white.opacity(0.62) : Color.black.opacity(0.60))
-                                )
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.85)
+                                .foregroundColor(isSelected ? deepPurple : Color(uiColor: .secondaryLabel))
                         }
-                        .padding(.vertical, 6)
                         .frame(maxWidth: .infinity)
+                        .offset(y: -10)
                         .scaleEffect(pressedTab == tab ? 0.92 : 1.0)
                     }
-                    .frame(height: 52)
-                    .contentShape(Rectangle())
-                }
-                .buttonStyle(TabItemButtonStyle(onPress: { isPressed in
-                    withAnimation(.easeOut(duration: 0.12)) {
-                        pressedTab = isPressed ? tab : nil
+                    .buttonStyle(.plain)
+                    .onAppear {
+                        withAnimation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true)) {
+                            aiHaloPulse = true
+                        }
                     }
-                }))
-                .accessibilityLabel("\(tab.title) Tab")
+                } else {
+                    // MARK: - Standard Tab Button
+                    Button {
+                        let feedback = UISelectionFeedbackGenerator()
+                        feedback.selectionChanged()
+                        withAnimation(.spring(response: 0.32, dampingFraction: 0.76)) {
+                            selectedTab = tab
+                        }
+                    } label: {
+                        VStack(spacing: 3) {
+                            Image(systemName: isSelected ? tab.selectedIconName : tab.iconName)
+                                .font(.system(size: 19, weight: isSelected ? .semibold : .regular))
+                                .foregroundColor(
+                                    isSelected
+                                        ? (colorScheme == .dark ? Color.white : deepPurple)
+                                        : Color(uiColor: .secondaryLabel)
+                                )
+                                .scaleEffect(isSelected ? 1.06 : 1.0)
+                            
+                            Text(tab.title)
+                                .font(.system(size: 10, weight: isSelected ? .bold : .medium))
+                                .foregroundColor(
+                                    isSelected
+                                        ? (colorScheme == .dark ? Color.white : deepPurple)
+                                        : Color(uiColor: .secondaryLabel)
+                                )
+                            
+                            // Golden/Yellow Indicator Dot Under Active Tab
+                            if isSelected {
+                                Circle()
+                                    .fill(goldAccent)
+                                    .frame(width: 4, height: 4)
+                                    .transition(.scale.combined(with: .opacity))
+                            } else {
+                                Circle()
+                                    .fill(Color.clear)
+                                    .frame(width: 4, height: 4)
+                            }
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 6)
+                        .scaleEffect(pressedTab == tab ? 0.94 : 1.0)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("\(tab.title) Tab")
+                }
             }
         }
-        .padding(.horizontal, 6)
-        .padding(.vertical, 4)
-        .frame(height: 60)
-        // Liquid Glass Capsule Base & Refraction Material
+        .padding(.horizontal, 14)
+        .padding(.vertical, 6)
+        .frame(height: 64)
+        // Authentic White / Frosted Glass Floating Capsule
         .background {
             Capsule()
-                .fill(.ultraThinMaterial)
-                .overlay(
-                    Capsule()
-                        .fill(
-                            colorScheme == .dark
-                                ? Color.white.opacity(0.06)
-                                : Color.white.opacity(0.25)
-                        )
+                .fill(
+                    colorScheme == .dark
+                        ? Color(red: 0.14, green: 0.14, blue: 0.18).opacity(0.95)
+                        : Color.white.opacity(0.96)
+                )
+                .background(
+                    Capsule().fill(.ultraThinMaterial)
                 )
         }
-        // Fresnel Specular Gradient Rim (1.0pt stroke at -45° virtual light angle)
+        // Hairline Specular Border
         .overlay {
             Capsule()
                 .stroke(
-                    LinearGradient(
-                        colors: [
-                            Color.white.opacity(colorScheme == .dark ? 0.40 : 0.65),
-                            Color.white.opacity(colorScheme == .dark ? 0.08 : 0.15),
-                            Color.white.opacity(colorScheme == .dark ? 0.22 : 0.35)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: 1.0
+                    colorScheme == .dark
+                        ? Color.white.opacity(0.12)
+                        : Color.black.opacity(0.04),
+                    lineWidth: 0.8
                 )
         }
-        // Dual Soft Floating Shadows (Contact shadow + Key light shadow)
+        // Diffuse Floating Drop Shadow
         .shadow(
             color: Color.black.opacity(colorScheme == .dark ? 0.35 : 0.08),
-            radius: 8,
+            radius: 16,
             x: 0,
-            y: 4
+            y: 6
         )
-        .shadow(
-            color: Color.black.opacity(colorScheme == .dark ? 0.45 : 0.12),
-            radius: 20,
-            x: 0,
-            y: 10
-        )
-    }
-}
-
-// Custom ButtonStyle to capture press-down and release for the 0.92 scale feedback
-private struct TabItemButtonStyle: ButtonStyle {
-    let onPress: (Bool) -> Void
-    
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .onChange(of: configuration.isPressed) { newValue in
-                onPress(newValue)
-            }
     }
 }

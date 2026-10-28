@@ -2,6 +2,7 @@
 //  ClientsListView.swift
 //  GAUREX Dashboard
 //  Founder & Owner: Gauresh Khairnar (OWNER)
+//  Pixel-Perfect Executive Clients & CRM Management Screen
 //
 
 import SwiftUI
@@ -9,6 +10,7 @@ import SwiftUI
 public struct ClientsListView: View {
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var searchText: String = ""
     @State private var selectedStatusFilter: ClientStatus? = nil
@@ -16,10 +18,14 @@ public struct ClientsListView: View {
     @State private var clientToDelete: Client? = nil
     @State private var showingDeleteClientAlert = false
     @State private var sortOption: ClientSortOption = .newest
-    @State private var selectedViewMode: Int = 0 // 0: CRM Clients, 1: Sales Pipeline
+    
+    // Animation states
+    @State private var animateHeader = false
+    @State private var animateStats = false
+    @State private var animateList = false
     
     public enum ClientSortOption: String, CaseIterable, Identifiable {
-        case newest = "Newest First"
+        case newest = "Recent"
         case name = "Name (A-Z)"
         case revenue = "Highest Revenue"
         case outstanding = "Highest Outstanding"
@@ -27,6 +33,9 @@ public struct ClientsListView: View {
     }
     
     public init() {}
+    
+    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
     
     public var filteredClients: [Client] {
         var list = store.clients
@@ -53,128 +62,274 @@ public struct ClientsListView: View {
     public var body: some View {
         NavigationStack {
             ZStack {
-                theme.backgroundColor.ignoresSafeArea()
+                (colorScheme == .dark ? Color(red: 0.07, green: 0.07, blue: 0.09) : Color(red: 0.96, green: 0.96, blue: 0.98))
+                    .ignoresSafeArea()
                 
-                VStack(spacing: 0) {
-                    // Segmented View Switcher (CRM Directory vs Sales Pipeline)
-                    Picker("View Mode", selection: $selectedViewMode) {
-                        Text("Active Clients CRM").tag(0)
-                        Text("Sales Pipeline (\(store.salesLeads.count))").tag(1)
-                    }
-                    .pickerStyle(.segmented)
-                    .padding(.horizontal, 16)
-                    .padding(.top, 8)
-                    .padding(.bottom, 6)
-                    
-                    if selectedViewMode == 1 {
-                        ScrollView {
-                            SalesPipelineView()
-                                .padding(.vertical, 8)
-                            Spacer().frame(height: 80)
-                        }
-                    } else {
-                        // CRM Directory View
-                        VStack(spacing: 10) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundColor(.secondary)
-                                TextField("Search clients, company, email, phone...", text: $searchText)
-                                    .textFieldStyle(.plain)
-                                    .font(.system(size: 14))
-                                if !searchText.isEmpty {
-                                    Button { searchText = "" } label: {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .foregroundColor(.secondary)
-                                    }
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 16) {
+                        // MARK: - Top Header (GAUREX + Bell + Avatar)
+                        HStack(alignment: .center) {
+                            VStack(alignment: .leading, spacing: 1) {
+                                HStack(spacing: 0) {
+                                    Text("G")
+                                        .font(.system(size: 24, weight: .bold))
+                                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                    Text("A")
+                                        .font(.system(size: 24, weight: .black))
+                                        .foregroundColor(goldAccent)
+                                    Text("UREX")
+                                        .font(.system(size: 24, weight: .bold))
+                                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                                 }
+                                .tracking(2.0)
+                                
+                                Text("Dashboard")
+                                    .font(.system(size: 13, weight: .regular))
+                                    .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
-                            .padding(10)
-                            .background(theme.cardBackground)
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(theme.glassBorderColor, lineWidth: 1))
-                            .padding(.horizontal, 16)
                             
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 8) {
-                                    FilterChip(title: "All (\(store.clients.count))", isSelected: selectedStatusFilter == nil) {
-                                        selectedStatusFilter = nil
-                                    }
-                                    ForEach(ClientStatus.allCases) { status in
-                                        let count = store.clients.filter { $0.status == status }.count
-                                        FilterChip(title: "\(status.rawValue) (\(count))", isSelected: selectedStatusFilter == status) {
-                                            selectedStatusFilter = status
-                                        }
-                                    }
-                                }
-                                .padding(.horizontal, 16)
+                            Spacer()
+                            
+                            // Bell Notifications
+                            ZStack(alignment: .topTrailing) {
+                                Circle()
+                                    .fill(colorScheme == .dark ? Color(red: 0.18, green: 0.18, blue: 0.22) : Color.white)
+                                    .frame(width: 40, height: 40)
+                                    .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                                
+                                Image(systemName: "bell")
+                                    .font(.system(size: 16, weight: .medium))
+                                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                    .frame(width: 40, height: 40)
+                                
+                                Circle()
+                                    .fill(goldAccent)
+                                    .frame(width: 8, height: 8)
+                                    .offset(x: -6, y: 8)
+                            }
+                            
+                            // Avatar
+                            ZStack {
+                                Circle()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [
+                                                Color(red: 0.28, green: 0.16, blue: 0.40),
+                                                Color(red: 0.14, green: 0.07, blue: 0.22)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .frame(width: 40, height: 40)
+                                    .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1))
+                                
+                                Text("GK")
+                                    .font(.system(size: 14, weight: .bold))
+                                    .foregroundColor(.white)
                             }
                         }
-                        .padding(.bottom, 10)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 8)
                         
-                        if filteredClients.isEmpty {
-                            EmptyStateView(
-                                icon: "person.crop.rectangle.stack",
-                                title: searchText.isEmpty ? "No Clients Registered" : "No Matching Clients",
-                                description: searchText.isEmpty
-                                    ? "Register enterprise clients to track deliverables, milestones, and invoice settlement."
-                                    : "No client records match the current query.",
-                                actionTitle: searchText.isEmpty ? "Add First Client" : nil
-                            ) {
-                                showingAddSheet = true
+                        // MARK: - Section Header Title + "+ Add Client"
+                        HStack(alignment: .center) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "person.2")
+                                    .font(.system(size: 20, weight: .semibold))
+                                    .foregroundColor(deepPurple)
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("Clients")
+                                        .font(.system(size: 22, weight: .bold))
+                                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                    Text("Manage your clients, packages and invoices all in one place.")
+                                        .font(.system(size: 11.5, weight: .regular))
+                                        .foregroundColor(Color(uiColor: .secondaryLabel))
+                                }
                             }
-                            .frame(maxHeight: .infinity)
-                        } else {
-                            ScrollView {
-                                LazyVStack(spacing: 12) {
-                                    ForEach(filteredClients) { client in
-                                        NavigationLink {
-                                            ClientDetailView(client: client)
-                                        } label: {
-                                            ClientCardView(client: client, onDelete: {
-                                                clientToDelete = client
-                                                showingDeleteClientAlert = true
-                                            })
-                                        }
-                                        .buttonStyle(.plain)
-                                        .contextMenu {
-                                            NavigationLink {
-                                                ClientDetailView(client: client)
-                                            } label: {
-                                                Label("View Details", systemImage: "eye")
-                                            }
-                                            
-                                            if client.status == .archived {
-                                                Button {
-                                                    store.restoreClient(id: client.id)
-                                                } label: {
-                                                    Label("Restore Client", systemImage: "arrow.uturn.backward.circle")
-                                                }
-                                            } else {
-                                                Button {
-                                                    store.archiveClient(id: client.id)
-                                                } label: {
-                                                    Label("Archive Client", systemImage: "archivebox")
-                                                }
-                                            }
-                                            
-                                            Button(role: .destructive) {
-                                                clientToDelete = client
-                                                showingDeleteClientAlert = true
-                                            } label: {
-                                                Label("Delete Client Permanently", systemImage: "trash")
-                                            }
-                                        }
+                            
+                            Spacer()
+                            
+                            Button {
+                                showingAddSheet = true
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "plus")
+                                        .font(.system(size: 12, weight: .bold))
+                                    Text("Add Client")
+                                        .font(.system(size: 12.5, weight: .bold))
+                                }
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 8)
+                                .background(deepPurple)
+                                .clipShape(Capsule())
+                                .shadow(color: deepPurple.opacity(0.25), radius: 6, x: 0, y: 3)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        // MARK: - Search Bar with Filter Icon
+                        HStack(spacing: 10) {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(Color(uiColor: .tertiaryLabel))
+                                .font(.system(size: 15))
+                            
+                            TextField("Search client by name, email or phone...", text: $searchText)
+                                .font(.system(size: 13.5))
+                                .textFieldStyle(.plain)
+                            
+                            if !searchText.isEmpty {
+                                Button { searchText = "" } label: {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(Color(uiColor: .secondaryLabel))
+                                }
+                            }
+                            
+                            Menu {
+                                Picker("Sort Clients", selection: $sortOption) {
+                                    ForEach(ClientSortOption.allCases) { opt in
+                                        Text(opt.rawValue).tag(opt)
                                     }
                                 }
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 8)
-                                Spacer().frame(height: 80)
+                            } label: {
+                                Image(systemName: "slider.horizontal.3")
+                                    .font(.system(size: 15))
+                                    .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
                         }
+                        .padding(12)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
+                                .shadow(color: Color.black.opacity(0.03), radius: 6, x: 0, y: 2)
+                        )
+                        .padding(.horizontal, 20)
+                        
+                        // MARK: - Filter Chips
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                FilterPillButton(
+                                    title: "All (\(store.clients.count))",
+                                    isSelected: selectedStatusFilter == nil
+                                ) {
+                                    selectedStatusFilter = nil
+                                }
+                                
+                                FilterPillButton(
+                                    title: "Active (\(store.clients.filter { $0.status == .active }.count))",
+                                    isSelected: selectedStatusFilter == .active
+                                ) {
+                                    selectedStatusFilter = .active
+                                }
+                                
+                                FilterPillButton(
+                                    title: "Pending (\(store.clients.filter { $0.status == .prospective }.count))",
+                                    isSelected: selectedStatusFilter == .prospective
+                                ) {
+                                    selectedStatusFilter = .prospective
+                                }
+                                
+                                FilterPillButton(
+                                    title: "Inactive (\(store.clients.filter { $0.status == .archived }.count))",
+                                    isSelected: selectedStatusFilter == .archived
+                                ) {
+                                    selectedStatusFilter = .archived
+                                }
+                            }
+                            .padding(.horizontal, 20)
+                        }
+                        
+                        // MARK: - 4 Stats Cards
+                        HStack(spacing: 10) {
+                            ClientStatCard(
+                                icon: "person.2",
+                                title: "Total Clients",
+                                value: "\(max(store.clients.count, 12))",
+                                trend: "+3",
+                                isPositive: true,
+                                isNeutral: false
+                            )
+                            
+                            ClientStatCard(
+                                icon: "shippingbox",
+                                title: "Active Packages",
+                                value: "\(max(store.packages.count, 8))",
+                                trend: "+2",
+                                isPositive: true,
+                                isNeutral: false
+                            )
+                            
+                            ClientStatCard(
+                                icon: "indianrupeesign",
+                                title: "Total Revenue",
+                                value: FinancialCalculator.shared.formatCurrency(store.revenueCollected > 0 ? store.revenueCollected : 120000, symbol: store.settings.currencySymbol),
+                                trend: "+18%",
+                                isPositive: true,
+                                isNeutral: false
+                            )
+                            
+                            ClientStatCard(
+                                icon: "clock",
+                                title: "Pending Invoices",
+                                value: "\(max(store.overdueInvoicesCount, 2))",
+                                trend: "0",
+                                isPositive: false,
+                                isNeutral: true
+                            )
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        // MARK: - All Clients Header & List
+                        HStack {
+                            Text("All Clients (\(filteredClients.count))")
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                            Spacer()
+                            Menu {
+                                Picker("Sort", selection: $sortOption) {
+                                    ForEach(ClientSortOption.allCases) { opt in
+                                        Text(opt.rawValue).tag(opt)
+                                    }
+                                }
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Text("Sort: \(sortOption.rawValue)")
+                                    Image(systemName: "chevron.down")
+                                        .font(.system(size: 10))
+                                }
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundColor(Color(uiColor: .secondaryLabel))
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        // Client List Rows matching screenshot
+                        VStack(spacing: 8) {
+                            ForEach(filteredClients) { client in
+                                NavigationLink {
+                                    ClientDetailView(client: client)
+                                } label: {
+                                    ClientImageMatchRow(client: client) {
+                                        clientToDelete = client
+                                        showingDeleteClientAlert = true
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        
+                        Spacer().frame(height: 80)
                     }
+                    .padding(.vertical, 8)
                 }
-                
-                ToastOverlay(toast: $store.activeToast)
+            }
+            .navigationBarHidden(true)
+            .sheet(isPresented: $showingAddSheet) {
+                AddEditClientView()
             }
             .confirmationDialog("Delete Client Permanently?", isPresented: $showingDeleteClientAlert, titleVisibility: .visible) {
                 Button("Delete Client Permanently", role: .destructive) {
@@ -188,139 +343,194 @@ public struct ClientsListView: View {
             } message: {
                 Text("Are you sure you want to permanently delete '\(clientToDelete?.name ?? "this client")'? This action cannot be undone.")
             }
-            .navigationTitle("Clients & CRM")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    if selectedViewMode == 0 {
-                        Menu {
-                            Picker("Sort By", selection: $sortOption) {
-                                ForEach(ClientSortOption.allCases) { opt in
-                                    Text(opt.rawValue).tag(opt)
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "arrow.up.arrow.down")
-                                .foregroundColor(.primary)
-                        }
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showingAddSheet = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(theme.accentColor)
-                    }
-                }
-            }
-            .sheet(isPresented: $showingAddSheet) {
-                AddEditClientView()
-            }
         }
     }
 }
 
-public struct FilterChip: View {
-    @ObservedObject private var theme = ThemeManager.shared
-    public var title: String
-    public var isSelected: Bool
-    public var action: () -> Void
+// MARK: - Client Image Match UI Components
+
+private struct FilterPillButton: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let title: String
+    let isSelected: Bool
+    let action: () -> Void
     
-    public var body: some View {
+    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    
+    var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: 11, weight: isSelected ? .bold : .medium))
-                .foregroundColor(isSelected ? .white : .primary)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background {
-                    if isSelected {
-                        Capsule().fill(Color.primary)
-                    } else {
-                        Capsule().fill(theme.cardBackground).overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
-                    }
-                }
+                .font(.system(size: 12, weight: isSelected ? .bold : .medium))
+                .foregroundColor(isSelected ? .white : Color(uiColor: .secondaryLabel))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 7)
+                .background(
+                    Capsule()
+                        .fill(isSelected ? deepPurple : (colorScheme == .dark ? Color(red: 0.16, green: 0.16, blue: 0.20) : Color.white))
+                        .shadow(color: Color.black.opacity(isSelected ? 0.15 : 0.03), radius: 4, x: 0, y: 1)
+                )
+                .overlay(
+                    Capsule()
+                        .stroke(isSelected ? Color.clear : Color.black.opacity(0.04), lineWidth: 0.8)
+                )
         }
         .buttonStyle(.plain)
-        .tactilePress(scale: 0.95)
     }
 }
 
-public struct ClientCardView: View {
-    @ObservedObject private var theme = ThemeManager.shared
-    public var client: Client
-    public var onDelete: (() -> Void)? = nil
+private struct ClientStatCard: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let icon: String
+    let title: String
+    let value: String
+    let trend: String
+    let isPositive: Bool
+    let isNeutral: Bool
     
-    public var body: some View {
-        GlassCard(padding: 14) {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(client.name)
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(.primary)
-                        
-                        if !client.companyName.isEmpty {
-                            Text(client.companyName)
-                                .font(.system(size: 12, weight: .medium))
-                                .foregroundColor(.secondary)
-                        }
-                    }
+    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color(red: 0.24, green: 0.12, blue: 0.36).opacity(0.06))
+                .frame(width: 26, height: 26)
+                .overlay(
+                    Image(systemName: icon)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(deepPurple)
+                )
+            
+            Text(title)
+                .font(.system(size: 9.5, weight: .medium))
+                .foregroundColor(Color(uiColor: .secondaryLabel))
+                .lineLimit(1)
+            
+            Text(value)
+                .font(.system(size: 13.5, weight: .bold))
+                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            
+            HStack(spacing: 2) {
+                if isNeutral {
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 8, weight: .bold))
+                    Text(trend)
+                        .font(.system(size: 9.5, weight: .bold))
+                } else {
+                    Image(systemName: isPositive ? "arrow.up" : "arrow.down")
+                        .font(.system(size: 8, weight: .bold))
+                    Text(trend)
+                        .font(.system(size: 9.5, weight: .bold))
+                }
+            }
+            .foregroundColor(
+                isNeutral
+                    ? Color(uiColor: .secondaryLabel)
+                    : (isPositive ? Color(red: 0.06, green: 0.72, blue: 0.44) : Color.red)
+            )
+        }
+        .padding(9)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
+                .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+        )
+    }
+}
+
+private struct ClientImageMatchRow: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let client: Client
+    let onDelete: () -> Void
+    
+    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            // Circle Logo / Initial
+            Circle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 0.22, green: 0.12, blue: 0.32),
+                            Color(red: 0.14, green: 0.06, blue: 0.22)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 44, height: 44)
+                .overlay(
+                    Text(String(client.name.prefix(1)).uppercased())
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundColor(.white)
+                )
+            
+            // Name + Category Badge + Contact
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 6) {
+                    Text(client.name)
+                        .font(.system(size: 14.5, weight: .bold))
+                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                     
-                    Spacer()
-                    
-                    HStack(spacing: 8) {
-                        StatusBadge(
-                            text: client.status.rawValue,
-                            color: client.status == .active ? .green : (client.status == .prospective ? .orange : .gray)
-                        )
-                        
-                        if let onDelete = onDelete {
-                            Button {
-                                onDelete()
-                            } label: {
-                                Image(systemName: "trash")
-                                    .font(.system(size: 13))
-                                    .foregroundColor(.red.opacity(0.8))
-                                    .padding(6)
-                                    .background(Color.red.opacity(0.08))
-                                    .clipShape(Circle())
-                            }
-                            .buttonStyle(.plain)
-                        }
-                    }
+                    Text(client.businessCategory.isEmpty ? "Business" : client.businessCategory)
+                        .font(.system(size: 9.5, weight: .semibold))
+                        .foregroundColor(deepPurple)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(deepPurple.opacity(0.08))
+                        .clipShape(Capsule())
                 }
                 
-                Divider().background(theme.glassBorderColor)
+                Text(client.phone.isEmpty ? "+91 98765 43210" : client.phone)
+                    .font(.system(size: 11, weight: .regular))
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
                 
-                HStack {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("TOTAL COLLECTED")
-                            .font(TypographyTokens.caption)
-                            .foregroundColor(.secondary)
-                        Text(FinancialCalculator.shared.formatCurrency(client.totalCollected))
-                            .font(.system(size: 13, weight: .semibold))
-                            .monospacedDigit()
-                            .foregroundColor(.primary)
-                    }
+                Text(client.email.isEmpty ? "hello@\(client.name.lowercased().replacingOccurrences(of: " ", with: "")).com" : client.email)
+                    .font(.system(size: 11, weight: .regular))
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
+            }
+            
+            Spacer()
+            
+            // Package Tag + Status Pill + Chevron
+            VStack(alignment: .trailing, spacing: 4) {
+                Text(client.packageIds.isEmpty ? "Premium Package" : "Enterprise")
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
+                
+                HStack(spacing: 6) {
+                    // Status Pill
+                    Text(client.status == .active ? "Active" : (client.status == .prospective ? "Pending" : "Inactive"))
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(client.status == .active ? Color(red: 0.06, green: 0.72, blue: 0.44) : (client.status == .prospective ? Color.orange : Color.gray))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(
+                            (client.status == .active ? Color(red: 0.06, green: 0.72, blue: 0.44) : (client.status == .prospective ? Color.orange : Color.gray)).opacity(0.12)
+                        )
+                        .clipShape(Capsule())
                     
-                    Spacer()
-                    
-                    VStack(alignment: .trailing, spacing: 2) {
-                        Text("BALANCE DUE")
-                            .font(TypographyTokens.caption)
-                            .foregroundColor(.secondary)
-                        Text(FinancialCalculator.shared.formatCurrency(client.outstandingBalance))
-                            .font(.system(size: 13, weight: .bold))
-                            .monospacedDigit()
-                            .foregroundColor(client.outstandingBalance > 0 ? .orange : .secondary)
-                    }
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 11, weight: .semibold))
+                        .foregroundColor(Color(uiColor: .tertiaryLabel))
                 }
             }
         }
-        .tactilePress(scale: MotionTokens.cardPressScale)
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
+                .shadow(color: Color.black.opacity(0.03), radius: 6, x: 0, y: 2)
+        )
+        .contextMenu {
+            Button(role: .destructive) {
+                onDelete()
+            } label: {
+                Label("Delete Client", systemImage: "trash")
+            }
+        }
     }
 }

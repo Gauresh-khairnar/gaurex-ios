@@ -10,271 +10,525 @@ public struct SettingsView: View {
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
     @ObservedObject private var bioAuth = BiometricAuthService.shared
+    @ObservedObject private var neoService = NeoCoFounderService.shared
     
     @State private var showingExportSheet = false
     @State private var exportData: Data? = nil
+    @State private var showingEditProfile = false
+    @State private var showingLogoutAlert = false
+    @State private var selectedColorIndex = 0
+    
+    // Editable Profile State
+    @State private var founderName: String = "Gauresh Khairnar"
+    @State private var officialEmail: String = "gaurex.ai@gmail.com"
+    @State private var officialPhone: String = "+91 98765 43210"
+    @State private var companyName: String = "GAUREX"
+    
+    private let accentColors: [Color] = [
+        Color(red: 0.18, green: 0.08, blue: 0.28), // Deep Royal Purple
+        Color(red: 0.90, green: 0.65, blue: 0.15), // Luxury Gold
+        Color(red: 0.15, green: 0.35, blue: 0.75), // Soft Navy
+        Color(red: 0.12, green: 0.60, blue: 0.40)  // Emerald
+    ]
     
     public init() {}
     
     public var body: some View {
         NavigationStack {
             ZStack {
-                theme.backgroundColor.ignoresSafeArea()
+                Color(uiColor: .systemGroupedBackground).ignoresSafeArea()
                 
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 18) {
-                        // MARK: - Founder Profile Card
-                        GlassCard {
-                            VStack(alignment: .leading, spacing: 12) {
-                                HStack(spacing: 14) {
-                                    Image("GaurexLogo")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 52, height: 52)
-                                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                                                .stroke(theme.glassBorderColor, lineWidth: 1)
-                                        )
-                                    
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        HStack(spacing: 8) {
-                                            Text(store.settings.founderName)
-                                                .font(.system(size: 18, weight: .bold))
-                                                .foregroundColor(.primary)
-                                            OwnerBadge()
-                                        }
-                                        
-                                        Text("\(store.settings.companyName) • Founder & Executive")
-                                            .font(.system(size: 12))
-                                            .foregroundColor(.secondary)
-                                        
-                                        Text(store.settings.officialEmail)
-                                            .font(.system(size: 11))
-                                            .foregroundColor(.secondary)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.horizontal, 16)
-                        .tactilePress(scale: MotionTokens.cardPressScale)
+                ScrollView(showsIndicators: false) {
+                    VStack(alignment: .leading, spacing: 20) {
                         
-                        // MARK: - Appearance & Themes
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("APPEARANCE & THEMES")
-                                .font(TypographyTokens.sectionHeader)
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
+                        // MARK: - Header Bar (GAUREX + Bell)
+                        HStack(alignment: .center) {
+                            HStack(spacing: 0) {
+                                Text("G")
+                                    .font(.system(size: 24, weight: .heavy, design: .rounded))
+                                    .foregroundColor(.primary)
+                                Text("A")
+                                    .font(.system(size: 24, weight: .heavy, design: .rounded))
+                                    .foregroundColor(Color(red: 0.90, green: 0.65, blue: 0.15))
+                                Text("UREX")
+                                    .font(.system(size: 24, weight: .heavy, design: .rounded))
+                                    .foregroundColor(.primary)
+                            }
                             
-                            GlassCard {
-                                VStack(alignment: .leading, spacing: 12) {
-                                    Text("Active Theme: \(theme.currentTheme.rawValue)")
-                                        .font(.system(size: 13, weight: .semibold))
-                                    
-                                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                                        ForEach(AppTheme.allCases) { th in
-                                            Button {
-                                                withAnimation(MotionTokens.interactiveSpring) {
-                                                    theme.currentTheme = th
-                                                    store.settings.activeThemeRaw = th.rawValue
-                                                    store.saveSettings()
-                                                }
-                                                MotionTokens.selection()
-                                            } label: {
-                                                HStack(spacing: 8) {
-                                                    Circle()
-                                                        .fill(themeIndicatorColor(for: th))
-                                                        .frame(width: 14, height: 14)
-                                                        .overlay(Circle().stroke(Color.primary.opacity(0.2), lineWidth: 1))
-                                                    
-                                                    Text(th.rawValue)
-                                                        .font(.system(size: 11, weight: theme.currentTheme == th ? .bold : .medium))
-                                                        .foregroundColor(.primary)
-                                                        .lineLimit(1)
-                                                    
-                                                    Spacer()
-                                                    
-                                                    if theme.currentTheme == th {
-                                                        Image(systemName: "checkmark")
-                                                            .font(.system(size: 10, weight: .bold))
-                                                            .foregroundColor(theme.accentColor)
-                                                    }
-                                                }
-                                                .padding(.horizontal, 10)
-                                                .padding(.vertical, 8)
-                                                .background(theme.currentTheme == th ? theme.accentColor.opacity(0.12) : theme.backgroundColor.opacity(0.5))
-                                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                                                .overlay(
-                                                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                                        .stroke(theme.currentTheme == th ? theme.accentColor.opacity(0.4) : theme.glassBorderColor, lineWidth: 1)
-                                                )
-                                            }
-                                            .buttonStyle(.plain)
-                                            .tactilePress(scale: 0.96)
-                                        }
-                                    }
-                                }
-                            }
-                            .padding(.horizontal, 16)
-                        }
-                        
-                        // MARK: - Commercial Operations & Assets
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("COMMERCIAL OPERATIONS")
-                                .font(TypographyTokens.sectionHeader)
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
+                            Spacer()
                             
-                            GlassCard(padding: 0) {
-                                VStack(spacing: 0) {
-                                    NavigationLink {
-                                        PackageManagementView()
-                                    } label: {
-                                        SettingsMenuRow(icon: "shippingbox.fill", title: "Package Catalog", subtitle: "\(store.packages.count) active packages", color: .orange)
-                                    }
+                            Button {
+                                MotionTokens.selection()
+                            } label: {
+                                ZStack(alignment: .topTrailing) {
+                                    Image(systemName: "bell.fill")
+                                        .font(.system(size: 18))
+                                        .foregroundColor(.primary)
+                                        .padding(8)
+                                        .background(Color(uiColor: .systemBackground))
+                                        .clipShape(Circle())
+                                        .shadow(color: Color.black.opacity(0.06), radius: 4, y: 2)
                                     
-                                    Divider().padding(.leading, 52).background(theme.glassBorderColor)
-                                    
-                                    NavigationLink {
-                                        BusinessSettingsView()
-                                    } label: {
-                                        SettingsMenuRow(icon: "building.2.fill", title: "Business Configuration", subtitle: "GSTIN, PAN, bank wiring & legal terms", color: .blue)
-                                    }
-                                    
-                                    Divider().padding(.leading, 52).background(theme.glassBorderColor)
-                                    
-                                    NavigationLink {
-                                        DocumentVaultView()
-                                    } label: {
-                                        SettingsMenuRow(icon: "folder.fill", title: "Document Vault", subtitle: "\(store.vaultDocuments.count) stored contracts, proposals & receipts", color: .teal)
-                                    }
-                                    
-                                    Divider().padding(.leading, 52).background(theme.glassBorderColor)
-                                    
-                                    NavigationLink {
-                                        MultiCurrencySettingsView()
-                                    } label: {
-                                        SettingsMenuRow(icon: "dollarsign.circle.fill", title: "Multi-Currency Management", subtitle: "Active: \(store.activeCurrency.symbol) \(store.activeCurrency.rawValue) with benchmark rates", color: .green)
-                                    }
-                                    
-                                    Divider().padding(.leading, 52).background(theme.glassBorderColor)
-                                    
-                                    NavigationLink {
-                                        IntegrationsHubView()
-                                    } label: {
-                                        SettingsMenuRow(icon: "network", title: "Integrations Hub", subtitle: "\(store.integrations.filter { $0.isConnected }.count) providers connected (Google, AWS, AI)", color: .purple)
-                                    }
+                                    Circle()
+                                        .fill(Color(red: 0.90, green: 0.65, blue: 0.15))
+                                        .frame(width: 8, height: 8)
+                                        .offset(x: -2, y: 2)
                                 }
                             }
-                            .padding(.horizontal, 16)
                         }
-                        
-                        // MARK: - Security & Access Control
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("SECURITY & ACCESS CONTROL")
-                                .font(TypographyTokens.sectionHeader)
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
-                            
-                            GlassCard(padding: 0) {
-                                VStack(spacing: 0) {
-                                    Toggle(isOn: $store.settings.biometricUnlockEnabled) {
-                                        HStack(spacing: 12) {
-                                            Image(systemName: "faceid")
-                                                .foregroundColor(.purple)
-                                                .frame(width: 24)
-                                            VStack(alignment: .leading, spacing: 2) {
-                                                Text("Biometric Security (\(bioAuth.biometricTypeString))")
-                                                    .font(.system(size: 14, weight: .semibold))
-                                                Text("Require Face ID to unlock executive dashboard")
-                                                    .font(.system(size: 11))
-                                                    .foregroundColor(.secondary)
-                                            }
-                                        }
-                                    }
-                                    .padding(.horizontal, 16)
-                                    .padding(.vertical, 12)
-                                    .onChange(of: store.settings.biometricUnlockEnabled) { _ in
-                                        store.saveSettings()
-                                    }
-                                    
-                                    Divider().padding(.leading, 52).background(theme.glassBorderColor)
-                                    
-                                    NavigationLink {
-                                        AuditLogsView()
-                                    } label: {
-                                        SettingsMenuRow(icon: "shield.lefthalf.filled", title: "Activity Audit Trail Ledger", subtitle: "Immutable log of all financial & administrative events", color: .indigo)
-                                    }
-                                    
-                                    Divider().padding(.leading, 52).background(theme.glassBorderColor)
-                                    
-                                    Button {
-                                        bioAuth.lockApp()
-                                    } label: {
-                                        SettingsMenuRow(icon: "lock.fill", title: "Lock Application Now", subtitle: "Immediate session termination", color: .red)
-                                    }
-                                }
-                            }
-                            .padding(.horizontal, 16)
-                        }
-                        
-                        // MARK: - Full Business JSON Export
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("BACKUP & RECOVERY")
-                                .font(TypographyTokens.sectionHeader)
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
-                            
-                            GlassCard(padding: 0) {
-                                VStack(spacing: 0) {
-                                    Button {
-                                        exportBusinessData()
-                                    } label: {
-                                        SettingsMenuRow(icon: "square.and.arrow.up.fill", title: "Export Full Business JSON", subtitle: "Complete ledger, clients, invoices, payroll & tasks", color: .teal)
-                                    }
-                                }
-                            }
-                            .padding(.horizontal, 16)
-                        }
-                        
-                        // MARK: - App Version
-                        VStack(spacing: 4) {
-                            Text("GAUREX Executive Suite v1.0.0")
-                                .font(.system(size: 12, weight: .bold))
-                                .foregroundColor(.primary)
-                            Text("Native SwiftUI • Swift Charts • PDFKit • LocalAuthentication\nEngineered for Founder Gauresh Khairnar")
-                                .font(.system(size: 11))
-                                .foregroundColor(.secondary)
-                                .multilineTextAlignment(.center)
-                        }
-                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 20)
                         .padding(.top, 8)
                         
-                        Spacer().frame(height: 80)
+                        // MARK: - Title
+                        Text("Settings")
+                            .font(.system(size: 28, weight: .bold, design: .rounded))
+                            .foregroundColor(.primary)
+                            .padding(.horizontal, 20)
+                        
+                        // MARK: - Founder Profile Card
+                        VStack(spacing: 14) {
+                            HStack(alignment: .center, spacing: 14) {
+                                // Avatar Circle
+                                ZStack {
+                                    Circle()
+                                        .fill(
+                                            LinearGradient(
+                                                colors: [
+                                                    Color(red: 0.18, green: 0.08, blue: 0.28),
+                                                    Color(red: 0.32, green: 0.12, blue: 0.45)
+                                                ],
+                                                startPoint: .topLeading,
+                                                endPoint: .bottomTrailing
+                                            )
+                                        )
+                                        .frame(width: 60, height: 60)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color(red: 0.90, green: 0.65, blue: 0.15), lineWidth: 2)
+                                        )
+                                        .shadow(color: Color.black.opacity(0.12), radius: 6, y: 3)
+                                    
+                                    Text("GK")
+                                        .font(.system(size: 20, weight: .bold, design: .rounded))
+                                        .foregroundColor(Color(red: 0.90, green: 0.65, blue: 0.15))
+                                }
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack(spacing: 8) {
+                                        Text(store.settings.founderName.isEmpty ? "Gauresh Khairnar" : store.settings.founderName)
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.primary)
+                                        
+                                        // Owner Badge
+                                        HStack(spacing: 3) {
+                                            Text("👑")
+                                                .font(.system(size: 11))
+                                            Text("Owner")
+                                                .font(.system(size: 11, weight: .bold))
+                                                .foregroundColor(Color(red: 0.70, green: 0.48, blue: 0.05))
+                                        }
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 3)
+                                        .background(Color(red: 0.98, green: 0.92, blue: 0.76))
+                                        .clipShape(Capsule())
+                                    }
+                                    
+                                    Text(store.settings.officialEmail.isEmpty ? "gaurex.ai@gmail.com" : store.settings.officialEmail)
+                                        .font(.system(size: 13))
+                                        .foregroundColor(.secondary)
+                                    
+                                    Text(store.settings.officialPhone.isEmpty ? "+91 98765 43210" : store.settings.officialPhone)
+                                        .font(.system(size: 13))
+                                        .foregroundColor(.secondary)
+                                }
+                                
+                                Spacer()
+                            }
+                            
+                            // Edit Profile Button
+                            Button {
+                                MotionTokens.selection()
+                                founderName = store.settings.founderName.isEmpty ? "Gauresh Khairnar" : store.settings.founderName
+                                officialEmail = store.settings.officialEmail.isEmpty ? "gaurex.ai@gmail.com" : store.settings.officialEmail
+                                officialPhone = store.settings.officialPhone.isEmpty ? "+91 98765 43210" : store.settings.officialPhone
+                                companyName = store.settings.companyName.isEmpty ? "GAUREX" : store.settings.companyName
+                                showingEditProfile = true
+                            } label: {
+                                HStack {
+                                    Spacer()
+                                    Text("Edit Profile")
+                                        .font(.system(size: 14, weight: .semibold))
+                                        .foregroundColor(Color(red: 0.18, green: 0.08, blue: 0.28))
+                                    Spacer()
+                                }
+                                .padding(.vertical, 10)
+                                .background(Color(red: 0.18, green: 0.08, blue: 0.28).opacity(0.08))
+                                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            }
+                            .buttonStyle(.plain)
+                        }
+                        .padding(16)
+                        .background(Color(uiColor: .systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                        .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
+                        .padding(.horizontal, 20)
+                        
+                        // MARK: - Appearance & Theme Section
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("APPEARANCE & THEME")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 20)
+                            
+                            // 4 Theme Cards Grid
+                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+                                ThemeCard(
+                                    title: "Light",
+                                    subtitle: "Clean & Fresh",
+                                    icon: "sun.max.fill",
+                                    isSelected: theme.currentTheme == .light || theme.currentTheme == .pureWhite,
+                                    color: .orange
+                                ) {
+                                    withAnimation(MotionTokens.interactiveSpring) {
+                                        theme.currentTheme = .light
+                                        store.settings.activeThemeRaw = AppTheme.light.rawValue
+                                        store.saveSettings()
+                                    }
+                                    MotionTokens.selection()
+                                }
+                                
+                                ThemeCard(
+                                    title: "Dark",
+                                    subtitle: "Bold & Focused",
+                                    icon: "moon.stars.fill",
+                                    isSelected: theme.currentTheme == .dark || theme.currentTheme == .midnight,
+                                    color: .indigo
+                                ) {
+                                    withAnimation(MotionTokens.interactiveSpring) {
+                                        theme.currentTheme = .dark
+                                        store.settings.activeThemeRaw = AppTheme.dark.rawValue
+                                        store.saveSettings()
+                                    }
+                                    MotionTokens.selection()
+                                }
+                                
+                                ThemeCard(
+                                    title: "Purple",
+                                    subtitle: "Modern & Elegant",
+                                    icon: "sparkles",
+                                    isSelected: theme.currentTheme == .purple,
+                                    color: Color(red: 0.55, green: 0.25, blue: 0.75)
+                                ) {
+                                    withAnimation(MotionTokens.interactiveSpring) {
+                                        theme.currentTheme = .purple
+                                        store.settings.activeThemeRaw = AppTheme.purple.rawValue
+                                        store.saveSettings()
+                                    }
+                                    MotionTokens.selection()
+                                }
+                                
+                                ThemeCard(
+                                    title: "Gold",
+                                    subtitle: "Luxury & Premium",
+                                    icon: "crown.fill",
+                                    isSelected: theme.currentTheme == .gold || theme.currentTheme == .gaurexAccent,
+                                    color: Color(red: 0.90, green: 0.65, blue: 0.15)
+                                ) {
+                                    withAnimation(MotionTokens.interactiveSpring) {
+                                        theme.currentTheme = .gold
+                                        store.settings.activeThemeRaw = AppTheme.gold.rawValue
+                                        store.saveSettings()
+                                    }
+                                    MotionTokens.selection()
+                                }
+                            }
+                            .padding(.horizontal, 20)
+                            
+                            // Theme Color Circles
+                            HStack(spacing: 16) {
+                                ForEach(0..<accentColors.count, id: \.self) { idx in
+                                    Button {
+                                        withAnimation(MotionTokens.interactiveSpring) {
+                                            selectedColorIndex = idx
+                                        }
+                                        MotionTokens.selection()
+                                    } label: {
+                                        Circle()
+                                            .fill(accentColors[idx])
+                                            .frame(width: 32, height: 32)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(Color.primary.opacity(selectedColorIndex == idx ? 0.8 : 0.15), lineWidth: selectedColorIndex == idx ? 3 : 1)
+                                                    .padding(-3)
+                                            )
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                                Spacer()
+                            }
+                            .padding(.horizontal, 24)
+                            .padding(.top, 4)
+                        }
+                        
+                        // MARK: - Business Settings Section
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("BUSINESS SETTINGS")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 20)
+                            
+                            VStack(spacing: 0) {
+                                NavigationLink {
+                                    BusinessSettingsView()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "building.2.fill",
+                                        iconColor: .purple,
+                                        title: "Company Profile",
+                                        subtitle: store.settings.companyName.isEmpty ? "GAUREX Executive Suite" : store.settings.companyName
+                                    )
+                                }
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                NavigationLink {
+                                    PackageManagementView()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "shippingbox.fill",
+                                        iconColor: .orange,
+                                        title: "Add Product / Service",
+                                        subtitle: "\(store.packages.count) active catalog offerings",
+                                        badgeText: "+ Add"
+                                    )
+                                }
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                NavigationLink {
+                                    BusinessSettingsView()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "doc.text.fill",
+                                        iconColor: .blue,
+                                        title: "Invoice Settings",
+                                        subtitle: "Terms, prefix, sequential numbering & footer"
+                                    )
+                                }
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                NavigationLink {
+                                    MultiCurrencySettingsView()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "creditcard.fill",
+                                        iconColor: .green,
+                                        title: "Payment Methods",
+                                        subtitle: "\(store.activeCurrency.symbol) \(store.activeCurrency.rawValue) & bank wiring"
+                                    )
+                                }
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                NavigationLink {
+                                    BusinessSettingsView()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "percent",
+                                        iconColor: .indigo,
+                                        title: "Taxes & GST",
+                                        subtitle: "GSTIN, tax slabs & automatic ledger calculation"
+                                    )
+                                }
+                            }
+                            .background(Color(uiColor: .systemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
+                            .padding(.horizontal, 20)
+                        }
+                        
+                        // MARK: - App Features Section
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("APP FEATURES")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 20)
+                            
+                            VStack(spacing: 0) {
+                                NavigationLink {
+                                    NeoAssistantSettingsView()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "sparkles",
+                                        iconColor: Color(red: 0.90, green: 0.65, blue: 0.15),
+                                        title: "AI Assistant (NEO)",
+                                        subtitle: "Voice greeting, speech co-founder & ML models",
+                                        badgeText: neoService.isVoiceGreetingEnabled ? "Active" : "Muted"
+                                    )
+                                }
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                NavigationLink {
+                                    DocumentVaultView()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "folder.fill",
+                                        iconColor: .teal,
+                                        title: "Document Vault",
+                                        subtitle: "\(store.vaultDocuments.count) stored contracts & receipts"
+                                    )
+                                }
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                Button {
+                                    exportBusinessData()
+                                    MotionTokens.selection()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "square.and.arrow.up.fill",
+                                        iconColor: .blue,
+                                        title: "Data & Backup",
+                                        subtitle: "Export full business JSON ledger snapshot"
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                            .background(Color(uiColor: .systemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
+                            .padding(.horizontal, 20)
+                        }
+                        
+                        // MARK: - System & Support Section
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text("SYSTEM & SUPPORT")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.secondary)
+                                .padding(.horizontal, 20)
+                            
+                            VStack(spacing: 0) {
+                                // Biometrics Row
+                                HStack(spacing: 14) {
+                                    Image(systemName: "faceid")
+                                        .font(.system(size: 16, weight: .semibold))
+                                        .foregroundColor(.purple)
+                                        .frame(width: 32, height: 32)
+                                        .background(Color.purple.opacity(0.12))
+                                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                                    
+                                    VStack(alignment: .leading, spacing: 2) {
+                                        Text("Biometric Security")
+                                            .font(.system(size: 15, weight: .semibold))
+                                            .foregroundColor(.primary)
+                                        Text("Require Face ID to unlock GAUREX")
+                                            .font(.system(size: 12))
+                                            .foregroundColor(.secondary)
+                                    }
+                                    
+                                    Spacer()
+                                    
+                                    Toggle("", isOn: $store.settings.biometricUnlockEnabled)
+                                        .labelsHidden()
+                                        .onChange(of: store.settings.biometricUnlockEnabled) { _ in
+                                            store.saveSettings()
+                                        }
+                                }
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                NavigationLink {
+                                    AuditLogsView()
+                                } label: {
+                                    SettingsRow(
+                                        icon: "shield.lefthalf.filled",
+                                        iconColor: .indigo,
+                                        title: "Activity Audit Trail",
+                                        subtitle: "Immutable event ledger & administrative actions"
+                                    )
+                                }
+                                
+                                Divider().padding(.leading, 56)
+                                
+                                SettingsRow(
+                                    icon: "info.circle.fill",
+                                    iconColor: .gray,
+                                    title: "About GAUREX",
+                                    subtitle: "v1.0.0 (Build 4011) • Apple Design System",
+                                    badgeText: "v1.0.0"
+                                )
+                            }
+                            .background(Color(uiColor: .systemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
+                            .padding(.horizontal, 20)
+                        }
+                        
+                        // MARK: - Log Out Pill Button
+                        Button {
+                            showingLogoutAlert = true
+                            MotionTokens.selection()
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "rectangle.portrait.and.arrow.right")
+                                    .font(.system(size: 15, weight: .semibold))
+                                Text("Log Out")
+                                    .font(.system(size: 16, weight: .bold))
+                            }
+                            .foregroundColor(.red)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color.red.opacity(0.08))
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    .stroke(Color.red.opacity(0.3), lineWidth: 1)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal, 20)
+                        .padding(.top, 4)
+                        
+                        Spacer().frame(height: 100)
                     }
-                    .padding(.vertical, 12)
+                    .padding(.vertical, 10)
                 }
                 
                 ToastOverlay(toast: $store.activeToast)
             }
-            .navigationTitle("Owner Control Center")
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarHidden(true)
             .sheet(isPresented: $showingExportSheet) {
                 if let data = exportData {
                     ActivityViewController(activityItems: [data])
                 }
             }
-        }
-    }
-    
-    private func themeIndicatorColor(for theme: AppTheme) -> Color {
-        switch theme {
-        case .system: return .gray
-        case .light, .pureWhite: return .white
-        case .dark, .midnight: return .black
-        case .graphite: return Color(white: 0.2)
-        case .oceanBlue: return Color(red: 0.1, green: 0.3, blue: 0.7)
-        case .gaurexAccent: return Color(red: 0.95, green: 0.77, blue: 0.25)
+            .sheet(isPresented: $showingEditProfile) {
+                EditProfileSheet(
+                    founderName: $founderName,
+                    officialEmail: $officialEmail,
+                    officialPhone: $officialPhone,
+                    companyName: $companyName,
+                    onSave: {
+                        store.settings.founderName = founderName
+                        store.settings.officialEmail = officialEmail
+                        store.settings.officialPhone = officialPhone
+                        store.settings.companyName = companyName
+                        store.saveSettings()
+                    }
+                )
+            }
+            .alert("Confirm Lock / Session Exit", isPresented: $showingLogoutAlert) {
+                Button("Lock Application", role: .destructive) {
+                    bioAuth.lockApp()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This will immediately terminate the current session and require Face ID or passcode to re-enter GAUREX.")
+            }
         }
     }
     
@@ -299,46 +553,223 @@ public struct SettingsView: View {
     }
 }
 
-public struct SettingsMenuRow: View {
-    public let icon: String
-    public let title: String
-    public let subtitle: String
-    public let color: Color
+// MARK: - Theme Card Component
+private struct ThemeCard: View {
+    let title: String
+    let subtitle: String
+    let icon: String
+    let isSelected: Bool
+    let color: Color
+    let action: () -> Void
     
-    public init(icon: String, title: String, subtitle: String, color: Color) {
-        self.icon = icon
-        self.title = title
-        self.subtitle = subtitle
-        self.color = color
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    Image(systemName: icon)
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(color)
+                        .frame(width: 30, height: 30)
+                        .background(color.opacity(0.12))
+                        .clipShape(Circle())
+                    
+                    Spacer()
+                    
+                    if isSelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.system(size: 16, weight: .bold))
+                            .foregroundColor(Color(red: 0.18, green: 0.08, blue: 0.28))
+                    }
+                }
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.primary)
+                    
+                    Text(subtitle)
+                        .font(.system(size: 11))
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding(14)
+            .background(Color(uiColor: .systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(isSelected ? Color(red: 0.18, green: 0.08, blue: 0.28) : Color.black.opacity(0.06), lineWidth: isSelected ? 2 : 1)
+            )
+            .shadow(color: Color.black.opacity(0.03), radius: 5, y: 2)
+        }
+        .buttonStyle(.plain)
     }
+}
+
+// MARK: - Standard Settings Row Component
+private struct SettingsRow: View {
+    let icon: String
+    let iconColor: Color
+    let title: String
+    let subtitle: String
+    var badgeText: String? = nil
     
-    public var body: some View {
-        HStack(spacing: 12) {
+    var body: some View {
+        HStack(spacing: 14) {
             Image(systemName: icon)
                 .font(.system(size: 15, weight: .semibold))
-                .foregroundColor(color)
-                .frame(width: 28, height: 28)
-                .background(color.opacity(0.12))
-                .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                .foregroundColor(iconColor)
+                .frame(width: 32, height: 32)
+                .background(iconColor.opacity(0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
             
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 14, weight: .semibold))
+                    .font(.system(size: 15, weight: .semibold))
                     .foregroundColor(.primary)
                 Text(subtitle)
-                    .font(.system(size: 11))
+                    .font(.system(size: 12))
                     .foregroundColor(.secondary)
                     .lineLimit(1)
             }
             
             Spacer()
             
+            if let badgeText = badgeText {
+                Text(badgeText)
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(Color(red: 0.18, green: 0.08, blue: 0.28))
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color(red: 0.18, green: 0.08, blue: 0.28).opacity(0.08))
+                    .clipShape(Capsule())
+            }
+            
             Image(systemName: "chevron.right")
                 .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(.secondary)
+                .foregroundColor(Color(uiColor: .tertiaryLabel))
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .contentShape(Rectangle())
+    }
+}
+
+// MARK: - NEO Assistant Settings Subview
+private struct NeoAssistantSettingsView: View {
+    @ObservedObject private var neo = NeoCoFounderService.shared
+    @State private var testPhrase = ""
+    
+    var body: some View {
+        Form {
+            Section(header: Text("Voice Co-Founder")) {
+                Toggle("Autonomous Voice Greeting", isOn: $neo.isVoiceGreetingEnabled)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Speech Rate: \(String(format: "%.2f", neo.speechRate))")
+                        .font(.system(size: 14))
+                    Slider(value: $neo.speechRate, in: 0.3...0.7, step: 0.05)
+                }
+                .padding(.vertical, 4)
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Voice Pitch: \(String(format: "%.2f", neo.speechPitch))")
+                        .font(.system(size: 14))
+                    Slider(value: $neo.speechPitch, in: 0.7...1.3, step: 0.05)
+                }
+                .padding(.vertical, 4)
+                
+                Button {
+                    neo.speakBriefing(
+                        context: AIAnalysisContext(
+                            totalRevenue: 2845000,
+                            totalExpenses: 890000,
+                            netProfit: 1955000,
+                            pendingInvoicesCount: 4,
+                            pendingInvoicesAmount: 320000,
+                            activeClientsCount: 14,
+                            totalWorkers: 8,
+                            totalInvoiced: 3165000,
+                            cashCollectionRate: 0.89
+                        ),
+                        force: true
+                    )
+                } label: {
+                    HStack {
+                        Image(systemName: "waveform")
+                        Text("Test Co-Founder Greeting Now")
+                    }
+                    .foregroundColor(Color(red: 0.90, green: 0.65, blue: 0.15))
+                }
+            }
+            
+            Section(header: Text("Intelligence Engines")) {
+                HStack {
+                    Text("Predictive ML Engine")
+                    Spacer()
+                    Text("Active (v2.0)")
+                        .foregroundColor(.green)
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                
+                HStack {
+                    Text("Cash Runway Forecasting")
+                    Spacer()
+                    Text("Active")
+                        .foregroundColor(.green)
+                        .font(.system(size: 14, weight: .semibold))
+                }
+                
+                HStack {
+                    Text("RFM Segmentation & Churn")
+                    Spacer()
+                    Text("Active")
+                        .foregroundColor(.green)
+                        .font(.system(size: 14, weight: .semibold))
+                }
+            }
+        }
+        .navigationTitle("NEO AI Co-Founder")
+    }
+}
+
+// MARK: - Edit Profile Sheet
+private struct EditProfileSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding var founderName: String
+    @Binding var officialEmail: String
+    @Binding var officialPhone: String
+    @Binding var companyName: String
+    let onSave: () -> Void
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section(header: Text("Founder Information")) {
+                    TextField("Founder Full Name", text: $founderName)
+                    TextField("Company Name", text: $companyName)
+                    TextField("Official Email", text: $officialEmail)
+                        .keyboardType(.emailAddress)
+                        .autocapitalization(.none)
+                    TextField("Official Phone", text: $officialPhone)
+                        .keyboardType(.phonePad)
+                }
+            }
+            .navigationTitle("Edit Profile")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        onSave()
+                        dismiss()
+                    }
+                    .font(.system(size: 16, weight: .bold))
+                }
+            }
+        }
     }
 }
