@@ -60,76 +60,75 @@ public struct BiometricUnlockOverlay: View {
     
     public var body: some View {
         ZStack {
-            AuroraLivingBackground()
+            theme.backgroundColor.ignoresSafeArea()
             
             VStack(spacing: 24) {
                 Spacer()
                 
-                ZStack {
-                    Circle()
-                        .fill(Color.gaurexDeepPlum)
-                        .frame(width: 90, height: 90)
-                        .overlay(Circle().stroke(Color.gaurexWarmGold.opacity(0.8), lineWidth: 2))
-                    
-                    Image(systemName: "faceid")
-                        .font(.system(size: 44, weight: .semibold))
-                        .foregroundColor(Color.gaurexWarmGold)
-                }
+                Image("GaurexLogo")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 80, height: 80)
+                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .stroke(theme.glassBorderColor, lineWidth: 1)
+                    )
+                    .shadow(color: Color.black.opacity(0.15), radius: 12, x: 0, y: 6)
                 
-                VStack(spacing: 8) {
-                    Text("GAUREX Executive Vault")
-                        .font(.pjs(22, weight: .bold))
-                        .foregroundColor(theme.colorScheme == .dark ? .white : Color.gaurexDeepPlum)
-                    
-                    Text("Founder authentication required")
-                        .font(.pjs(13, weight: .medium))
-                        .foregroundColor(.secondary)
-                    
-                    Text("Founder & Owner: Gauresh Khairnar (OWNER)")
-                        .font(.pjs(11, weight: .semibold))
-                        .foregroundColor(Color.gaurexWarmGold)
-                        .padding(.top, 4)
-                }
-                
-                if let err = authErrorMessage {
-                    Text(err)
-                        .font(.pjs(12, weight: .semibold))
-                        .foregroundColor(.red)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-                }
-                
-                Button {
-                    let impact = UIImpactFeedbackGenerator(style: .medium)
-                    impact.impactOccurred()
-                    bioAuth.authenticateUser { success, error in
-                        if !success {
-                            authErrorMessage = error ?? "Biometric verification unsuccessful"
-                        }
-                    }
-                } label: {
+                VStack(spacing: 6) {
                     HStack(spacing: 8) {
-                        Image(systemName: "faceid")
-                        Text("Authenticate with Face ID")
+                        Text("GAUREX")
+                            .font(TypographyTokens.executiveTitle)
+                            .tracking(2.0)
+                        OwnerBadge()
                     }
-                    .font(.pjs(14, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 14)
-                    .background(Color.gaurexDeepPlum)
-                    .clipShape(Capsule())
-                    .overlay(Capsule().stroke(Color.gaurexWarmGold.opacity(0.5), lineWidth: 1))
+                    
+                    Text("Executive Security Vault")
+                        .font(TypographyTokens.caption)
+                        .foregroundColor(.secondary)
                 }
                 
                 Spacer()
+                
+                Button {
+                    authenticate()
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "faceid")
+                            .font(.system(size: 18, weight: .semibold))
+                        Text("Unlock with \(bioAuth.biometricTypeString)")
+                            .font(.system(size: 15, weight: .bold))
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Color.primary)
+                    .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .tactilePress()
+                .padding(.horizontal, 32)
+                
+                if let err = authErrorMessage {
+                    Text(err)
+                        .font(.system(size: 12))
+                        .foregroundColor(.red)
+                        .padding(.horizontal, 32)
+                }
+                
+                Spacer().frame(height: 40)
             }
-            .padding(.horizontal, 24)
         }
         .onAppear {
-            bioAuth.authenticateUser { success, error in
-                if !success {
-                    authErrorMessage = error
-                }
+            authenticate()
+        }
+    }
+    
+    private func authenticate() {
+        bioAuth.authenticateOwner { success, error in
+            if !success {
+                authErrorMessage = error ?? "Biometric authentication required."
             }
         }
     }
