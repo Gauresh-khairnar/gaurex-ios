@@ -25,6 +25,8 @@ public struct AIIntelligenceView: View {
     private let deepPlum = Color.gaurexDeepPlum
     private let warmGold = Color.gaurexWarmGold
     private let mistGray = Color.gaurexMistGray
+    private let deepPurple = Color.gaurexDeepPlum
+    private let goldAccent = Color.gaurexWarmGold
     @ObservedObject private var voiceAI = MultilingualVoiceAIService.shared
     
     public init() {}
@@ -328,7 +330,7 @@ public struct AIIntelligenceView: View {
                                                 .foregroundColor(.secondary)
                                             Text("\(currentContext.totalClients)")
                                                 .font(.system(size: 12, weight: .bold))
-                                                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                                .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                                         }
                                     }
                                     .padding(.horizontal, 16)
@@ -370,7 +372,7 @@ public struct AIIntelligenceView: View {
                                             
                                             QuickAIPromptTile(
                                                 icon: "bolt.fill",
-                                                iconColor: goldAccent,
+                                                iconColor: warmGold,
                                                 title: "Today's Priorities",
                                                 subtitle: "Key actions & follow-ups"
                                             ) {
@@ -379,7 +381,7 @@ public struct AIIntelligenceView: View {
                                             
                                             QuickAIPromptTile(
                                                 icon: "arrow.up.right.circle.fill",
-                                                iconColor: deepPurple,
+                                                iconColor: deepPlum,
                                                 title: "Growth Plan",
                                                 subtitle: "Packages & margin review"
                                             ) {
@@ -463,7 +465,7 @@ public struct AIIntelligenceView: View {
                             } label: {
                                 Image(systemName: "mic.fill")
                                     .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                    .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                                     .frame(width: 38, height: 38)
                                     .background(
                                         Circle()
@@ -493,7 +495,7 @@ public struct AIIntelligenceView: View {
                                             .fill(
                                                 inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                                                     ? Color.secondary.opacity(0.4)
-                                                    : deepPurple
+                                                    : deepPlum
                                             )
                                     )
                             }
@@ -617,6 +619,8 @@ private struct CleanAIMessageRow: View {
     private let deepPlum = Color.gaurexDeepPlum
     private let warmGold = Color.gaurexWarmGold
     private let mistGray = Color.gaurexMistGray
+    private let deepPurple = Color.gaurexDeepPlum
+    private let goldAccent = Color.gaurexWarmGold
     @ObservedObject private var voiceAI = MultilingualVoiceAIService.shared
     
     var body: some View {

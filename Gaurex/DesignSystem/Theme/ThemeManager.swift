@@ -16,6 +16,10 @@ extension Color {
     
     /// Warm Gold (#EAAA00) - Precious highlight & status indicator
     public static let gaurexWarmGold = Color(red: 0xEA / 255.0, green: 0xAA / 255.0, blue: 0x00 / 255.0)
+    
+    // Backwards Compatibility Aliases
+    public static let deepPurple = gaurexDeepPlum
+    public static let goldAccent = gaurexWarmGold
 }
 
 public enum AppTheme: String, CaseIterable, Identifiable {

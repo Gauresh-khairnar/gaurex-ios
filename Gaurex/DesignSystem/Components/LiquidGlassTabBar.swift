@@ -75,6 +75,8 @@ public struct LiquidGlassTabBar: View {
     
     private let deepPlum = Color.gaurexDeepPlum
     private let warmGold = Color.gaurexWarmGold
+    private let deepPurple = Color.gaurexDeepPlum
+    private let goldAccent = Color.gaurexWarmGold
     
     public var body: some View {
         HStack(spacing: 0) {
