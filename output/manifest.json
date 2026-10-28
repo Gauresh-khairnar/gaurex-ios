@@ -1,0 +1,22 @@
+{
+  "pipelineVersion": "1.0.0",
+  "generatedAt": "2026-10-28T06:02:51.578Z",
+  "owner": "Gauresh Khairnar (OWNER)",
+  "recordsVerified": 2400,
+  "splitStats": {
+    "train": 1754,
+    "val": 348,
+    "test": 298
+  },
+  "domainBreakdown": {
+    "asr": 300,
+    "tts": 300,
+    "intent": 300,
+    "bi": 300,
+    "rag": 300,
+    "agentic": 300,
+    "reasoning": 300,
+    "noisy_speech": 300
+  },
+  "reportPath": "E:\\Gaurex\\ios\\output\\reports\\QUALITY_AUDIT_REPORT.md"
+}

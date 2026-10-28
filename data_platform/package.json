@@ -1,0 +1,32 @@
+{
+  "name": "gaurex-data-platform",
+  "version": "1.0.0",
+  "description": "Production-grade dataset engineering platform for GAUREX AI Co-Founder (NEO) - 100M+ Scale Architecture",
+  "main": "src/cli.js",
+  "bin": {
+    "gaurex-data": "bin/gaurex-data.js"
+  },
+  "type": "module",
+  "scripts": {
+    "start": "node src/cli.js",
+    "generate": "node src/cli.js generate --count 2000",
+    "validate": "node src/cli.js validate",
+    "split": "node src/cli.js split",
+    "report": "node src/cli.js report",
+    "estimate": "node src/cli.js estimate",
+    "all": "node src/cli.js run-all --count 3000"
+  },
+  "keywords": [
+    "dataset-engineering",
+    "speech-recognition",
+    "tts",
+    "business-intelligence",
+    "agentic-ai",
+    "rag",
+    "mlops",
+    "gaurex",
+    "neo"
+  ],
+  "author": "Gauresh Khairnar <founder@gaurex.com>",
+  "license": "Proprietary"
+}
