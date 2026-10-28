@@ -130,7 +130,7 @@ public struct DashboardView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         .padding(.top, 8)
                         .offset(y: animateHeader ? 0 : -20)
                         .opacity(animateHeader ? 1 : 0)
@@ -186,12 +186,16 @@ public struct DashboardView: View {
                                 .background(
                                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                                         .fill(colorScheme == .dark ? Color(red: 0.16, green: 0.16, blue: 0.20) : Color.white)
-                                        .shadow(color: Color.black.opacity(0.04), radius: 8, x: 0, y: 2)
+                                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.04), radius: 8, x: 0, y: 2)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                        .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                                 )
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         .offset(y: animateHeader ? 0 : -15)
                         .opacity(animateHeader ? 1 : 0)
                         
@@ -202,7 +206,11 @@ public struct DashboardView: View {
                             ZStack(alignment: .topTrailing) {
                                 RoundedRectangle(cornerRadius: 22, style: .continuous)
                                     .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                                    .shadow(color: Color.black.opacity(0.05), radius: 14, x: 0, y: 4)
+                                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.25 : 0.05), radius: 14, x: 0, y: 4)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                                            .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                                    )
                                 
                                 // Content
                                 HStack(alignment: .bottom) {
@@ -284,12 +292,12 @@ public struct DashboardView: View {
                             }
                         }
                         .buttonStyle(.plain)
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         .offset(y: animateRevenueCard ? 0 : 25)
                         .opacity(animateRevenueCard ? 1 : 0)
                         
-                        // MARK: - 4-Card Metrics Grid
-                        HStack(spacing: 10) {
+                        // MARK: - 4-Card Metrics Grid (2x2 Spacious)
+                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                             // 1. Total Clients
                             StatMetricTile(
                                 icon: "person.2",
@@ -338,7 +346,7 @@ public struct DashboardView: View {
                                 showingProfitCenter = true
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         .offset(y: animateStatsGrid ? 0 : 25)
                         .opacity(animateStatsGrid ? 1 : 0)
                         
@@ -355,7 +363,7 @@ public struct DashboardView: View {
                                 .font(.system(size: 12, weight: .semibold))
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 16)
                             
                             VStack(spacing: 0) {
                                 ActivityItemRow(
@@ -400,21 +408,25 @@ public struct DashboardView: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 20, style: .continuous)
                                     .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                                    .shadow(color: Color.black.opacity(0.04), radius: 10, x: 0, y: 3)
+                                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.04), radius: 8, x: 0, y: 3)
                             )
-                            .padding(.horizontal, 20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                            )
+                            .padding(.horizontal, 16)
                         }
                         .offset(y: animateActivity ? 0 : 25)
                         .opacity(animateActivity ? 1 : 0)
                         
-                        // MARK: - Quick Actions Section
+                        // MARK: - Quick Actions Section (2x2 Spacious)
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Quick Actions")
                                 .font(.system(size: 16, weight: .bold))
                                 .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 16)
                             
-                            HStack(spacing: 10) {
+                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                                 // 1. New Project
                                 QuickActionCardTile(
                                     icon: "sparkles",
@@ -448,17 +460,17 @@ public struct DashboardView: View {
                                     icon: "brain.head.profile",
                                     iconColor: Color(red: 0.55, green: 0.40, blue: 0.75),
                                     title: "AI Assistant",
-                                    subtitle: "Get instant help"
+                                    subtitle: "Ask NEO advisor"
                                 ) {
                                     selectedTab = .aiModel
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 16)
                         }
                         .offset(y: animateQuickActions ? 0 : 25)
                         .opacity(animateQuickActions ? 1 : 0)
                         
-                        Spacer().frame(height: 80)
+                        Spacer().frame(height: 110)
                     }
                     .padding(.vertical, 10)
                 }
@@ -518,52 +530,68 @@ private struct StatMetricTile: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 8) {
-                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                    .fill(Color(red: 0.24, green: 0.12, blue: 0.36).opacity(0.06))
-                    .frame(width: 28, height: 28)
-                    .overlay(
-                        Image(systemName: icon)
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundColor(deepPurple)
-                    )
-                
-                Text(title)
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundColor(Color(uiColor: .secondaryLabel))
-                    .lineLimit(1)
-                
-                Text(value)
-                    .font(.system(size: 15, weight: .bold))
-                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
-                
-                HStack(spacing: 3) {
-                    if isNeutral {
-                        Image(systemName: "arrow.right")
-                            .font(.system(size: 9, weight: .bold))
-                        Text(trend)
-                            .font(.system(size: 10, weight: .bold))
-                    } else {
-                        Image(systemName: isPositive ? "arrow.up" : "arrow.down")
-                            .font(.system(size: 9, weight: .bold))
-                        Text(trend)
-                            .font(.system(size: 10, weight: .bold))
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color(red: 0.24, green: 0.12, blue: 0.36).opacity(0.08))
+                        .frame(width: 32, height: 32)
+                        .overlay(
+                            Image(systemName: icon)
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(deepPurple)
+                        )
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 3) {
+                        if isNeutral {
+                            Image(systemName: "arrow.right")
+                                .font(.system(size: 9, weight: .bold))
+                            Text(trend)
+                                .font(.system(size: 10.5, weight: .bold))
+                        } else {
+                            Image(systemName: isPositive ? "arrow.up" : "arrow.down")
+                                .font(.system(size: 9, weight: .bold))
+                            Text(trend)
+                                .font(.system(size: 10.5, weight: .bold))
+                        }
                     }
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background(
+                        (isNeutral ? Color.secondary : (isPositive ? Color(red: 0.06, green: 0.72, blue: 0.44) : Color.red)).opacity(0.12)
+                    )
+                    .clipShape(Capsule())
+                    .foregroundColor(
+                        isNeutral
+                            ? Color(uiColor: .secondaryLabel)
+                            : (isPositive ? Color(red: 0.06, green: 0.72, blue: 0.44) : Color.red)
+                    )
                 }
-                .foregroundColor(
-                    isNeutral
-                        ? Color(uiColor: .secondaryLabel)
-                        : (isPositive ? Color(red: 0.06, green: 0.72, blue: 0.44) : Color.red)
-                )
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(Color(uiColor: .secondaryLabel))
+                        .lineLimit(1)
+                    
+                    Text(value)
+                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
             }
-            .padding(10)
+            .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                    .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.04), radius: 8, x: 0, y: 3)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
             )
         }
         .buttonStyle(.plain)
@@ -622,32 +650,38 @@ private struct QuickActionCardTile: View {
     
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 8) {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+            VStack(alignment: .leading, spacing: 10) {
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
                     .fill(deepPurple)
-                    .frame(width: 34, height: 34)
+                    .frame(width: 38, height: 38)
                     .overlay(
                         Image(systemName: icon)
-                            .font(.system(size: 15, weight: .semibold))
+                            .font(.system(size: 17, weight: .semibold))
                             .foregroundColor(iconColor)
                     )
                 
-                Text(title)
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                    .lineLimit(1)
-                
-                Text(subtitle)
-                    .font(.system(size: 9.5, weight: .regular))
-                    .foregroundColor(Color(uiColor: .secondaryLabel))
-                    .lineLimit(1)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                        .lineLimit(1)
+                    
+                    Text(subtitle)
+                        .font(.system(size: 11, weight: .regular))
+                        .foregroundColor(Color(uiColor: .secondaryLabel))
+                        .lineLimit(1)
+                }
             }
-            .padding(10)
+            .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                    .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.04), radius: 8, x: 0, y: 3)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
             )
         }
         .buttonStyle(.plain)

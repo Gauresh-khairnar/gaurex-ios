@@ -129,7 +129,7 @@ public struct ClientsListView: View {
                                     .foregroundColor(.white)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         .padding(.top, 8)
                         
                         // MARK: - Section Header Title + "+ Add Client"
@@ -169,7 +169,7 @@ public struct ClientsListView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         
                         // MARK: - Search Bar with Filter Icon
                         HStack(spacing: 10) {
@@ -204,9 +204,13 @@ public struct ClientsListView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
                                 .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                                .shadow(color: Color.black.opacity(0.03), radius: 6, x: 0, y: 2)
+                                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 6, x: 0, y: 2)
                         )
-                        .padding(.horizontal, 20)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                        )
+                        .padding(.horizontal, 16)
                         
                         // MARK: - Filter Chips
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -239,11 +243,11 @@ public struct ClientsListView: View {
                                     selectedStatusFilter = .archived
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 16)
                         }
                         
-                        // MARK: - 4 Stats Cards
-                        HStack(spacing: 10) {
+                        // MARK: - 4 Stats Cards (2x2 Spacious)
+                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                             ClientStatCard(
                                 icon: "person.2",
                                 title: "Total Clients",
@@ -280,7 +284,7 @@ public struct ClientsListView: View {
                                 isNeutral: true
                             )
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         
                         // MARK: - All Clients Header & List
                         HStack {
@@ -304,10 +308,10 @@ public struct ClientsListView: View {
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         
                         // Client List Rows matching screenshot
-                        VStack(spacing: 8) {
+                        VStack(spacing: 12) {
                             ForEach(filteredClients) { client in
                                 NavigationLink {
                                     ClientDetailView(client: client)
@@ -320,9 +324,9 @@ public struct ClientsListView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         
-                        Spacer().frame(height: 80)
+                        Spacer().frame(height: 110)
                     }
                     .padding(.vertical, 8)
                 }
@@ -390,52 +394,68 @@ private struct ClientStatCard: View {
     private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(Color(red: 0.24, green: 0.12, blue: 0.36).opacity(0.06))
-                .frame(width: 26, height: 26)
-                .overlay(
-                    Image(systemName: icon)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundColor(deepPurple)
-                )
-            
-            Text(title)
-                .font(.system(size: 9.5, weight: .medium))
-                .foregroundColor(Color(uiColor: .secondaryLabel))
-                .lineLimit(1)
-            
-            Text(value)
-                .font(.system(size: 13.5, weight: .bold))
-                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
-            
-            HStack(spacing: 2) {
-                if isNeutral {
-                    Image(systemName: "arrow.right")
-                        .font(.system(size: 8, weight: .bold))
-                    Text(trend)
-                        .font(.system(size: 9.5, weight: .bold))
-                } else {
-                    Image(systemName: isPositive ? "arrow.up" : "arrow.down")
-                        .font(.system(size: 8, weight: .bold))
-                    Text(trend)
-                        .font(.system(size: 9.5, weight: .bold))
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color(red: 0.24, green: 0.12, blue: 0.36).opacity(0.08))
+                    .frame(width: 32, height: 32)
+                    .overlay(
+                        Image(systemName: icon)
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(deepPurple)
+                    )
+                
+                Spacer()
+                
+                HStack(spacing: 3) {
+                    if isNeutral {
+                        Image(systemName: "arrow.right")
+                            .font(.system(size: 9, weight: .bold))
+                        Text(trend)
+                            .font(.system(size: 10.5, weight: .bold))
+                    } else {
+                        Image(systemName: isPositive ? "arrow.up" : "arrow.down")
+                            .font(.system(size: 9, weight: .bold))
+                        Text(trend)
+                            .font(.system(size: 10.5, weight: .bold))
+                    }
                 }
+                .padding(.horizontal, 7)
+                .padding(.vertical, 3)
+                .background(
+                    (isNeutral ? Color.secondary : (isPositive ? Color(red: 0.06, green: 0.72, blue: 0.44) : Color.red)).opacity(0.12)
+                )
+                .clipShape(Capsule())
+                .foregroundColor(
+                    isNeutral
+                        ? Color(uiColor: .secondaryLabel)
+                        : (isPositive ? Color(red: 0.06, green: 0.72, blue: 0.44) : Color.red)
+                )
             }
-            .foregroundColor(
-                isNeutral
-                    ? Color(uiColor: .secondaryLabel)
-                    : (isPositive ? Color(red: 0.06, green: 0.72, blue: 0.44) : Color.red)
-            )
+            
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
+                    .lineLimit(1)
+                
+                Text(value)
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
         }
-        .padding(9)
+        .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
+                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.04), radius: 8, x: 0, y: 3)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
         )
     }
 }
@@ -448,7 +468,7 @@ private struct ClientImageMatchRow: View {
     private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
     
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 14) {
             // Circle Logo / Initial
             Circle()
                 .fill(
@@ -461,10 +481,10 @@ private struct ClientImageMatchRow: View {
                         endPoint: .bottomTrailing
                     )
                 )
-                .frame(width: 44, height: 44)
+                .frame(width: 46, height: 46)
                 .overlay(
                     Text(String(client.name.prefix(1)).uppercased())
-                        .font(.system(size: 17, weight: .bold))
+                        .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.white)
                 )
             
@@ -472,7 +492,7 @@ private struct ClientImageMatchRow: View {
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
                     Text(client.name)
-                        .font(.system(size: 14.5, weight: .bold))
+                        .font(.system(size: 15, weight: .bold))
                         .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                     
                     Text(client.businessCategory.isEmpty ? "Business" : client.businessCategory)
@@ -485,18 +505,18 @@ private struct ClientImageMatchRow: View {
                 }
                 
                 Text(client.phone.isEmpty ? "+91 98765 43210" : client.phone)
-                    .font(.system(size: 11, weight: .regular))
+                    .font(.system(size: 11.5, weight: .regular))
                     .foregroundColor(Color(uiColor: .secondaryLabel))
                 
                 Text(client.email.isEmpty ? "hello@\(client.name.lowercased().replacingOccurrences(of: " ", with: "")).com" : client.email)
-                    .font(.system(size: 11, weight: .regular))
+                    .font(.system(size: 11.5, weight: .regular))
                     .foregroundColor(Color(uiColor: .secondaryLabel))
             }
             
             Spacer()
             
             // Package Tag + Status Pill + Chevron
-            VStack(alignment: .trailing, spacing: 4) {
+            VStack(alignment: .trailing, spacing: 5) {
                 Text(client.packageIds.isEmpty ? "Premium Package" : "Enterprise")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundColor(Color(uiColor: .secondaryLabel))
@@ -519,11 +539,15 @@ private struct ClientImageMatchRow: View {
                 }
             }
         }
-        .padding(14)
+        .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                .shadow(color: Color.black.opacity(0.03), radius: 6, x: 0, y: 2)
+                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 8, x: 0, y: 3)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
         )
         .contextMenu {
             Button(role: .destructive) {

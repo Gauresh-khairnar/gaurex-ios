@@ -76,14 +76,14 @@ public struct SettingsView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         .padding(.top, 8)
                         
                         // MARK: - Title
                         Text("Settings")
                             .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(.primary)
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 16)
                         
                         // MARK: - Founder Profile Card
                         VStack(spacing: 14) {
@@ -171,14 +171,18 @@ public struct SettingsView: View {
                         .background(Color(uiColor: .systemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                         .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
-                        .padding(.horizontal, 20)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                        )
+                        .padding(.horizontal, 16)
                         
                         // MARK: - Appearance & Theme Section
                         VStack(alignment: .leading, spacing: 12) {
                             Text("APPEARANCE & THEME")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 16)
                             
                             // 4 Theme Cards Grid
                             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
@@ -242,7 +246,7 @@ public struct SettingsView: View {
                                     MotionTokens.selection()
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 16)
                             
                             // Theme Color Circles
                             HStack(spacing: 16) {
@@ -266,7 +270,7 @@ public struct SettingsView: View {
                                 }
                                 Spacer()
                             }
-                            .padding(.horizontal, 24)
+                            .padding(.horizontal, 20)
                             .padding(.top, 4)
                         }
                         
@@ -345,7 +349,11 @@ public struct SettingsView: View {
                             .background(Color(uiColor: .systemBackground))
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                             .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
-                            .padding(.horizontal, 20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                            )
+                            .padding(.horizontal, 16)
                         }
                         
                         // MARK: - App Features Section
@@ -353,7 +361,7 @@ public struct SettingsView: View {
                             Text("APP FEATURES")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 16)
                             
                             VStack(spacing: 0) {
                                 NavigationLink {
@@ -399,7 +407,11 @@ public struct SettingsView: View {
                             .background(Color(uiColor: .systemBackground))
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                             .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
-                            .padding(.horizontal, 20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                            )
+                            .padding(.horizontal, 16)
                         }
                         
                         // MARK: - System & Support Section
@@ -407,7 +419,7 @@ public struct SettingsView: View {
                             Text("SYSTEM & SUPPORT")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 16)
                             
                             VStack(spacing: 0) {
                                 // Biometrics Row
@@ -465,7 +477,11 @@ public struct SettingsView: View {
                             .background(Color(uiColor: .systemBackground))
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                             .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
-                            .padding(.horizontal, 20)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                            )
+                            .padding(.horizontal, 16)
                         }
                         
                         // MARK: - Log Out Pill Button
@@ -490,10 +506,10 @@ public struct SettingsView: View {
                             )
                         }
                         .buttonStyle(.plain)
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 16)
                         .padding(.top, 4)
                         
-                        Spacer().frame(height: 100)
+                        Spacer().frame(height: 110)
                     }
                     .padding(.vertical, 10)
                 }
@@ -594,12 +610,12 @@ private struct ThemeCard: View {
             }
             .padding(14)
             .background(Color(uiColor: .systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .stroke(isSelected ? Color(red: 0.18, green: 0.08, blue: 0.28) : Color.black.opacity(0.06), lineWidth: isSelected ? 2 : 1)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(isSelected ? Color(red: 0.18, green: 0.08, blue: 0.28) : Color.primary.opacity(0.06), lineWidth: isSelected ? 2 : 0.8)
             )
-            .shadow(color: Color.black.opacity(0.03), radius: 5, y: 2)
+            .shadow(color: Color.black.opacity(0.03), radius: 6, y: 2)
         }
         .buttonStyle(.plain)
     }

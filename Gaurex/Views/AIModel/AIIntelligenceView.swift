@@ -2,6 +2,7 @@
 //  AIIntelligenceView.swift
 //  GAUREX Dashboard
 //  Founder & Owner: Gauresh Khairnar (OWNER)
+//  NEO: Autonomous AI Co-Founder & Executive Intelligence Engine
 //
 
 import SwiftUI
@@ -10,23 +11,19 @@ public struct AIIntelligenceView: View {
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
     @ObservedObject private var aiService = AIService.shared
+    @ObservedObject private var neoVoice = NeoCoFounderService.shared
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var inputText: String = ""
     @State private var showingSettingsSheet = false
     @State private var showingVoiceSheet = false
     @State private var showingDocumentExtraction = false
     @State private var showingClearHistoryAlert = false
+    @State private var pulseAnimation = false
+    @State private var copiedMessageId: String? = nil
     
-    let allExecutivePrompts = [
-        "📊 Executive Financial Briefing",
-        "💸 Outstanding Invoices & Collection Strategy",
-        "📈 Growth & Profit Optimization Plan",
-        "⚡ Priority Actions for Today",
-        "How much money did we actually collect this month?",
-        "Which invoices are overdue right now?",
-        "Which client deals need follow-up today?",
-        "Generate this week's business performance report."
-    ]
+    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
     
     public init() {}
     
@@ -66,223 +63,356 @@ public struct AIIntelligenceView: View {
     public var body: some View {
         NavigationStack {
             ZStack {
-                theme.backgroundColor.ignoresSafeArea()
+                // Background
+                (colorScheme == .dark ? Color(red: 0.07, green: 0.07, blue: 0.09) : Color(red: 0.96, green: 0.96, blue: 0.98))
+                    .ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Header Assistant Mode Bar
-                    HStack(spacing: 10) {
-                        Button {
-                            showingVoiceSheet = true
-                        } label: {
-                            HStack(spacing: 4) {
-                                Image(systemName: "mic.fill")
-                                Text("Voice Mode")
+                    
+                    // MARK: - Minimalist Executive Top Bar
+                    HStack(alignment: .center) {
+                        VStack(alignment: .leading, spacing: 1) {
+                            HStack(spacing: 0) {
+                                Text("G")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                Text("A")
+                                    .font(.system(size: 22, weight: .black))
+                                    .foregroundColor(goldAccent)
+                                Text("UREX")
+                                    .font(.system(size: 22, weight: .bold))
+                                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                             }
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(.primary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(theme.cardBackground)
-                            .clipShape(Capsule())
-                            .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
-                        }
-                        .buttonStyle(.plain)
-                        .tactilePress()
-                        
-                        Button {
-                            showingDocumentExtraction = true
-                        } label: {
+                            .tracking(1.5)
+                            
                             HStack(spacing: 4) {
-                                Image(systemName: "doc.viewfinder.fill")
-                                Text("Scan / Extract")
+                                Circle()
+                                    .fill(Color(red: 0.06, green: 0.72, blue: 0.44))
+                                    .frame(width: 6, height: 6)
+                                Text("NEO 2.0 • Online")
+                                    .font(.system(size: 11, weight: .semibold))
+                                    .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
                             }
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(.primary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(theme.cardBackground)
-                            .clipShape(Capsule())
-                            .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
                         }
-                        .buttonStyle(.plain)
-                        .tactilePress()
                         
                         Spacer()
                         
-                        if !store.aiMessages.isEmpty {
-                            Button {
-                                showingClearHistoryAlert = true
-                            } label: {
-                                HStack(spacing: 3) {
-                                    Image(systemName: "trash")
-                                    Text("Clear History")
-                                }
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundColor(.red.opacity(0.85))
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(Color.red.opacity(0.08))
-                                .clipShape(Capsule())
-                            }
-                            .buttonStyle(.plain)
+                        // Live Ledger Summary Capsule
+                        HStack(spacing: 6) {
+                            Image(systemName: "bolt.shield.fill")
+                                .font(.system(size: 11))
+                                .foregroundColor(goldAccent)
+                            Text("Live Ledger")
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                         }
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 5)
+                        .background(
+                            Capsule()
+                                .fill(colorScheme == .dark ? Color(red: 0.16, green: 0.16, blue: 0.20) : Color.white)
+                                .shadow(color: Color.black.opacity(0.04), radius: 4, y: 1)
+                        )
+                        .overlay(
+                            Capsule().stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                        )
                         
-                        Text("Ledger Grounded")
-                            .font(.system(size: 10, weight: .bold))
-                            .foregroundColor(.green)
+                        // Voice Button
+                        Button {
+                            MotionTokens.selection()
+                            showingVoiceSheet = true
+                        } label: {
+                            Image(systemName: "mic.fill")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                .padding(9)
+                                .background(
+                                    Circle()
+                                        .fill(colorScheme == .dark ? Color(red: 0.16, green: 0.16, blue: 0.20) : Color.white)
+                                        .shadow(color: Color.black.opacity(0.04), radius: 4, y: 1)
+                                )
+                                .overlay(
+                                    Circle().stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        
+                        // Menu Button
+                        Menu {
+                            Button {
+                                showingSettingsSheet = true
+                            } label: {
+                                Label("Model & Key Settings", systemImage: "slider.horizontal.3")
+                            }
+                            
+                            Button {
+                                showingDocumentExtraction = true
+                            } label: {
+                                Label("Scan Document", systemImage: "doc.viewfinder")
+                            }
+                            
+                            if !store.aiMessages.isEmpty {
+                                Divider()
+                                Button(role: .destructive) {
+                                    showingClearHistoryAlert = true
+                                } label: {
+                                    Label("Clear Conversation", systemImage: "trash")
+                                }
+                            }
+                        } label: {
+                            Image(systemName: "ellipsis")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(Color(uiColor: .secondaryLabel))
+                                .padding(9)
+                                .background(
+                                    Circle()
+                                        .fill(colorScheme == .dark ? Color(red: 0.16, green: 0.16, blue: 0.20) : Color.white)
+                                        .shadow(color: Color.black.opacity(0.04), radius: 4, y: 1)
+                                )
+                                .overlay(
+                                    Circle().stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                                )
+                        }
                     }
                     .padding(.horizontal, 16)
-                    .padding(.vertical, 6)
+                    .padding(.top, 8)
+                    .padding(.bottom, 6)
                     
-                    // Messages Chat Area
+                    // MARK: - Conversational Stream Area
                     ScrollViewReader { proxy in
-                        ScrollView {
-                            VStack(spacing: 14) {
-                                GlassCard {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        HStack {
-                                            Image(systemName: "sparkles")
-                                                .font(.system(size: 18))
-                                                .foregroundColor(theme.accentColor)
-                                            Text("NEO • AI Co-Founder")
-                                                .font(.system(size: 15, weight: .bold))
-                                            Spacer()
-                                            OwnerBadge()
-                                        }
-                                        Text("Autonomous executive intelligence partner trained on GAUREX live ledger, ML cashflow regression, churn classification, and predictive analytics.")
-                                            .font(.system(size: 13))
-                                            .foregroundColor(.secondary)
-                                    }
-                                }
-                                .padding(.horizontal, 16)
-                                .padding(.top, 6)
-                                
-                                // Executive Business Pulse Telemetry Card
-                                GlassCard {
-                                    VStack(alignment: .leading, spacing: 10) {
-                                        HStack {
-                                            HStack(spacing: 6) {
-                                                Image(systemName: "chart.line.uptrend.xyaxis")
-                                                    .font(.system(size: 14, weight: .semibold))
-                                                    .foregroundColor(theme.accentColor)
-                                                Text("EXECUTIVE BUSINESS PULSE")
-                                                    .font(TypographyTokens.caption)
-                                                    .foregroundColor(theme.accentColor)
-                                            }
-                                            Spacer()
-                                            OwnerBadge()
-                                        }
-                                        
-                                        HStack(spacing: 12) {
-                                            VStack(alignment: .leading, spacing: 3) {
-                                                Text("Collected Cash")
-                                                    .font(.system(size: 10, weight: .medium))
-                                                    .foregroundColor(.secondary)
-                                                Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.revenueCollected))")
-                                                    .font(.system(size: 17, weight: .bold))
-                                                    .foregroundColor(.green)
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            
-                                            Divider().frame(height: 30)
-                                            
-                                            VStack(alignment: .leading, spacing: 3) {
-                                                Text("Receivables")
-                                                    .font(.system(size: 10, weight: .medium))
-                                                    .foregroundColor(.secondary)
-                                                Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.outstandingPayments))")
-                                                    .font(.system(size: 17, weight: .bold))
-                                                    .foregroundColor(.orange)
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                            
-                                            Divider().frame(height: 30)
-                                            
-                                            VStack(alignment: .leading, spacing: 3) {
-                                                Text("Net Profit")
-                                                    .font(.system(size: 10, weight: .medium))
-                                                    .foregroundColor(.secondary)
-                                                Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.netOperatingIncome))")
-                                                    .font(.system(size: 17, weight: .bold))
-                                                    .foregroundColor(theme.accentColor)
-                                            }
-                                            .frame(maxWidth: .infinity, alignment: .leading)
-                                        }
-                                        
-                                        Button {
-                                            sendMessage(text: "📊 Executive Financial Briefing")
-                                        } label: {
-                                            HStack {
-                                                Image(systemName: "sparkles")
-                                                Text("Generate Strategic Executive Briefing")
-                                                Spacer()
-                                                Image(systemName: "arrow.right.circle.fill")
-                                            }
-                                            .font(.system(size: 11.5, weight: .bold))
-                                            .foregroundColor(.white)
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 8)
-                                            .background(theme.accentColor)
-                                            .clipShape(Capsule())
-                                        }
-                                        .buttonStyle(.plain)
-                                        .padding(.top, 2)
-                                    }
-                                }
-                                .padding(.horizontal, 16)
-                                
-                                // Suggested Quick Questions
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("STRATEGIC INQUIRIES")
-                                        .font(TypographyTokens.sectionHeader)
-                                        .foregroundColor(.secondary)
-                                        .padding(.horizontal, 16)
+                        ScrollView(showsIndicators: false) {
+                            if store.aiMessages.isEmpty {
+                                // MARK: - Clean Ambient Welcome State (Uncluttered)
+                                VStack(spacing: 24) {
+                                    Spacer().frame(height: 20)
                                     
-                                    ScrollView(.horizontal, showsIndicators: false) {
-                                        HStack(spacing: 8) {
-                                            ForEach(allExecutivePrompts, id: \.self) { prompt in
-                                                Button {
-                                                    sendMessage(text: prompt)
-                                                } label: {
-                                                    Text(prompt)
-                                                        .font(.system(size: 12, weight: .medium))
-                                                        .foregroundColor(.primary)
-                                                        .padding(.horizontal, 12)
-                                                        .padding(.vertical, 7)
-                                                        .background(theme.cardBackground)
-                                                        .clipShape(Capsule())
-                                                        .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
-                                                }
-                                                .buttonStyle(.plain)
-                                                .tactilePress(scale: 0.95)
-                                            }
-                                        }
-                                        .padding(.horizontal, 16)
+                                    // Animated NEO Breathing Core
+                                    ZStack {
+                                        // Outer pulsing halo
+                                        Circle()
+                                            .fill(
+                                                RadialGradient(
+                                                    colors: [
+                                                        goldAccent.opacity(0.20),
+                                                        deepPurple.opacity(0.05),
+                                                        Color.clear
+                                                    ],
+                                                    center: .center,
+                                                    startRadius: 20,
+                                                    endRadius: 75
+                                                )
+                                            )
+                                            .frame(width: 150, height: 150)
+                                            .scaleEffect(pulseAnimation ? 1.15 : 0.95)
+                                            .animation(
+                                                Animation.easeInOut(duration: 2.4).repeatForever(autoreverses: true),
+                                                value: pulseAnimation
+                                            )
+                                        
+                                        // Middle Ring
+                                        Circle()
+                                            .stroke(
+                                                LinearGradient(
+                                                    colors: [
+                                                        goldAccent.opacity(0.6),
+                                                        Color(red: 0.65, green: 0.35, blue: 0.85).opacity(0.4)
+                                                    ],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                ),
+                                                lineWidth: 2
+                                            )
+                                            .frame(width: 88, height: 88)
+                                            .rotationEffect(.degrees(pulseAnimation ? 360 : 0))
+                                            .animation(
+                                                Animation.linear(duration: 20).repeatForever(autoreverses: false),
+                                                value: pulseAnimation
+                                            )
+                                        
+                                        // Core Orb
+                                        Circle()
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [
+                                                        Color(red: 0.24, green: 0.12, blue: 0.36),
+                                                        Color(red: 0.12, green: 0.05, blue: 0.20)
+                                                    ],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
+                                            )
+                                            .frame(width: 70, height: 70)
+                                            .overlay(
+                                                Circle()
+                                                    .stroke(goldAccent.opacity(0.5), lineWidth: 1.5)
+                                            )
+                                            .shadow(color: deepPurple.opacity(0.3), radius: 10, y: 4)
+                                        
+                                        Image(systemName: "sparkles")
+                                            .font(.system(size: 26, weight: .semibold))
+                                            .foregroundColor(goldAccent)
                                     }
-                                }
-                                
-                                // Conversation Messages
-                                ForEach(store.aiMessages) { msg in
-                                    AIMessageBubble(message: msg)
-                                        .id(msg.id)
-                                }
-                                
-                                if aiService.isAnalyzing {
-                                    HStack(spacing: 8) {
-                                        ProgressView()
-                                            .progressViewStyle(CircularProgressViewStyle())
-                                        Text("Querying authorized business records...")
-                                            .font(.system(size: 12))
-                                            .foregroundColor(.secondary)
-                                        Spacer()
+                                    .padding(.top, 10)
+                                    
+                                    // Welcome Text
+                                    VStack(spacing: 6) {
+                                        Text("Good Morning, Gauresh")
+                                            .font(.system(size: 22, weight: .bold, design: .rounded))
+                                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                        
+                                        Text("I'm NEO, your executive AI co-founder.\nWhat would you like to analyze or execute across GAUREX?")
+                                            .font(.system(size: 13, weight: .regular))
+                                            .foregroundColor(Color(uiColor: .secondaryLabel))
+                                            .multilineTextAlignment(.center)
+                                            .lineSpacing(3)
+                                            .padding(.horizontal, 24)
+                                    }
+                                    
+                                    // Compact Business Pulse Capsule
+                                    HStack(spacing: 12) {
+                                        HStack(spacing: 4) {
+                                            Text("Cash:")
+                                                .font(.system(size: 11, weight: .medium))
+                                                .foregroundColor(.secondary)
+                                            Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.revenueCollected))")
+                                                .font(.system(size: 12, weight: .bold))
+                                                .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
+                                        }
+                                        
+                                        Text("•").foregroundColor(.secondary)
+                                        
+                                        HStack(spacing: 4) {
+                                            Text("Due:")
+                                                .font(.system(size: 11, weight: .medium))
+                                                .foregroundColor(.secondary)
+                                            Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.outstandingPayments))")
+                                                .font(.system(size: 12, weight: .bold))
+                                                .foregroundColor(.orange)
+                                        }
+                                        
+                                        Text("•").foregroundColor(.secondary)
+                                        
+                                        HStack(spacing: 4) {
+                                            Text("Clients:")
+                                                .font(.system(size: 11, weight: .medium))
+                                                .foregroundColor(.secondary)
+                                            Text("\(currentContext.totalClients)")
+                                                .font(.system(size: 12, weight: .bold))
+                                                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                        }
                                     }
                                     .padding(.horizontal, 16)
-                                    .id("ANALYSIS_LOADING")
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        Capsule()
+                                            .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
+                                            .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 6, y: 2)
+                                    )
+                                    .overlay(
+                                        Capsule().stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                                    )
+                                    
+                                    // 4 Curated High-Impact Prompt Cards (2x2 Grid)
+                                    VStack(alignment: .leading, spacing: 10) {
+                                        Text("SUGGESTED EXECUTIVE ACTIONS")
+                                            .font(.system(size: 11, weight: .bold))
+                                            .foregroundColor(.secondary)
+                                            .padding(.horizontal, 4)
+                                        
+                                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+                                            QuickAIPromptTile(
+                                                icon: "chart.line.uptrend.xyaxis",
+                                                iconColor: Color(red: 0.06, green: 0.72, blue: 0.44),
+                                                title: "Financial Briefing",
+                                                subtitle: "Profit, revenue & runway"
+                                            ) {
+                                                sendMessage(text: "Generate this week's executive financial briefing with cash runway and net profit.")
+                                            }
+                                            
+                                            QuickAIPromptTile(
+                                                icon: "exclamationmark.circle.fill",
+                                                iconColor: .orange,
+                                                title: "Overdue Invoices",
+                                                subtitle: "Collections & balances"
+                                            ) {
+                                                sendMessage(text: "Which client invoices are overdue right now and what is our collection strategy?")
+                                            }
+                                            
+                                            QuickAIPromptTile(
+                                                icon: "bolt.fill",
+                                                iconColor: goldAccent,
+                                                title: "Today's Priorities",
+                                                subtitle: "Key actions & follow-ups"
+                                            ) {
+                                                sendMessage(text: "What are my top 3 highest leverage business priorities for today?")
+                                            }
+                                            
+                                            QuickAIPromptTile(
+                                                icon: "arrow.up.right.circle.fill",
+                                                iconColor: deepPurple,
+                                                title: "Growth Plan",
+                                                subtitle: "Packages & margin review"
+                                            ) {
+                                                sendMessage(text: "Analyze our package offerings and recommend how to increase our gross operating margin.")
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal, 16)
+                                    .padding(.top, 4)
+                                    
+                                    Spacer().frame(height: 120)
                                 }
-                                
-                                Spacer().frame(height: 100)
+                            } else {
+                                // MARK: - Active Conversation Stream
+                                VStack(spacing: 16) {
+                                    ForEach(store.aiMessages) { msg in
+                                        CleanAIMessageRow(
+                                            message: msg,
+                                            onSpeak: {
+                                                neoVoice.speak(text: msg.content)
+                                            },
+                                            onCopy: {
+                                                UIPasteboard.general.string = msg.content
+                                                copiedMessageId = msg.id
+                                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                                    copiedMessageId = nil
+                                                }
+                                            },
+                                            isCopied: copiedMessageId == msg.id
+                                        )
+                                        .id(msg.id)
+                                    }
+                                    
+                                    if aiService.isAnalyzing {
+                                        HStack(spacing: 10) {
+                                            ProgressView()
+                                                .scaleEffect(0.85)
+                                            Text("NEO is querying authorized ledger records...")
+                                                .font(.system(size: 13, weight: .medium))
+                                                .foregroundColor(.secondary)
+                                            Spacer()
+                                        }
+                                        .padding(.horizontal, 18)
+                                        .padding(.vertical, 10)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                                .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
+                                        )
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                                .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                                        )
+                                        .padding(.horizontal, 16)
+                                        .id("ANALYSIS_LOADING")
+                                    }
+                                    
+                                    Spacer().frame(height: 120)
+                                }
+                                .padding(.vertical, 12)
                             }
-                            .padding(.vertical, 8)
+                        }
+                        .onAppear {
+                            pulseAnimation = true
                         }
                         .onChange(of: store.aiMessages.count) { _ in
                             if let lastId = store.aiMessages.last?.id {
@@ -293,78 +423,87 @@ public struct AIIntelligenceView: View {
                         }
                     }
                     
-                    // Input Bar
+                    // MARK: - Floating Executive Input Capsule
                     VStack(spacing: 0) {
-                        Divider().background(theme.glassBorderColor)
                         HStack(spacing: 10) {
-                            TextField("Ask business advisor...", text: $inputText)
-                                .textFieldStyle(.plain)
-                                .font(.system(size: 14))
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 10)
-                                .background(theme.cardBackground)
-                                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                                .overlay(RoundedRectangle(cornerRadius: 20).stroke(theme.glassBorderColor, lineWidth: 1))
+                            // Quick Mic Button
+                            Button {
+                                MotionTokens.selection()
+                                showingVoiceSheet = true
+                            } label: {
+                                Image(systemName: "mic.fill")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                    .frame(width: 38, height: 38)
+                                    .background(
+                                        Circle()
+                                            .fill(colorScheme == .dark ? Color(red: 0.20, green: 0.20, blue: 0.26) : Color(uiColor: .systemGroupedBackground))
+                                    )
+                            }
+                            .buttonStyle(.plain)
                             
+                            // Text Input Field
+                            TextField("Ask NEO anything about your business...", text: $inputText)
+                                .font(.system(size: 14))
+                                .submitLabel(.send)
+                                .onSubmit {
+                                    sendMessage(text: inputText)
+                                }
+                            
+                            // Send Button
                             Button {
                                 sendMessage(text: inputText)
                             } label: {
-                                Image(systemName: "arrow.up.circle.fill")
-                                    .font(.system(size: 32))
-                                    .foregroundColor(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? .secondary : theme.accentColor)
+                                Image(systemName: "arrow.up")
+                                    .font(.system(size: 15, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .frame(width: 36, height: 36)
+                                    .background(
+                                        Circle()
+                                            .fill(
+                                                inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                                    ? Color.secondary.opacity(0.4)
+                                                    : deepPurple
+                                            )
+                                    )
                             }
                             .disabled(inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || aiService.isAnalyzing)
+                            .buttonStyle(.plain)
                         }
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(
+                            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                                .fill(colorScheme == .dark ? Color(red: 0.16, green: 0.16, blue: 0.20) : Color.white)
+                                .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.25 : 0.06), radius: 10, y: 3)
+                        )
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                                .stroke(Color.primary.opacity(0.08), lineWidth: 0.8)
+                        )
                         .padding(.horizontal, 16)
-                        .padding(.top, 8)
-                        .padding(.bottom, 68)
-                        .background(.ultraThinMaterial)
+                        .padding(.bottom, 12)
                     }
                 }
             }
-            .navigationTitle("AI Advisor")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItemGroup(placement: .navigationBarTrailing) {
-                    if !store.aiMessages.isEmpty {
-                        Button {
-                            showingClearHistoryAlert = true
-                        } label: {
-                            Image(systemName: "trash")
-                                .foregroundColor(.red.opacity(0.85))
-                        }
-                        .accessibilityLabel("Clear AI History")
-                    }
-                    
-                    Button {
-                        showingSettingsSheet = true
-                    } label: {
-                        Image(systemName: "gearshape")
-                    }
-                }
-            }
-            .confirmationDialog(
-                "Clear AI History",
-                isPresented: $showingClearHistoryAlert,
-                titleVisibility: .visible
-            ) {
-                Button("Clear All Messages", role: .destructive) {
-                    withAnimation {
-                        store.clearAIMessages()
-                    }
-                }
-                Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("Are you sure you want to delete all past AI conversations and inquiry history?")
+            .navigationBarHidden(true)
+            .sheet(isPresented: $showingVoiceSheet) {
+                VoiceAssistantOverlay()
             }
             .sheet(isPresented: $showingSettingsSheet) {
                 AISettingsSheet()
             }
-            .sheet(isPresented: $showingVoiceSheet) {
-                VoiceAssistantOverlay()
-            }
             .sheet(isPresented: $showingDocumentExtraction) {
                 DocumentExtractionView()
+            }
+            .alert("Clear Conversation?", isPresented: $showingClearHistoryAlert) {
+                Button("Clear", role: .destructive) {
+                    store.aiMessages.removeAll()
+                    store.saveAIMessages()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to delete all messages in this consultation session?")
             }
         }
     }
@@ -377,6 +516,8 @@ public struct AIIntelligenceView: View {
         store.aiMessages.append(userMsg)
         inputText = ""
         
+        MotionTokens.selection()
+        
         aiService.askBusinessAssistant(question: trimmed, context: currentContext) { response in
             store.aiMessages.append(response)
             store.saveAIMessages()
@@ -384,82 +525,224 @@ public struct AIIntelligenceView: View {
     }
 }
 
-public struct AIMessageBubble: View {
-    @ObservedObject private var theme = ThemeManager.shared
-    public var message: AIMessage
+// MARK: - Quick AI Prompt Tile Component
+private struct QuickAIPromptTile: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let icon: String
+    let iconColor: Color
+    let title: String
+    let subtitle: String
+    let action: () -> Void
     
-    public var body: some View {
+    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 8) {
+                Circle()
+                    .fill(iconColor.opacity(0.12))
+                    .frame(width: 32, height: 32)
+                    .overlay(
+                        Image(systemName: icon)
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(iconColor)
+                    )
+                
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.system(size: 13, weight: .bold))
+                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                        .lineLimit(1)
+                    
+                    Text(subtitle)
+                        .font(.system(size: 10.5, weight: .regular))
+                        .foregroundColor(Color(uiColor: .secondaryLabel))
+                        .lineLimit(1)
+                }
+            }
+            .padding(14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
+                    .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 6, y: 2)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Clean AI Message Row
+private struct CleanAIMessageRow: View {
+    @Environment(\.colorScheme) private var colorScheme
+    let message: AIMessage
+    let onSpeak: () -> Void
+    let onCopy: () -> Void
+    let isCopied: Bool
+    
+    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
+    
+    var body: some View {
         HStack {
             if message.sender == "user" {
-                Spacer()
+                Spacer(minLength: 44)
+                
                 Text(message.content)
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.white)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 10)
-                    .background(Color.primary)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .padding(.leading, 40)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 11)
+                    .background(deepPurple)
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             } else {
                 VStack(alignment: .leading, spacing: 8) {
+                    // NEO Header inside response bubble
                     HStack(spacing: 6) {
                         Image(systemName: "sparkles")
-                            .font(.system(size: 12))
-                            .foregroundColor(theme.accentColor)
-                        Text("GAUREX ADVISOR")
-                            .font(TypographyTokens.code)
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(goldAccent)
+                        Text("NEO")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                        
+                        Text("• Co-Founder")
+                            .font(.system(size: 11, weight: .regular))
                             .foregroundColor(.secondary)
+                        
+                        Spacer()
+                        
                         if message.isForecastEstimate {
-                            Text("• ESTIMATE")
+                            Text("ML FORECAST")
                                 .font(.system(size: 9, weight: .bold))
                                 .foregroundColor(.orange)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 2)
+                                .background(Color.orange.opacity(0.12))
+                                .clipShape(Capsule())
                         }
                     }
                     
+                    // Message Content
                     Text(LocalizedStringKey(message.content))
-                        .font(.system(size: 13.5))
+                        .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.primary)
-                        .lineSpacing(3)
+                        .lineSpacing(3.5)
                     
+                    // Action Recommendation Card if present
                     if let rec = message.actionRecommendation {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("EXECUTIVE RECOMMENDATION")
-                                .font(TypographyTokens.code)
-                                .foregroundColor(theme.accentColor)
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundColor(goldAccent)
                             Text(rec)
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.primary)
                         }
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .background(theme.backgroundColor.opacity(0.5))
+                        .background(colorScheme == .dark ? Color.black.opacity(0.2) : Color.black.opacity(0.03))
                         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(theme.glassBorderColor, lineWidth: 1))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .stroke(goldAccent.opacity(0.3), lineWidth: 0.8)
+                        )
                     }
+                    
+                    // Footer: Speak aloud & Copy actions
+                    HStack(spacing: 12) {
+                        Button {
+                            onSpeak()
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: "speaker.wave.2.fill")
+                                    .font(.system(size: 11))
+                                Text("Listen")
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .foregroundColor(goldAccent)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(goldAccent.opacity(0.10))
+                            .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        
+                        Button {
+                            onCopy()
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                                    .font(.system(size: 11))
+                                Text(isCopied ? "Copied" : "Copy")
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.secondary.opacity(0.10))
+                            .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        
+                        Spacer()
+                    }
+                    .padding(.top, 2)
                 }
-                .padding(14)
-                .background(theme.cardBackground)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 16).stroke(theme.glassBorderColor, lineWidth: 1))
-                .padding(.trailing, 40)
-                Spacer()
+                .padding(15)
+                .background(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
+                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 8, x: 0, y: 3)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                )
+                
+                Spacer(minLength: 44)
             }
         }
         .padding(.horizontal, 16)
-        .transition(.opacity.combined(with: .scale(scale: 0.98)))
     }
 }
 
+// MARK: - AIMessageBubble Alias for any legacy views
+public struct AIMessageBubble: View {
+    public let message: AIMessage
+    
+    public init(message: AIMessage) {
+        self.message = message
+    }
+    
+    public var body: some View {
+        CleanAIMessageRow(
+            message: message,
+            onSpeak: {
+                NeoCoFounderService.shared.speak(text: message.content)
+            },
+            onCopy: {
+                UIPasteboard.general.string = message.content
+            },
+            isCopied: false
+        )
+    }
+}
+
+// MARK: - AI Settings Sheet
 public struct AISettingsSheet: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var theme: ThemeManager
-    @State private var selectedModel: String = "openai/gpt-oss-120b"
+    @State private var selectedModel: String = "llama-3.3-70b-versatile"
     @State private var customApiKey: String = ""
     @State private var statusMessage: String = ""
     @State private var isTesting: Bool = false
     
     private let availableModels = [
-        "openai/gpt-oss-120b",
         "llama-3.3-70b-versatile",
         "llama-3.1-8b-instant",
         "mixtral-8x7b-32768"
@@ -470,15 +753,17 @@ public struct AISettingsSheet: View {
     public var body: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Model Engine")) {
+                SwiftUI.Section {
                     Picker("Active Model", selection: $selectedModel) {
                         ForEach(availableModels, id: \.self) { model in
                             Text(model).tag(model)
                         }
                     }
+                } header: {
+                    Text("Model Engine")
                 }
                 
-                Section(header: Text("API Credentials"), footer: Text("Custom credentials override the built-in GAUREX enterprise AI key.")) {
+                SwiftUI.Section {
                     SecureField("Custom Groq API Key (Optional)", text: $customApiKey)
                     
                     Button {
@@ -499,9 +784,13 @@ public struct AISettingsSheet: View {
                             .font(.system(size: 12))
                             .foregroundColor(statusMessage.contains("Success") ? .green : .red)
                     }
+                } header: {
+                    Text("API Credentials")
+                } footer: {
+                    Text("Custom credentials override the built-in GAUREX enterprise AI key.")
                 }
                 
-                Section(header: Text("Executive Context")) {
+                SwiftUI.Section {
                     HStack {
                         Text("Authorized User")
                         Spacer()
@@ -514,9 +803,11 @@ public struct AISettingsSheet: View {
                         Text("Groq Cloud Ultra-Low Latency")
                             .foregroundColor(.secondary)
                     }
+                } header: {
+                    Text("Executive Context")
                 }
             }
-            .navigationTitle("AI Intelligence Settings")
+            .navigationTitle("NEO AI Engine Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
