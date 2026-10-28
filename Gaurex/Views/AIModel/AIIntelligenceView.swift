@@ -746,41 +746,6 @@ private struct CleanAIMessageRow: View {
         .padding(.horizontal, 16)
     }
 }
-                            HStack(spacing: 4) {
-                                Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
-                                    .font(.system(size: 11))
-                                Text(isCopied ? "Copied" : "Copy")
-                                    .font(.system(size: 11, weight: .semibold))
-                            }
-                            .foregroundColor(.secondary)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.secondary.opacity(0.10))
-                            .clipShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                        
-                        Spacer()
-                    }
-                    .padding(.top, 2)
-                }
-                .padding(15)
-                .background(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
-                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 8, x: 0, y: 3)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
-                )
-                
-                Spacer(minLength: 44)
-            }
-        }
-        .padding(.horizontal, 16)
-    }
-}
 
 // MARK: - AIMessageBubble Alias for any legacy views
 public struct AIMessageBubble: View {
