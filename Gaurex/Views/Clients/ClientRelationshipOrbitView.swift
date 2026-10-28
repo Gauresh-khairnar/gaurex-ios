@@ -154,30 +154,23 @@ public struct ClientRelationshipOrbitView: View {
             .position(x: center.x, y: center.y + 110)
         } else {
             ForEach(Array(store.clients.enumerated()), id: \.element.id) { index, client in
-                let planetRadius = calculateOrbitRadius(for: client, maxRadius: maxRadius)
-                let baseAngle = (Double(index) / Double(max(1, store.clients.count))) * 2.0 * .pi
-                let currentAngle = baseAngle + orbitalPhase + dragOffsetAngle
-                let posX = center.x + CGFloat(cos(currentAngle)) * planetRadius
-                let posY = center.y + CGFloat(sin(currentAngle)) * planetRadius
-                let isSelected = selectedClient?.id == client.id
-                let planetSize = calculatePlanetSize(for: client)
-                
-                ClientPlanetView(
+                OrbitingPlanetNodeView(
                     client: client,
-                    size: planetSize,
-                    isSelected: isSelected
-                )
-                .position(x: posX, y: posY)
-                .onTapGesture {
-                    MotionTokens.impact(style: .medium)
-                    withAnimation(MotionTokens.bouncySpring) {
+                    index: index,
+                    totalCount: store.clients.count,
+                    center: center,
+                    maxRadius: maxRadius,
+                    orbitalPhase: orbitalPhase,
+                    dragOffsetAngle: dragOffsetAngle,
+                    isSelected: selectedClient?.id == client.id,
+                    onSelect: {
                         if selectedClient?.id == client.id {
                             selectedClient = nil
                         } else {
                             selectedClient = client
                         }
                     }
-                }
+                )
             }
         }
     }
@@ -284,33 +277,6 @@ public struct ClientRelationshipOrbitView: View {
         }
     }
     
-    // MARK: - Parametric Calculations
-    private func calculateOrbitRadius(for client: Client, maxRadius: CGFloat) -> CGFloat {
-        let outstanding = client.outstandingBalance
-        if outstanding <= 500 {
-            return maxRadius * 0.38
-        } else if outstanding <= 25000 {
-            let ratio = CGFloat(outstanding / 25000.0)
-            return (maxRadius * 0.38) + (maxRadius * 0.30 * ratio)
-        } else {
-            let ratio = min(1.0, CGFloat((outstanding - 25000.0) / 75000.0))
-            return (maxRadius * 0.68) + (maxRadius * 0.30 * ratio)
-        }
-    }
-    
-    private func calculatePlanetSize(for client: Client) -> CGFloat {
-        let total = client.totalInvoiced
-        if total <= 10000 {
-            return 28.0
-        } else if total <= 50000 {
-            return 36.0
-        } else if total <= 150000 {
-            return 44.0
-        } else {
-            return 52.0
-        }
-    }
-    
     private func startOrbitTimer() {
         Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             if isAutoRotating {
@@ -356,6 +322,68 @@ fileprivate struct OrbitTrackView: View {
                 .font(.pjs(8.5, weight: .semibold))
                 .foregroundColor(color)
                 .position(x: center.x, y: center.y - radius - 8)
+        }
+    }
+}
+
+// MARK: - Orbiting Planet Node View (Modularized for Swift Compiler Performance)
+fileprivate struct OrbitingPlanetNodeView: View {
+    let client: Client
+    let index: Int
+    let totalCount: Int
+    let center: CGPoint
+    let maxRadius: CGFloat
+    let orbitalPhase: Double
+    let dragOffsetAngle: Double
+    let isSelected: Bool
+    let onSelect: () -> Void
+    
+    private var planetRadius: CGFloat {
+        let outstanding = client.outstandingBalance
+        if outstanding <= 500 {
+            return maxRadius * 0.38
+        } else if outstanding <= 25000 {
+            let ratio = CGFloat(outstanding / 25000.0)
+            return (maxRadius * 0.38) + (maxRadius * 0.30 * ratio)
+        } else {
+            let ratio = min(1.0, CGFloat((outstanding - 25000.0) / 75000.0))
+            return (maxRadius * 0.68) + (maxRadius * 0.30 * ratio)
+        }
+    }
+    
+    private var planetSize: CGFloat {
+        let total = client.totalInvoiced
+        if total <= 10000 {
+            return 28.0
+        } else if total <= 50000 {
+            return 36.0
+        } else if total <= 150000 {
+            return 44.0
+        } else {
+            return 52.0
+        }
+    }
+    
+    private var positionPoint: CGPoint {
+        let baseAngle: Double = (Double(index) / Double(max(1, totalCount))) * 2.0 * .pi
+        let angle: Double = baseAngle + orbitalPhase + dragOffsetAngle
+        let x: CGFloat = center.x + CGFloat(cos(angle)) * planetRadius
+        let y: CGFloat = center.y + CGFloat(sin(angle)) * planetRadius
+        return CGPoint(x: x, y: y)
+    }
+    
+    var body: some View {
+        ClientPlanetView(
+            client: client,
+            size: planetSize,
+            isSelected: isSelected
+        )
+        .position(positionPoint)
+        .onTapGesture {
+            MotionTokens.impact(style: .medium)
+            withAnimation(MotionTokens.bouncySpring) {
+                onSelect()
+            }
         }
     }
 }
