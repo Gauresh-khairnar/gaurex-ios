@@ -281,9 +281,8 @@ public final class FirestoreDataStore: ObservableObject {
             // 3. Cascade delete all payments for those invoices or for this client
             payments.removeAll { clientInvoiceIds.contains($0.invoiceId) || $0.clientId == id }
             
-            // 4. Cascade delete associated projects & leads
+            // 4. Cascade delete associated projects
             projects.removeAll { $0.clientId == id }
-            salesLeads.removeAll { $0.clientId == id }
             
             // 5. Remove the client record
             clients.remove(at: idx)
@@ -293,7 +292,6 @@ public final class FirestoreDataStore: ObservableObject {
             saveInvoices()
             savePayments()
             saveProjects()
-            saveSalesLeads()
             
             AuditLogger.shared.log(actionType: "DELETE_CASCADE", entityType: "Client", entityId: id, description: "Permanently deleted client: \(name) with \(clientInvoiceIds.count) associated invoices and payments")
             showToast(title: "Client & Invoices Removed")
