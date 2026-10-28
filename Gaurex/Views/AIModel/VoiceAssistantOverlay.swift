@@ -51,7 +51,7 @@ public struct VoiceAssistantOverlay: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.top, 12)
                     }
                     
@@ -186,7 +186,7 @@ public struct VoiceAssistantOverlay: View {
                             RoundedRectangle(cornerRadius: 16, style: .continuous)
                                 .stroke(Color.black.opacity(0.06), lineWidth: 1)
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                     }
                     
                     // MARK: - Sensitive Action Confirmation Card
@@ -245,7 +245,7 @@ public struct VoiceAssistantOverlay: View {
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
                                 .stroke(action.riskLevel.badgeColor.opacity(0.4), lineWidth: 1.2)
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                     }
                     
                     // MARK: - Multilingual Sample Query Pills
@@ -299,7 +299,7 @@ public struct VoiceAssistantOverlay: View {
                             .clipShape(Capsule())
                             .overlay(Capsule().stroke(Color.black.opacity(0.08), lineWidth: 1))
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                     }
                     
                     Spacer()

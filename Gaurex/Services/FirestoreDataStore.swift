@@ -271,10 +271,32 @@ public final class FirestoreDataStore: ObservableObject {
     public func deleteClient(id: String) {
         if let idx = clients.firstIndex(where: { $0.id == id }) {
             let name = clients[idx].name
+            
+            // 1. Identify all invoices belonging to this client
+            let clientInvoiceIds = Set(invoices.filter { $0.clientId == id }.map { $0.id })
+            
+            // 2. Cascade delete invoices
+            invoices.removeAll { $0.clientId == id }
+            
+            // 3. Cascade delete all payments for those invoices or for this client
+            payments.removeAll { clientInvoiceIds.contains($0.invoiceId) || $0.clientId == id }
+            
+            // 4. Cascade delete associated projects & leads
+            projects.removeAll { $0.clientId == id }
+            salesLeads.removeAll { $0.clientId == id }
+            
+            // 5. Remove the client record
             clients.remove(at: idx)
+            
+            // 6. Persist all updated stores
             saveClients()
-            AuditLogger.shared.log(actionType: "DELETE", entityType: "Client", entityId: id, description: "Permanently deleted client: \(name)")
-            showToast(title: "Client Removed")
+            saveInvoices()
+            savePayments()
+            saveProjects()
+            saveSalesLeads()
+            
+            AuditLogger.shared.log(actionType: "DELETE_CASCADE", entityType: "Client", entityId: id, description: "Permanently deleted client: \(name) with \(clientInvoiceIds.count) associated invoices and payments")
+            showToast(title: "Client & Invoices Removed")
         }
     }
     
@@ -557,10 +579,13 @@ public final class FirestoreDataStore: ObservableObject {
             let num = invoices[idx].invoiceNumber
             let clientId = invoices[idx].clientId
             invoices.remove(at: idx)
+            // Cascade delete any payments recorded for this invoice
+            payments.removeAll { $0.invoiceId == id }
             saveInvoices()
+            savePayments()
             recalculateClientFinancials(clientId: clientId)
-            AuditLogger.shared.log(actionType: "DELETE", entityType: "Invoice", entityId: id, description: "Permanently deleted invoice #\(num)")
-            showToast(title: "Invoice #\(num) Deleted")
+            AuditLogger.shared.log(actionType: "DELETE", entityType: "Invoice", entityId: id, description: "Permanently deleted invoice #\(num) and linked payment transactions")
+            showToast(title: "Invoice #\(num) & Payments Removed")
         }
     }
     public func deleteDocument(id: String) {
@@ -602,6 +627,14 @@ public final class FirestoreDataStore: ObservableObject {
     
     public var totalMonthlyPayrollExpenses: Double {
         payrollRecords.filter { $0.paymentStatus == .paid }.reduce(0.0) { $0 + $1.netSalaryPayable }
+    }
+    
+    public var allOperationalExpenses: Double {
+        totalMonthlyExpenses + totalMonthlyPayrollExpenses
+    }
+    
+    public var netOperatingRevenue: Double {
+        max(0.0, revenueCollected - allOperationalExpenses)
     }
     
     public var netOperatingIncome: Double {

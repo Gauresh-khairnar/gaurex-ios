@@ -49,7 +49,7 @@ public struct InvoicesListView: View {
                         .background(theme.cardBackground)
                         .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                         .overlay(RoundedRectangle(cornerRadius: 14).stroke(theme.glassBorderColor, lineWidth: 1))
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
@@ -63,7 +63,7 @@ public struct InvoicesListView: View {
                                     }
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         }
                     }
                     .padding(.top, 8)
@@ -93,7 +93,7 @@ public struct InvoicesListView: View {
                                     .buttonStyle(.plain)
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                             .padding(.vertical, 8)
                             Spacer().frame(height: 80)
                         }

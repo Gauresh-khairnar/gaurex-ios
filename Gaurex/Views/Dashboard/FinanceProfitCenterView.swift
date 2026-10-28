@@ -86,7 +86,7 @@ public struct FinanceProfitCenterView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - Budget Utilization
                         let budget = store.businessGoals.first(where: { $0.metricType == .expenseBudget })?.targetValue ?? 200000.0
@@ -119,7 +119,7 @@ public struct FinanceProfitCenterView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - Expense Manager
                         VStack(alignment: .leading, spacing: 10) {
@@ -139,7 +139,7 @@ public struct FinanceProfitCenterView: View {
                                     .foregroundColor(theme.accentColor)
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                             
                             // Category Filter
                             ScrollView(.horizontal, showsIndicators: false) {
@@ -154,7 +154,7 @@ public struct FinanceProfitCenterView: View {
                                         }
                                     }
                                 }
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                             }
                             
                             if filteredExpenses.isEmpty {
@@ -165,7 +165,7 @@ public struct FinanceProfitCenterView: View {
                                         .frame(maxWidth: .infinity, alignment: .center)
                                         .padding(.vertical, 10)
                                 }
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                             } else {
                                 VStack(spacing: 8) {
                                     ForEach(filteredExpenses) { exp in
@@ -213,7 +213,7 @@ public struct FinanceProfitCenterView: View {
                                         }
                                     }
                                 }
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                             }
                         }
                         

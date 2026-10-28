@@ -117,7 +117,7 @@ public struct WorkersListView: View {
                                     .foregroundColor(.white)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.top, 8)
                         
                         // MARK: - Section Header Title + "+ Add Worker"
@@ -157,7 +157,7 @@ public struct WorkersListView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - Search Bar
                         HStack(spacing: 10) {
@@ -194,7 +194,7 @@ public struct WorkersListView: View {
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
                                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - Filter Chips
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -227,7 +227,7 @@ public struct WorkersListView: View {
                                     selectedStatusFilter = .archived
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         }
                         
                         // MARK: - 4 Stats Cards (2x2 Spacious with Real Data)
@@ -268,7 +268,7 @@ public struct WorkersListView: View {
                                 isNeutral: false
                             )
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - Team Members Header & List
                         HStack {
@@ -289,7 +289,7 @@ public struct WorkersListView: View {
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // Worker List Rows matching screenshot
                         VStack(spacing: 12) {
@@ -305,7 +305,7 @@ public struct WorkersListView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         Spacer().frame(height: 110)
                     }

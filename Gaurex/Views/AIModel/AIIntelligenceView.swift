@@ -184,7 +184,7 @@ public struct AIIntelligenceView: View {
                                 )
                         }
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 24)
                     .padding(.top, 8)
                     .padding(.bottom, 6)
                     
@@ -212,7 +212,7 @@ public struct AIIntelligenceView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.bottom, 6)
                     }
                     
@@ -395,7 +395,7 @@ public struct AIIntelligenceView: View {
                                             }
                                         }
                                     }
-                                    .padding(.horizontal, 20)
+                                    .padding(.horizontal, 24)
                                     .padding(.top, 4)
                                     
                                     Spacer().frame(height: 120)
@@ -440,7 +440,7 @@ public struct AIIntelligenceView: View {
                                             RoundedRectangle(cornerRadius: 14, style: .continuous)
                                                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                                         )
-                                        .padding(.horizontal, 20)
+                                        .padding(.horizontal, 24)
                                         .id("ANALYSIS_LOADING")
                                     }
                                     
@@ -522,7 +522,7 @@ public struct AIIntelligenceView: View {
                             RoundedRectangle(cornerRadius: 24, style: .continuous)
                                 .stroke(Color.primary.opacity(0.08), lineWidth: 0.8)
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.bottom, 14)
                     }
                 }
@@ -752,7 +752,7 @@ private struct CleanAIMessageRow: View {
                 Spacer(minLength: 44)
             }
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 24)
     }
 }
 

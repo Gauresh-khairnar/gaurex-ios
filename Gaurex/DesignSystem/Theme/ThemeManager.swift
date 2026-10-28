@@ -20,6 +20,9 @@ extension Color {
     // Backwards Compatibility Aliases
     public static let deepPurple = gaurexDeepPlum
     public static let goldAccent = gaurexWarmGold
+    
+    // Spacious Apple Bezel Padding
+    public static let bezelPadding: CGFloat = 24.0
 }
 
 public enum AppTheme: String, CaseIterable, Identifiable {

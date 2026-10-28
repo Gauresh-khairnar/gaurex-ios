@@ -130,7 +130,7 @@ public struct ClientsListView: View {
                                     .foregroundColor(.white)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.top, 8)
                         
                         // MARK: - Section Header Title + "+ Add Client"
@@ -170,7 +170,7 @@ public struct ClientsListView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - Search Bar with Filter Icon
                         HStack(spacing: 10) {
@@ -211,7 +211,7 @@ public struct ClientsListView: View {
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
                                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - Filter Chips
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -244,7 +244,7 @@ public struct ClientsListView: View {
                                     selectedStatusFilter = .archived
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         }
                         
                         // MARK: - 4 Stats Cards (2x2 Spacious with Real Data)
@@ -285,7 +285,7 @@ public struct ClientsListView: View {
                                 isNeutral: store.overdueInvoicesCount > 0
                             )
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - All Clients Header & List
                         HStack {
@@ -309,7 +309,7 @@ public struct ClientsListView: View {
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // Client List Rows matching screenshot
                         VStack(spacing: 12) {
@@ -325,7 +325,7 @@ public struct ClientsListView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         Spacer().frame(height: 110)
                     }

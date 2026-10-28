@@ -20,6 +20,7 @@ public struct DashboardView: View {
     @State private var showingVoiceAssistant = false
     @State private var showingSettingsSheet = false
     @State private var showingNewProjectSheet = false
+    @State private var showingAddExpenseSheet = false
     
     // Opening & Micro-Animation States
     @State private var animateHeader = false
@@ -69,18 +70,34 @@ public struct DashboardView: View {
                         // MARK: - Top Header (GAUREX + Bell + Avatar)
                         HStack(alignment: .center) {
                             VStack(alignment: .leading, spacing: 2) {
-                                HStack(spacing: 0) {
-                                    Text("G")
-                                        .font(.pjs(24, weight: .bold))
-                                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                                    Text("A")
-                                        .font(.pjs(24, weight: .black))
-                                        .foregroundColor(goldAccent)
-                                    Text("UREX")
-                                        .font(.pjs(24, weight: .bold))
-                                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                HStack(spacing: 8) {
+                                    HStack(spacing: 0) {
+                                        Text("G")
+                                            .font(.pjs(24, weight: .bold))
+                                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                        Text("A")
+                                            .font(.pjs(24, weight: .black))
+                                            .foregroundColor(goldAccent)
+                                        Text("UREX")
+                                            .font(.pjs(24, weight: .bold))
+                                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                    }
+                                    .tracking(2.0)
+                                    
+                                    // Animated AI Sparkles
+                                    ZStack {
+                                        Circle()
+                                            .fill(deepPurple)
+                                            .frame(width: 22, height: 22)
+                                            .overlay(Circle().stroke(goldAccent.opacity(0.8), lineWidth: 1))
+                                        Image(systemName: "sparkles")
+                                            .font(.system(size: 11, weight: .bold))
+                                            .foregroundColor(goldAccent)
+                                            .rotationEffect(.degrees(sparklinePulse ? 180 : 0))
+                                            .scaleEffect(sparklinePulse ? 1.15 : 0.90)
+                                    }
+                                    .animation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true), value: sparklinePulse)
                                 }
-                                .tracking(2.0)
                                 
                                 Text("Executive Dashboard")
                                     .font(.pjs(12, weight: .medium))
@@ -142,7 +159,7 @@ public struct DashboardView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.top, 10)
                         .offset(y: animateHeader ? 0 : -20)
                         .opacity(animateHeader ? 1 : 0)
@@ -211,7 +228,7 @@ public struct DashboardView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .offset(y: animateHeader ? 0 : -15)
                         .opacity(animateHeader ? 1 : 0)
                         
@@ -241,26 +258,36 @@ public struct DashboardView: View {
                                                         .foregroundColor(deepPurple)
                                                 )
                                             
-                                            Text("Total Revenue Collected")
+                                            Text("Net Operating Cashflow")
                                                 .font(.pjs(13, weight: .medium))
                                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                                         }
                                         
                                         // Real live verified store data
-                                        Text(FinancialCalculator.shared.formatCurrency(store.revenueCollected, symbol: store.settings.currencySymbol))
+                                        Text(FinancialCalculator.shared.formatCurrency(store.netOperatingRevenue, symbol: store.settings.currencySymbol))
                                             .font(.pjs(26, weight: .bold))
                                             .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                                         
-                                        HStack(spacing: 4) {
-                                            Image(systemName: "arrow.up.right")
-                                                .font(.system(size: 11, weight: .bold))
-                                            Text("Verified Cash")
-                                                .font(.pjs(12, weight: .bold))
-                                            Text("• \(store.invoices.filter { $0.status == .paid }.count) Settled Invoices")
-                                                .font(.pjs(11, weight: .regular))
-                                                .foregroundColor(Color(uiColor: .secondaryLabel))
+                                        HStack(spacing: 8) {
+                                            HStack(spacing: 3) {
+                                                Image(systemName: "arrow.down.left")
+                                                    .font(.system(size: 10, weight: .bold))
+                                                Text("In: \(FinancialCalculator.shared.formatCurrency(store.revenueCollected, symbol: store.settings.currencySymbol))")
+                                                    .font(.pjs(11, weight: .semibold))
+                                            }
+                                            .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
+                                            
+                                            Text("•")
+                                                .foregroundColor(Color(uiColor: .tertiaryLabel))
+                                            
+                                            HStack(spacing: 3) {
+                                                Image(systemName: "arrow.up.right")
+                                                    .font(.system(size: 10, weight: .bold))
+                                                Text("Exp: -\(FinancialCalculator.shared.formatCurrency(store.allOperationalExpenses, symbol: store.settings.currencySymbol))")
+                                                    .font(.pjs(11, weight: .semibold))
+                                            }
+                                            .foregroundColor(Color(red: 0.92, green: 0.28, blue: 0.28))
                                         }
-                                        .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
                                     }
                                     
                                     Spacer()
@@ -308,7 +335,7 @@ public struct DashboardView: View {
                             }
                         }
                         .buttonStyle(.plain)
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .offset(y: animateRevenueCard ? 0 : 25)
                         .opacity(animateRevenueCard ? 1 : 0)
                         
@@ -362,7 +389,7 @@ public struct DashboardView: View {
                                 showingProfitCenter = true
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .offset(y: animateStatsGrid ? 0 : 25)
                         .opacity(animateStatsGrid ? 1 : 0)
                         
@@ -371,7 +398,7 @@ public struct DashboardView: View {
                             Text("Quick Actions")
                                 .font(.pjs(16, weight: .bold))
                                 .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                             
                             LazyVGrid(columns: [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)], spacing: 14) {
                                 // 1. New Project
@@ -411,8 +438,28 @@ public struct DashboardView: View {
                                 ) {
                                     selectedTab = .aiModel
                                 }
+                                
+                                // 5. Log Expense
+                                QuickActionCardTile(
+                                    icon: "creditcard.fill",
+                                    iconColor: Color(red: 0.92, green: 0.28, blue: 0.28),
+                                    title: "Log Expense",
+                                    subtitle: "Deducts live cashflow"
+                                ) {
+                                    showingAddExpenseSheet = true
+                                }
+                                
+                                // 6. Profit Center
+                                QuickActionCardTile(
+                                    icon: "chart.line.uptrend.xyaxis",
+                                    iconColor: goldAccent,
+                                    title: "Profit Center",
+                                    subtitle: "P&L and margins"
+                                ) {
+                                    showingProfitCenter = true
+                                }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         }
                         .offset(y: animateQuickActions ? 0 : 25)
                         .opacity(animateQuickActions ? 1 : 0)
@@ -431,6 +478,9 @@ public struct DashboardView: View {
             .sheet(isPresented: $showingSettingsSheet) { SettingsView() }
             .sheet(isPresented: $showingNewProjectSheet) {
                 AddEditPackageView()
+            }
+            .sheet(isPresented: $showingAddExpenseSheet) {
+                AddExpenseSheet()
             }
             .onAppear {
                 triggerAppOpeningAnimations()

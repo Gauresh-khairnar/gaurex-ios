@@ -76,14 +76,14 @@ public struct SettingsView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.top, 8)
                         
                         // MARK: - Title
                         Text("Settings")
                             .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(.primary)
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         
                         // MARK: - Founder Profile Card
                         VStack(spacing: 14) {
@@ -175,14 +175,14 @@ public struct SettingsView: View {
                             RoundedRectangle(cornerRadius: 18, style: .continuous)
                                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                         )
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         // MARK: - Appearance & Theme Section
                         VStack(alignment: .leading, spacing: 12) {
                             Text("APPEARANCE & THEME")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                             
                             // 4 Theme Cards Grid
                             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
@@ -246,7 +246,7 @@ public struct SettingsView: View {
                                     MotionTokens.selection()
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                             
                             // Theme Color Circles
                             HStack(spacing: 16) {
@@ -270,7 +270,7 @@ public struct SettingsView: View {
                                 }
                                 Spacer()
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                             .padding(.top, 4)
                         }
                         
@@ -279,7 +279,7 @@ public struct SettingsView: View {
                             Text("BUSINESS SETTINGS")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                             
                             VStack(spacing: 0) {
                                 NavigationLink {
@@ -353,7 +353,7 @@ public struct SettingsView: View {
                                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                                     .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                             )
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         }
                         
                         // MARK: - App Features Section
@@ -361,7 +361,7 @@ public struct SettingsView: View {
                             Text("APP FEATURES")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                             
                             VStack(spacing: 0) {
                                 NavigationLink {
@@ -411,7 +411,7 @@ public struct SettingsView: View {
                                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                                     .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                             )
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         }
                         
                         // MARK: - System & Support Section
@@ -419,7 +419,7 @@ public struct SettingsView: View {
                             Text("SYSTEM & SUPPORT")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                             
                             VStack(spacing: 0) {
                                 // Biometrics Row
@@ -448,7 +448,7 @@ public struct SettingsView: View {
                                             store.saveSettings()
                                         }
                                 }
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 24)
                                 .padding(.vertical, 12)
                                 
                                 Divider().padding(.leading, 56)
@@ -481,7 +481,7 @@ public struct SettingsView: View {
                                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                                     .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                             )
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         }
                         
                         // MARK: - Log Out Pill Button
@@ -506,7 +506,7 @@ public struct SettingsView: View {
                             )
                         }
                         .buttonStyle(.plain)
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.top, 4)
                         
                         Spacer().frame(height: 110)
@@ -664,7 +664,7 @@ private struct SettingsRow: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(Color(uiColor: .tertiaryLabel))
         }
-        .padding(.horizontal, 20)
+        .padding(.horizontal, 24)
         .padding(.vertical, 12)
         .contentShape(Rectangle())
     }
@@ -781,7 +781,7 @@ private struct NeoAssistantSettingsView: View {
                                 .padding(.vertical, 12)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .background(Color(uiColor: .systemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                         .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
@@ -869,7 +869,7 @@ private struct NeoAssistantSettingsView: View {
                             }
                             .padding(.vertical, 14)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .background(Color(uiColor: .systemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                         .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)

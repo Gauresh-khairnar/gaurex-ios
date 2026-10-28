@@ -23,7 +23,7 @@ public struct FounderCommandCenterView: View {
                     .foregroundColor(.secondary)
                 Spacer()
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 24)
             
             // Health Score Card
             let health = store.businessHealthScore
@@ -67,7 +67,7 @@ public struct FounderCommandCenterView: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 24)
             .tactilePress(scale: MotionTokens.cardPressScale)
             .onTapGesture {
                 showingHealthScoreDetails = true
@@ -124,7 +124,7 @@ public struct FounderCommandCenterView: View {
                     }
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 24)
         }
         .sheet(isPresented: $showingHealthScoreDetails) {
             HealthScoreExplanationSheet(breakdown: store.businessHealthScore)
@@ -193,12 +193,12 @@ public struct HealthScoreExplanationSheet: View {
                                     .foregroundColor(.secondary)
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         
                         Text("FACTOR BREAKDOWN")
                             .font(TypographyTokens.sectionHeader)
                             .foregroundColor(.secondary)
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal, 24)
                         
                         VStack(spacing: 8) {
                             ForEach(breakdown.explanations, id: \.self) { exp in
@@ -213,7 +213,7 @@ public struct HealthScoreExplanationSheet: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                     }
                     .padding(.vertical, 12)
                 }
