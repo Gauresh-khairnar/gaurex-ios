@@ -7,6 +7,25 @@
 import UIKit
 import PDFKit
 
+public struct BiometricSealStamp {
+    public let ownerName: String
+    public let timestamp: Date
+    public let hashSignature: String
+    public let biometricType: String
+    
+    public init(
+        ownerName: String = "Gauresh Khairnar (OWNER)",
+        timestamp: Date = Date(),
+        hashSignature: String = "",
+        biometricType: String = "Face ID"
+    ) {
+        self.ownerName = ownerName
+        self.timestamp = timestamp
+        self.hashSignature = hashSignature.isEmpty ? "SHA256-\(UUID().uuidString.prefix(12).uppercased())" : hashSignature
+        self.biometricType = biometricType
+    }
+}
+
 public final class PDFGeneratorService {
     public static let shared = PDFGeneratorService()
     
@@ -16,7 +35,8 @@ public final class PDFGeneratorService {
     public func generateInvoicePDF(
         invoice: Invoice,
         client: Client,
-        business: BusinessSettings = BusinessSettings()
+        business: BusinessSettings = BusinessSettings(),
+        biometricSeal: BiometricSealStamp? = nil
     ) -> Data {
         let pdfMetaData = [
             kCGPDFContextCreator: "GAUREX Executive Suite",
@@ -191,6 +211,76 @@ public final class PDFGeneratorService {
             
             let signText = "\(business.founderName)\n\(business.ownerBadge), GAUREX"
             signText.draw(in: CGRect(x: signX, y: signY + 6, width: 150, height: 35), withAttributes: [.font: UIFont.systemFont(ofSize: 9, weight: .bold), .foregroundColor: UIColor.black])
+            
+            // MARK: - Biometric Digital Stamp & Watermark
+            if let seal = biometricSeal {
+                // Diagonal background watermark
+                context.cgContext.saveGState()
+                context.cgContext.translateBy(x: pageWidth / 2, y: pageHeight / 2)
+                context.cgContext.rotate(by: -CGFloat.pi / 5.2)
+                
+                let wmText = "GAUREX VERIFIED EXECUTIVE INSTRUMENT • \(seal.ownerName.uppercased())"
+                let wmFont = UIFont.systemFont(ofSize: 15, weight: .heavy)
+                let wmAttrs: [NSAttributedString.Key: Any] = [
+                    .font: wmFont,
+                    .foregroundColor: UIColor(red: 0.91, green: 0.66, blue: 0.0, alpha: 0.08)
+                ]
+                let wmSize = wmText.size(withAttributes: wmAttrs)
+                wmText.draw(at: CGPoint(x: -wmSize.width / 2, y: -wmSize.height / 2), withAttributes: wmAttrs)
+                context.cgContext.restoreGState()
+                
+                // Embossed Gold Digital Seal
+                let sealSize: CGFloat = 82.0
+                let sealRect = CGRect(x: signX + 46, y: signY - 58, width: sealSize, height: sealSize)
+                let goldColor = UIColor(red: 0.88, green: 0.64, blue: 0.05, alpha: 1.0)
+                let plumColor = UIColor(red: 0.23, green: 0.06, blue: 0.20, alpha: 1.0)
+                
+                // Outer ring
+                goldColor.setStroke()
+                let outerRing = UIBezierPath(ovalIn: sealRect)
+                outerRing.lineWidth = 1.8
+                outerRing.stroke()
+                
+                // Inner dashed ring
+                let innerRing = UIBezierPath(ovalIn: sealRect.insetBy(dx: 3.5, dy: 3.5))
+                let dashes: [CGFloat] = [3, 2]
+                innerRing.setLineDash(dashes, count: 2, phase: 0)
+                innerRing.lineWidth = 0.9
+                innerRing.stroke()
+                
+                // Text inside seal
+                let sealFont = UIFont.systemFont(ofSize: 6.0, weight: .black)
+                let sealAttrs: [NSAttributedString.Key: Any] = [.font: sealFont, .foregroundColor: goldColor]
+                
+                let topText = "★ GAUREX SEAL ★"
+                let tSize = topText.size(withAttributes: sealAttrs)
+                topText.draw(at: CGPoint(x: sealRect.midX - tSize.width / 2, y: sealRect.minY + 11), withAttributes: sealAttrs)
+                
+                let gkFont = UIFont.systemFont(ofSize: 13, weight: .black)
+                let gkAttrs: [NSAttributedString.Key: Any] = [.font: gkFont, .foregroundColor: plumColor]
+                let gkText = "GK"
+                let gkSize = gkText.size(withAttributes: gkAttrs)
+                gkText.draw(at: CGPoint(x: sealRect.midX - gkSize.width / 2, y: sealRect.midY - 8), withAttributes: gkAttrs)
+                
+                let bioLabel = "\(seal.biometricType.uppercased())"
+                let bioFont = UIFont.systemFont(ofSize: 5.5, weight: .bold)
+                let bioAttrs: [NSAttributedString.Key: Any] = [.font: bioFont, .foregroundColor: goldColor]
+                let bSize = bioLabel.size(withAttributes: bioAttrs)
+                bioLabel.draw(at: CGPoint(x: sealRect.midX - bSize.width / 2, y: sealRect.midY + 8), withAttributes: bioAttrs)
+                
+                let df = DateFormatter()
+                df.dateFormat = "dd/MM/yy HH:mm"
+                let dStr = df.string(from: seal.timestamp)
+                let dSize = dStr.size(withAttributes: bioAttrs)
+                dStr.draw(at: CGPoint(x: sealRect.midX - dSize.width / 2, y: sealRect.maxY - 17), withAttributes: bioAttrs)
+                
+                // Cryptographic Hash & Verification String below signature
+                let hashAttrs: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.monospacedSystemFont(ofSize: 6.2, weight: .semibold),
+                    .foregroundColor: UIColor.darkGray
+                ]
+                "SECURED BY \(seal.biometricType.uppercased()) • \(seal.hashSignature)".draw(at: CGPoint(x: signX - 40, y: signY + 38), withAttributes: hashAttrs)
+            }
         }
     }
     

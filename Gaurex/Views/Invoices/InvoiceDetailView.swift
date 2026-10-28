@@ -333,7 +333,7 @@ public struct InvoiceDetailView: View {
         .sheet(isPresented: $showingPDFPreview) {
             let client = associatedClient ?? Client(name: currentInvoice.clientName, companyName: "", email: currentInvoice.clientEmail, phone: "")
             let pdf = PDFGeneratorService.shared.generateInvoicePDF(invoice: currentInvoice, client: client, business: store.settings)
-            PDFPreviewView(pdfData: pdf, documentTitle: "Invoice \(currentInvoice.invoiceNumber)")
+            PDFPreviewView(pdfData: pdf, documentTitle: "Invoice \(currentInvoice.invoiceNumber)", invoice: currentInvoice, client: client)
         }
         .sheet(isPresented: $showingRecordPaymentSheet) {
             NavigationStack {

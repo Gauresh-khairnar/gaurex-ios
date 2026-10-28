@@ -79,6 +79,7 @@ public final class FirestoreDataStore: ObservableObject {
     
     public func toggleStealthPrivacy() {
         MotionTokens.impact(style: .medium)
+        GaurexSoundEffectsService.shared.playStealthModeClick()
         isStealthPrivacyActive.toggle()
         showToast(title: isStealthPrivacyActive ? "Stealth Shield Active (Figures Hidden)" : "Privacy Shield Deactivated")
     }
@@ -435,6 +436,7 @@ public final class FirestoreDataStore: ObservableObject {
         recalculateClientFinancials(clientId: updatedInv.clientId)
         
         AuditLogger.shared.log(actionType: "PAYMENT", entityType: "Invoice", entityId: invoiceId, description: "Recorded payment of \(settings.currencySymbol)\(validAmount) for invoice #\(updatedInv.invoiceNumber)")
+        GaurexSoundEffectsService.shared.playCashSettledSound()
         showToast(title: "Payment Recorded Successfully")
     }
     
@@ -524,6 +526,7 @@ public final class FirestoreDataStore: ObservableObject {
                     tasks[idx].status = .completed
                     tasks[idx].completedAt = Date()
                     MotionTokens.notification(type: .success)
+                    GaurexSoundEffectsService.shared.playMilestoneCompletedSound()
                 }
             }
             saveTasks()

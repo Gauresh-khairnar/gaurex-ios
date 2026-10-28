@@ -85,18 +85,28 @@ public struct DashboardView: View {
                                     }
                                     .tracking(2.0)
                                     
-                                    // Animated AI Sparkles
-                                    ZStack {
-                                        Circle()
-                                            .fill(deepPurple)
-                                            .frame(width: 22, height: 22)
-                                            .overlay(Circle().stroke(goldAccent.opacity(0.8), lineWidth: 1))
-                                        Image(systemName: "sparkles")
-                                            .font(.system(size: 11, weight: .bold))
-                                            .foregroundColor(goldAccent)
-                                            .rotationEffect(.degrees(sparklinePulse ? 180 : 0))
-                                            .scaleEffect(sparklinePulse ? 1.15 : 0.90)
+                                    // Animated AI Sparkles - Tap to trigger Neo voice briefing
+                                    Button {
+                                        MotionTokens.impact(style: .light)
+                                        if NeoCoFounderService.shared.isSpeaking {
+                                            NeoCoFounderService.shared.stopSpeaking()
+                                        } else {
+                                            NeoCoFounderService.shared.greetFounderOnLaunch(force: true)
+                                        }
+                                    } label: {
+                                        ZStack {
+                                            Circle()
+                                                .fill(deepPurple)
+                                                .frame(width: 22, height: 22)
+                                                .overlay(Circle().stroke(goldAccent.opacity(0.8), lineWidth: 1))
+                                            Image(systemName: "sparkles")
+                                                .font(.system(size: 11, weight: .bold))
+                                                .foregroundColor(goldAccent)
+                                                .rotationEffect(.degrees(sparklinePulse ? 180 : 0))
+                                                .scaleEffect(sparklinePulse ? 1.15 : 0.90)
+                                        }
                                     }
+                                    .buttonStyle(.plain)
                                     .animation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true), value: sparklinePulse)
                                 }
                                 
@@ -181,6 +191,9 @@ public struct DashboardView: View {
                         .padding(.top, 10)
                         .offset(y: animateHeader ? 0 : -20)
                         .opacity(animateHeader ? 1 : 0)
+                        
+                        // MARK: - Ambient Voice Aura Waveform on Nav Bar (Audio-Reactive Liquid Glass)
+                        AmbientVoiceAuraWaveform()
                         
                         // MARK: - Greeting & Date Row
                         HStack(alignment: .top) {

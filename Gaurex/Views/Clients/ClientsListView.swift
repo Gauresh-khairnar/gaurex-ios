@@ -18,6 +18,13 @@ public struct ClientsListView: View {
     @State private var clientToDelete: Client? = nil
     @State private var showingDeleteClientAlert = false
     @State private var sortOption: ClientSortOption = .newest
+    @State private var displayMode: ClientDisplayMode = .list
+    
+    public enum ClientDisplayMode: String, CaseIterable, Identifiable {
+        case list = "Standard List"
+        case orbit = "Founder Orbit"
+        public var id: String { rawValue }
+    }
     
     // Animation states
     @State private var animateHeader = false
@@ -172,6 +179,51 @@ public struct ClientsListView: View {
                         }
                         .padding(.horizontal, 24)
                         
+                        // MARK: - View Mode Toggle (Standard List vs 🪐 Founder Orbit View)
+                        HStack(spacing: 4) {
+                            ForEach(ClientDisplayMode.allCases) { mode in
+                                Button {
+                                    MotionTokens.selection()
+                                    withAnimation(MotionTokens.snappySpring) {
+                                        displayMode = mode
+                                    }
+                                } label: {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: mode == .list ? "list.bullet" : "circle.hexagongrid.fill")
+                                            .font(.system(size: 11, weight: .bold))
+                                        Text(mode == .list ? "Standard List" : "🪐 Founder Orbit")
+                                            .font(.pjs(11.5, weight: displayMode == mode ? .bold : .medium))
+                                    }
+                                    .foregroundColor(displayMode == mode ? (colorScheme == .dark ? .black : .white) : Color(uiColor: .secondaryLabel))
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 8)
+                                    .background(
+                                        Group {
+                                            if displayMode == mode {
+                                                Capsule()
+                                                    .fill(colorScheme == .dark ? goldAccent : deepPurple)
+                                                    .shadow(color: deepPurple.opacity(0.18), radius: 6, x: 0, y: 2)
+                                            } else {
+                                                Color.clear
+                                            }
+                                        }
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(4)
+                        .background(
+                            Capsule()
+                                .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color(red: 0.92, green: 0.92, blue: 0.95))
+                        )
+                        .padding(.horizontal, 24)
+                        
+                        if displayMode == .orbit {
+                            ClientRelationshipOrbitView()
+                                .frame(height: 540)
+                                .padding(.horizontal, 4)
+                        } else {
                         // MARK: - Search Bar with Filter Icon
                         HStack(spacing: 10) {
                             Image(systemName: "magnifyingglass")
@@ -326,6 +378,7 @@ public struct ClientsListView: View {
                             }
                         }
                         .padding(.horizontal, 24)
+                        } // End of else displayMode == .list
                         
                         Spacer().frame(height: 110)
                     }
