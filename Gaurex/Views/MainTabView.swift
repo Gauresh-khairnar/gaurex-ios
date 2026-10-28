@@ -13,39 +13,47 @@ public struct MainTabView: View {
     public init() {}
     
     public var body: some View {
-        ZStack(alignment: .bottom) {
-            AuroraLivingBackground()
-            
-            Group {
-                switch selectedTab {
-                case .home:
-                    DashboardView(selectedTab: $selectedTab)
-                case .tasks:
-                    TasksManagementView()
-                case .finance:
-                    FinanceProfitCenterView()
-                case .clients:
-                    ClientsListView()
-                case .workers:
-                    WorkersListView()
-                case .aiModel:
-                    AIIntelligenceView()
-                case .settings:
-                    SettingsView()
+        ZStack(alignment: .top) {
+            ZStack(alignment: .bottom) {
+                AuroraLivingBackground()
+                
+                Group {
+                    switch selectedTab {
+                    case .home:
+                        DashboardView(selectedTab: $selectedTab)
+                    case .tasks:
+                        TasksManagementView()
+                    case .finance:
+                        FinanceProfitCenterView()
+                    case .clients:
+                        ClientsListView()
+                    case .workers:
+                        WorkersListView()
+                    case .aiModel:
+                        AIIntelligenceView()
+                    case .settings:
+                        SettingsView()
+                    }
                 }
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .safeAreaInset(edge: .bottom) {
-                Color.clear.frame(height: 72)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .safeAreaInset(edge: .bottom) {
+                    Color.clear.frame(height: 72)
+                }
+                
+                // Persistent Floating Liquid Glass Tab Bar (7 Tabs)
+                LiquidGlassTabBar(selectedTab: $selectedTab)
+                    .padding(.horizontal, 18)
+                    .padding(.bottom, 8)
             }
             
-            // Persistent Floating Liquid Glass Tab Bar (7 Tabs)
-            LiquidGlassTabBar(selectedTab: $selectedTab)
-                .padding(.horizontal, 18)
-                .padding(.bottom, 8)
+            // Executive Interactive Dynamic Island HUD
+            ExecutiveDynamicIslandHUD()
+                .padding(.top, 4)
+                .zIndex(100)
         }
         .onAppear {
             NeoCoFounderService.shared.greetFounderOnLaunch()
+            DynamicIslandActivityService.shared.requestSystemLiveActivity()
         }
         .preferredColorScheme(theme.colorScheme)
     }
