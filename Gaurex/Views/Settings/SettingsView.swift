@@ -661,7 +661,7 @@ private struct NeoAssistantSettingsView: View {
     
     var body: some View {
         Form {
-            Section(header: Text("Voice Co-Founder")) {
+            Section("Voice Co-Founder") {
                 Toggle("Autonomous Voice Greeting", isOn: $neo.isVoiceGreetingEnabled)
                 
                 VStack(alignment: .leading, spacing: 8) {
@@ -702,7 +702,7 @@ private struct NeoAssistantSettingsView: View {
                 }
             }
             
-            Section(header: Text("Intelligence Engines")) {
+            Section("Intelligence Engines") {
                 HStack {
                     Text("Predictive ML Engine")
                     Spacer()
@@ -744,7 +744,7 @@ private struct EditProfileSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section(header: Text("Founder Information")) {
+                Section("Founder Information") {
                     TextField("Founder Full Name", text: $founderName)
                     TextField("Company Name", text: $companyName)
                     TextField("Official Email", text: $officialEmail)
