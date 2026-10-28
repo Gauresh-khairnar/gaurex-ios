@@ -21,7 +21,6 @@ public struct ClientRelationshipOrbitView: View {
     
     private let deepPurple = Color.gaurexDeepPlum
     private let goldAccent = Color.gaurexWarmGold
-    private let mistGray = Color.gaurexMistGray
     
     public init() {}
     
@@ -31,187 +30,12 @@ public struct ClientRelationshipOrbitView: View {
             let maxRadius = min(geometry.size.width, geometry.size.height) * 0.44
             
             ZStack {
-                // Background Galaxy / Starfield Glow
-                RadialGradient(
-                    gradient: Gradient(colors: [
-                        deepPurple.opacity(colorScheme == .dark ? 0.35 : 0.08),
-                        Color.clear
-                    ]),
-                    center: .init(x: 0.5, y: 0.42),
-                    startRadius: 20,
-                    endRadius: maxRadius * 1.2
-                )
-                .ignoresSafeArea()
-                
-                // MARK: - Concentric Gravitational Orbit Rings
-                Group {
-                    // Inner Orbit (Settled / Low Balance: 0 - 10k)
-                    OrbitTrackView(
-                        center: center,
-                        radius: maxRadius * 0.38,
-                        label: "Settled / Low (≤₹10k)",
-                        color: goldAccent.opacity(0.35)
-                    )
-                    
-                    // Mid Orbit (Active Receivables: 10k - 50k)
-                    OrbitTrackView(
-                        center: center,
-                        radius: maxRadius * 0.68,
-                        label: "Receivable (₹10k-₹50k)",
-                        color: goldAccent.opacity(0.25)
-                    )
-                    
-                    // Outer Orbit (High Priority Collection: >50k)
-                    OrbitTrackView(
-                        center: center,
-                        radius: maxRadius * 0.98,
-                        label: "High Priority (>₹50k)",
-                        color: deepPurple.opacity(0.40)
-                    )
-                }
-                
-                // MARK: - Central GAUREX Nucleus
-                ZStack {
-                    // Pulsing Corona
-                    Circle()
-                        .fill(goldAccent.opacity(0.18))
-                        .frame(width: 86, height: 86)
-                        .scaleEffect(coronaPulse ? 1.25 : 0.95)
-                        .opacity(coronaPulse ? 0.3 : 0.7)
-                    
-                    Circle()
-                        .fill(
-                            LinearGradient(
-                                colors: [deepPurple, Color(red: 0.12, green: 0.04, blue: 0.16)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .frame(width: 64, height: 64)
-                        .overlay(Circle().stroke(goldAccent, lineWidth: 2.0))
-                        .shadow(color: goldAccent.opacity(0.6), radius: 14, x: 0, y: 0)
-                    
-                    VStack(spacing: 2) {
-                        Image(systemName: "crown.fill")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(goldAccent)
-                        
-                        Text("GAUREX")
-                            .font(.pjs(8.5, weight: .black))
-                            .tracking(1.4)
-                            .foregroundColor(.white)
-                    }
-                }
-                .position(center)
-                .onTapGesture {
-                    MotionTokens.impact(style: .light)
-                    withAnimation(MotionTokens.snappySpring) {
-                        selectedClient = nil
-                    }
-                }
-                
-                // MARK: - Orbiting Client Planets
-                if store.clients.isEmpty {
-                    VStack(spacing: 6) {
-                        Image(systemName: "globe.asia.australia.fill")
-                            .font(.system(size: 32))
-                            .foregroundColor(goldAccent.opacity(0.6))
-                        Text("No Clients in Orbit")
-                            .font(.pjs(14, weight: .bold))
-                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                        Text("Add clients to populate your solar system.")
-                            .font(.pjs(11.5, weight: .regular))
-                            .foregroundColor(Color(uiColor: .secondaryLabel))
-                    }
-                    .position(x: center.x, y: center.y + 110)
-                } else {
-                    ForEach(Array(store.clients.enumerated()), id: \.element.id) { index, client in
-                        let planetRadius = calculateOrbitRadius(for: client, maxRadius: maxRadius)
-                        let baseAngle = (Double(index) / Double(max(1, store.clients.count))) * 2.0 * .pi
-                        let currentAngle = baseAngle + orbitalPhase + dragOffsetAngle
-                        
-                        let posX = center.x + CGFloat(cos(currentAngle)) * planetRadius
-                        let posY = center.y + CGFloat(sin(currentAngle)) * planetRadius
-                        let isSelected = selectedClient?.id == client.id
-                        let planetSize = calculatePlanetSize(for: client)
-                        
-                        ClientPlanetView(
-                            client: client,
-                            size: planetSize,
-                            isSelected: isSelected
-                        )
-                        .position(x: posX, y: posY)
-                        .onTapGesture {
-                            MotionTokens.impact(style: .medium)
-                            withAnimation(MotionTokens.bouncySpring) {
-                                if selectedClient?.id == client.id {
-                                    selectedClient = nil
-                                } else {
-                                    selectedClient = client
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                // MARK: - Orbit Controls (Rotation Speed, Center Reset)
-                VStack {
-                    HStack {
-                        Spacer()
-                        
-                        Button {
-                            MotionTokens.impact(style: .light)
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                isAutoRotating.toggle()
-                            }
-                        } label: {
-                            HStack(spacing: 5) {
-                                Image(systemName: isAutoRotating ? "pause.fill" : "play.fill")
-                                    .font(.system(size: 10, weight: .bold))
-                                Text(isAutoRotating ? "Auto-Orbit" : "Paused")
-                                    .font(.pjs(10.5, weight: .bold))
-                            }
-                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .fill(colorScheme == .dark ? Color(red: 0.16, green: 0.16, blue: 0.20) : Color.white)
-                                    .shadow(color: Color.black.opacity(0.06), radius: 4, x: 0, y: 2)
-                            )
-                        }
-                        .padding(.trailing, 20)
-                    }
-                    Spacer()
-                }
-                .padding(.top, 10)
-                
-                // MARK: - Floating Executive Client Dossier Card (Ripplix / Wise Spring)
-                if let client = selectedClient {
-                    VStack {
-                        Spacer()
-                        
-                        ExecutiveClientOrbitCard(
-                            client: client,
-                            currencySymbol: store.settings.currencySymbol,
-                            onWhatsAppNudge: {
-                                clientForWhatsApp = client
-                                showingWhatsAppSheet = true
-                            },
-                            onDismiss: {
-                                withAnimation(MotionTokens.snappySpring) {
-                                    selectedClient = nil
-                                }
-                            }
-                        )
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 24)
-                        .transition(.asymmetric(
-                            insertion: .scale(scale: 0.92, anchor: .bottom).combined(with: .opacity).combined(with: .move(edge: .bottom)),
-                            removal: .scale(scale: 0.95, anchor: .bottom).combined(with: .opacity).combined(with: .move(edge: .bottom))
-                        ))
-                    }
-                }
+                backgroundGalaxy(maxRadius: maxRadius)
+                orbitRings(center: center, maxRadius: maxRadius)
+                centralNucleus(center: center)
+                planetsOverlay(center: center, maxRadius: maxRadius)
+                controlsOverlay
+                dossierCardOverlay
             }
             .gesture(
                 DragGesture()
@@ -231,55 +55,232 @@ public struct ClientRelationshipOrbitView: View {
             startOrbitTimer()
         }
         .sheet(isPresented: $showingWhatsAppSheet) {
-            if let client = clientForWhatsApp {
-                NavigationStack {
-                    VStack(spacing: 20) {
-                        Image(systemName: "message.badge.filled.fill")
-                            .font(.system(size: 44))
-                            .foregroundColor(Color.green)
-                        
-                        Text("WhatsApp Executive Settler")
-                            .font(.pjs(20, weight: .bold))
-                        
-                        Text("Send automated executive payment settlement reminder to \(client.name) for \(store.settings.currencySymbol)\(Int(client.outstandingBalance)).")
-                            .font(.pjs(13, weight: .regular))
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(Color(uiColor: .secondaryLabel))
-                            .padding(.horizontal, 20)
-                        
-                        Button {
-                            sendWhatsAppClientNudge(for: client)
-                            showingWhatsAppSheet = false
-                        } label: {
-                            HStack {
-                                Image(systemName: "paperplane.fill")
-                                Text("Dispatch via WhatsApp")
-                                    .font(.pjs(14, weight: .bold))
-                            }
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 14)
-                            .background(Color.green)
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
+            whatsappSheetContent
+        }
+    }
+    
+    // MARK: - Subviews
+    @ViewBuilder
+    private func backgroundGalaxy(maxRadius: CGFloat) -> some View {
+        RadialGradient(
+            gradient: Gradient(colors: [
+                deepPurple.opacity(colorScheme == .dark ? 0.35 : 0.08),
+                Color.clear
+            ]),
+            center: .init(x: 0.5, y: 0.42),
+            startRadius: 20,
+            endRadius: maxRadius * 1.2
+        )
+        .ignoresSafeArea()
+    }
+    
+    @ViewBuilder
+    private func orbitRings(center: CGPoint, maxRadius: CGFloat) -> some View {
+        OrbitTrackView(
+            center: center,
+            radius: maxRadius * 0.38,
+            label: "Settled / Low (≤₹10k)",
+            color: goldAccent.opacity(0.35)
+        )
+        OrbitTrackView(
+            center: center,
+            radius: maxRadius * 0.68,
+            label: "Receivable (₹10k-₹50k)",
+            color: goldAccent.opacity(0.25)
+        )
+        OrbitTrackView(
+            center: center,
+            radius: maxRadius * 0.98,
+            label: "High Priority (>₹50k)",
+            color: deepPurple.opacity(0.40)
+        )
+    }
+    
+    @ViewBuilder
+    private func centralNucleus(center: CGPoint) -> some View {
+        ZStack {
+            Circle()
+                .fill(goldAccent.opacity(0.18))
+                .frame(width: 86, height: 86)
+                .scaleEffect(coronaPulse ? 1.25 : 0.95)
+                .opacity(coronaPulse ? 0.3 : 0.7)
+            
+            Circle()
+                .fill(
+                    LinearGradient(
+                        colors: [deepPurple, Color(red: 0.12, green: 0.04, blue: 0.16)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 64, height: 64)
+                .overlay(Circle().stroke(goldAccent, lineWidth: 2.0))
+                .shadow(color: goldAccent.opacity(0.6), radius: 14, x: 0, y: 0)
+            
+            VStack(spacing: 2) {
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(goldAccent)
+                
+                Text("GAUREX")
+                    .font(.pjs(8.5, weight: .black))
+                    .tracking(1.4)
+                    .foregroundColor(.white)
+            }
+        }
+        .position(center)
+        .onTapGesture {
+            MotionTokens.impact(style: .light)
+            withAnimation(MotionTokens.snappySpring) {
+                selectedClient = nil
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func planetsOverlay(center: CGPoint, maxRadius: CGFloat) -> some View {
+        if store.clients.isEmpty {
+            VStack(spacing: 6) {
+                Image(systemName: "globe.asia.australia.fill")
+                    .font(.system(size: 32))
+                    .foregroundColor(goldAccent.opacity(0.6))
+                Text("No Clients in Orbit")
+                    .font(.pjs(14, weight: .bold))
+                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                Text("Add clients to populate your solar system.")
+                    .font(.pjs(11.5, weight: .regular))
+                    .foregroundColor(Color(uiColor: .secondaryLabel))
+            }
+            .position(x: center.x, y: center.y + 110)
+        } else {
+            ForEach(Array(store.clients.enumerated()), id: \.element.id) { index, client in
+                let planetRadius = calculateOrbitRadius(for: client, maxRadius: maxRadius)
+                let baseAngle = (Double(index) / Double(max(1, store.clients.count))) * 2.0 * .pi
+                let currentAngle = baseAngle + orbitalPhase + dragOffsetAngle
+                let posX = center.x + CGFloat(cos(currentAngle)) * planetRadius
+                let posY = center.y + CGFloat(sin(currentAngle)) * planetRadius
+                let isSelected = selectedClient?.id == client.id
+                let planetSize = calculatePlanetSize(for: client)
+                
+                ClientPlanetView(
+                    client: client,
+                    size: planetSize,
+                    isSelected: isSelected
+                )
+                .position(x: posX, y: posY)
+                .onTapGesture {
+                    MotionTokens.impact(style: .medium)
+                    withAnimation(MotionTokens.bouncySpring) {
+                        if selectedClient?.id == client.id {
+                            selectedClient = nil
+                        } else {
+                            selectedClient = client
                         }
-                        .padding(.horizontal, 24)
                     }
-                    .padding(24)
-                    .presentationDetents([.fraction(0.38)])
                 }
             }
         }
     }
     
-    private func sendWhatsAppClientNudge(for client: Client) {
-        let cleanPhone = client.phone.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+", with: "")
-        let message = "Dear \(client.name), this is Gauresh Khairnar from GAUREX. A friendly executive reminder regarding your outstanding balance of \(store.settings.currencySymbol)\(Int(client.outstandingBalance)). Please let us know if you require any invoice or bank wire details. Thank you."
-        guard let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
-        let urlString = !cleanPhone.isEmpty ? "whatsapp://send?phone=\(cleanPhone)&text=\(encoded)" : "whatsapp://send?text=\(encoded)"
-        if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
-            UIApplication.shared.open(url)
-        } else if let webUrl = URL(string: "https://api.whatsapp.com/send?text=\(encoded)") {
-            UIApplication.shared.open(webUrl)
+    @ViewBuilder
+    private var controlsOverlay: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button {
+                    MotionTokens.impact(style: .light)
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        isAutoRotating.toggle()
+                    }
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: isAutoRotating ? "pause.fill" : "play.fill")
+                            .font(.system(size: 10, weight: .bold))
+                        Text(isAutoRotating ? "Auto-Orbit" : "Paused")
+                            .font(.pjs(10.5, weight: .bold))
+                    }
+                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(
+                        Capsule()
+                            .fill(colorScheme == .dark ? Color(red: 0.16, green: 0.16, blue: 0.20) : Color.white)
+                            .shadow(color: Color.black.opacity(0.06), radius: 4, x: 0, y: 2)
+                    )
+                }
+                .padding(.trailing, 20)
+            }
+            Spacer()
+        }
+        .padding(.top, 10)
+    }
+    
+    @ViewBuilder
+    private var dossierCardOverlay: some View {
+        if let client = selectedClient {
+            VStack {
+                Spacer()
+                ExecutiveClientOrbitCard(
+                    client: client,
+                    currencySymbol: store.settings.currencySymbol,
+                    onWhatsAppNudge: {
+                        clientForWhatsApp = client
+                        showingWhatsAppSheet = true
+                    },
+                    onDismiss: {
+                        withAnimation(MotionTokens.snappySpring) {
+                            selectedClient = nil
+                        }
+                    }
+                )
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
+                .transition(.asymmetric(
+                    insertion: .scale(scale: 0.92, anchor: .bottom).combined(with: .opacity).combined(with: .move(edge: .bottom)),
+                    removal: .scale(scale: 0.95, anchor: .bottom).combined(with: .opacity).combined(with: .move(edge: .bottom))
+                ))
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var whatsappSheetContent: some View {
+        if let client = clientForWhatsApp {
+            NavigationStack {
+                VStack(spacing: 20) {
+                    Image(systemName: "message.badge.filled.fill")
+                        .font(.system(size: 44))
+                        .foregroundColor(Color.green)
+                    
+                    Text("WhatsApp Executive Settler")
+                        .font(.pjs(20, weight: .bold))
+                    
+                    Text("Send automated executive payment settlement reminder to \(client.name) for \(store.settings.currencySymbol)\(Int(client.outstandingBalance)).")
+                        .font(.pjs(13, weight: .regular))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(Color(uiColor: .secondaryLabel))
+                        .padding(.horizontal, 20)
+                    
+                    Button {
+                        sendWhatsAppClientNudge(for: client)
+                        showingWhatsAppSheet = false
+                    } label: {
+                        HStack {
+                            Image(systemName: "paperplane.fill")
+                            Text("Dispatch via WhatsApp")
+                                .font(.pjs(14, weight: .bold))
+                        }
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Color.green)
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                    }
+                    .padding(.horizontal, 24)
+                }
+                .padding(24)
+                .presentationDetents([.fraction(0.38)])
+            }
         }
     }
     
@@ -287,14 +288,11 @@ public struct ClientRelationshipOrbitView: View {
     private func calculateOrbitRadius(for client: Client, maxRadius: CGFloat) -> CGFloat {
         let outstanding = client.outstandingBalance
         if outstanding <= 500 {
-            // Settled planets stay very close to GAUREX nucleus
             return maxRadius * 0.38
         } else if outstanding <= 25000 {
-            // Moderate receivables in mid orbital ring
             let ratio = CGFloat(outstanding / 25000.0)
             return (maxRadius * 0.38) + (maxRadius * 0.30 * ratio)
         } else {
-            // High outstanding planets gravitate outward
             let ratio = min(1.0, CGFloat((outstanding - 25000.0) / 75000.0))
             return (maxRadius * 0.68) + (maxRadius * 0.30 * ratio)
         }
@@ -309,7 +307,7 @@ public struct ClientRelationshipOrbitView: View {
         } else if total <= 150000 {
             return 44.0
         } else {
-            return 52.0 // Enterprise Gas Giant
+            return 52.0
         }
     }
     
@@ -321,6 +319,18 @@ public struct ClientRelationshipOrbitView: View {
                     orbitalPhase = 0
                 }
             }
+        }
+    }
+    
+    private func sendWhatsAppClientNudge(for client: Client) {
+        let cleanPhone = client.phone.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+", with: "")
+        let message = "Dear \(client.name), this is Gauresh Khairnar from GAUREX. A friendly executive reminder regarding your outstanding balance of \(store.settings.currencySymbol)\(Int(client.outstandingBalance)). Please let us know if you require any invoice or bank wire details. Thank you."
+        guard let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
+        let urlString = !cleanPhone.isEmpty ? "whatsapp://send?phone=\(cleanPhone)&text=\(encoded)" : "whatsapp://send?text=\(encoded)"
+        if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        } else if let webUrl = URL(string: "https://api.whatsapp.com/send?text=\(encoded)") {
+            UIApplication.shared.open(webUrl)
         }
     }
 }
@@ -394,7 +404,6 @@ fileprivate struct ClientPlanetView: View {
                     .frame(width: size, height: size)
                     .shadow(color: Color.gaurexWarmGold.opacity(client.status == .active ? 0.4 : 0.1), radius: 6, x: 0, y: 2)
                 
-                // Initials
                 Text(client.name.prefix(2).uppercased())
                     .font(.pjs(size * 0.34, weight: .black))
                     .foregroundColor(.white)
@@ -487,7 +496,6 @@ fileprivate struct ExecutiveClientOrbitCard: View {
                 }
             }
             
-            // Action Buttons
             HStack(spacing: 10) {
                 NavigationLink(destination: ClientDetailView(client: client)) {
                     Text("View Dossier")

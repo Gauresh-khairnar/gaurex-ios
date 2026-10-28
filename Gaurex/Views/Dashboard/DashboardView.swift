@@ -68,127 +68,17 @@ public struct DashboardView: View {
                 
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 20) {
-                        // MARK: - Top Header (GAUREX + Bell + Avatar)
-                        HStack(alignment: .center) {
-                            VStack(alignment: .leading, spacing: 2) {
-                                HStack(spacing: 8) {
-                                    HStack(spacing: 0) {
-                                        Text("G")
-                                            .font(.pjs(24, weight: .bold))
-                                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                                        Text("A")
-                                            .font(.pjs(24, weight: .black))
-                                            .foregroundColor(goldAccent)
-                                        Text("UREX")
-                                            .font(.pjs(24, weight: .bold))
-                                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                                    }
-                                    .tracking(2.0)
-                                    
-                                    // Animated AI Sparkles - Tap to trigger Neo voice briefing
-                                    Button {
-                                        MotionTokens.impact(style: .light)
-                                        if NeoCoFounderService.shared.isSpeaking {
-                                            NeoCoFounderService.shared.stopSpeaking()
-                                        } else {
-                                            NeoCoFounderService.shared.greetFounderOnLaunch(force: true)
-                                        }
-                                    } label: {
-                                        ZStack {
-                                            Circle()
-                                                .fill(deepPurple)
-                                                .frame(width: 22, height: 22)
-                                                .overlay(Circle().stroke(goldAccent.opacity(0.8), lineWidth: 1))
-                                            Image(systemName: "sparkles")
-                                                .font(.system(size: 11, weight: .bold))
-                                                .foregroundColor(goldAccent)
-                                                .rotationEffect(.degrees(sparklinePulse ? 180 : 0))
-                                                .scaleEffect(sparklinePulse ? 1.15 : 0.90)
-                                        }
-                                    }
-                                    .buttonStyle(.plain)
-                                    .animation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true), value: sparklinePulse)
-                                }
-                                
-                                Text("Executive Dashboard")
-                                    .font(.pjs(12, weight: .medium))
-                                    .foregroundColor(Color(uiColor: .secondaryLabel))
-                            }
-                            
-                            Spacer()
-                            
-                            // Stealth Privacy Shield Button
-                            Button {
-                                store.toggleStealthPrivacy()
-                            } label: {
-                                ZStack {
-                                    Circle()
-                                        .fill(colorScheme == .dark ? Color(red: 0.18, green: 0.18, blue: 0.22) : Color.white)
-                                        .frame(width: 42, height: 42)
-                                        .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
-                                    
-                                    Image(systemName: store.isStealthPrivacyActive ? "eye.slash.fill" : "eye.fill")
-                                        .font(.system(size: 15, weight: .semibold))
-                                        .foregroundColor(store.isStealthPrivacyActive ? Color.red : goldAccent)
-                                }
-                            }
-                            .buttonStyle(.plain)
-                            
-                            // Bell Notifications Button with Live Yellow Indicator Dot
-                            Button {
+                        // MARK: - Top Header (Gyro Gold Sweep + Neo AI Crest + Biometric Halo)
+                        ExecutiveDashboardNavBar(
+                            onAvatarTap: {
+                                selectedTab = .settings
+                            },
+                            onBellTap: {
                                 let feedback = UIImpactFeedbackGenerator(style: .light)
                                 feedback.impactOccurred()
                                 showingVoiceAssistant = true
-                            } label: {
-                                ZStack(alignment: .topTrailing) {
-                                    Circle()
-                                        .fill(colorScheme == .dark ? Color(red: 0.18, green: 0.18, blue: 0.22) : Color.white)
-                                        .frame(width: 42, height: 42)
-                                        .shadow(color: Color.black.opacity(0.04), radius: 6, x: 0, y: 2)
-                                    
-                                    Image(systemName: "bell")
-                                        .font(.system(size: 16, weight: .medium))
-                                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
-                                        .frame(width: 42, height: 42)
-                                    
-                                    // Notification Alert Dot
-                                    Circle()
-                                        .fill(goldAccent)
-                                        .frame(width: 8, height: 8)
-                                        .offset(x: -6, y: 8)
-                                }
                             }
-                            .buttonStyle(.plain)
-                            
-                            // Founder Avatar Circle
-                            Button {
-                                selectedTab = .settings
-                            } label: {
-                                ZStack {
-                                    Circle()
-                                        .fill(
-                                            LinearGradient(
-                                                colors: [
-                                                    deepPurple,
-                                                    Color(red: 0.14, green: 0.07, blue: 0.22)
-                                                ],
-                                                startPoint: .topLeading,
-                                                endPoint: .bottomTrailing
-                                            )
-                                        )
-                                        .frame(width: 42, height: 42)
-                                        .overlay(Circle().stroke(goldAccent.opacity(0.4), lineWidth: 1.2))
-                                        .shadow(color: Color.black.opacity(0.06), radius: 6, x: 0, y: 2)
-                                    
-                                    Text("GK")
-                                        .font(.pjs(14, weight: .bold))
-                                        .foregroundColor(.white)
-                                }
-                            }
-                            .buttonStyle(.plain)
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.top, 10)
+                        )
                         .offset(y: animateHeader ? 0 : -20)
                         .opacity(animateHeader ? 1 : 0)
                         
