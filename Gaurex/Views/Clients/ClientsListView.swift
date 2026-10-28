@@ -73,19 +73,19 @@ public struct ClientsListView: View {
                             VStack(alignment: .leading, spacing: 1) {
                                 HStack(spacing: 0) {
                                     Text("G")
-                                        .font(.system(size: 24, weight: .bold))
+                                        .font(.pjs(24, weight: .bold))
                                         .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                                     Text("A")
-                                        .font(.system(size: 24, weight: .black))
+                                        .font(.pjs(24, weight: .black))
                                         .foregroundColor(goldAccent)
                                     Text("UREX")
-                                        .font(.system(size: 24, weight: .bold))
+                                        .font(.pjs(24, weight: .bold))
                                         .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                                 }
                                 .tracking(2.0)
                                 
-                                Text("Dashboard")
-                                    .font(.system(size: 13, weight: .regular))
+                                Text("Executive Dashboard")
+                                    .font(.pjs(13, weight: .regular))
                                     .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
                             
@@ -109,13 +109,13 @@ public struct ClientsListView: View {
                                     .offset(x: -6, y: 8)
                             }
                             
-                            // Avatar
+                            // Founder GK Avatar
                             ZStack {
                                 Circle()
                                     .fill(
                                         LinearGradient(
                                             colors: [
-                                                Color(red: 0.28, green: 0.16, blue: 0.40),
+                                                deepPurple,
                                                 Color(red: 0.14, green: 0.07, blue: 0.22)
                                             ],
                                             startPoint: .topLeading,
@@ -123,14 +123,14 @@ public struct ClientsListView: View {
                                         )
                                     )
                                     .frame(width: 40, height: 40)
-                                    .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1))
+                                    .overlay(Circle().stroke(goldAccent.opacity(0.3), lineWidth: 1))
                                 
                                 Text("GK")
-                                    .font(.system(size: 14, weight: .bold))
+                                    .font(.pjs(14, weight: .bold))
                                     .foregroundColor(.white)
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .padding(.top, 8)
                         
                         // MARK: - Section Header Title + "+ Add Client"
@@ -142,10 +142,10 @@ public struct ClientsListView: View {
                                 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Clients")
-                                        .font(.system(size: 22, weight: .bold))
+                                        .font(.pjs(22, weight: .bold))
                                         .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                                     Text("Manage your clients, packages and invoices all in one place.")
-                                        .font(.system(size: 11.5, weight: .regular))
+                                        .font(.pjs(11.5, weight: .regular))
                                         .foregroundColor(Color(uiColor: .secondaryLabel))
                                 }
                             }
@@ -159,7 +159,7 @@ public struct ClientsListView: View {
                                     Image(systemName: "plus")
                                         .font(.system(size: 12, weight: .bold))
                                     Text("Add Client")
-                                        .font(.system(size: 12.5, weight: .bold))
+                                        .font(.pjs(12.5, weight: .bold))
                                 }
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 14)
@@ -170,7 +170,7 @@ public struct ClientsListView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // MARK: - Search Bar with Filter Icon
                         HStack(spacing: 10) {
@@ -211,7 +211,7 @@ public struct ClientsListView: View {
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
                                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                         )
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // MARK: - Filter Chips
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -244,16 +244,16 @@ public struct ClientsListView: View {
                                     selectedStatusFilter = .archived
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         }
                         
-                        // MARK: - 4 Stats Cards (2x2 Spacious)
-                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+                        // MARK: - 4 Stats Cards (2x2 Spacious with Real Data)
+                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)], spacing: 14) {
                             ClientStatCard(
                                 icon: "person.2",
                                 title: "Total Clients",
-                                value: "\(max(store.clients.count, 12))",
-                                trend: "+3",
+                                value: "\(store.clients.count)",
+                                trend: "\(store.clients.filter { $0.status == .active }.count) Active",
                                 isPositive: true,
                                 isNeutral: false
                             )
@@ -261,8 +261,8 @@ public struct ClientsListView: View {
                             ClientStatCard(
                                 icon: "shippingbox",
                                 title: "Active Packages",
-                                value: "\(max(store.packages.count, 8))",
-                                trend: "+2",
+                                value: "\(store.packages.count)",
+                                trend: "Verified",
                                 isPositive: true,
                                 isNeutral: false
                             )
@@ -270,8 +270,8 @@ public struct ClientsListView: View {
                             ClientStatCard(
                                 icon: "indianrupeesign",
                                 title: "Total Revenue",
-                                value: FinancialCalculator.shared.formatCurrency(store.revenueCollected > 0 ? store.revenueCollected : 120000, symbol: store.settings.currencySymbol),
-                                trend: "+18%",
+                                value: FinancialCalculator.shared.formatCurrency(store.revenueCollected, symbol: store.settings.currencySymbol),
+                                trend: "\(store.invoices.filter { $0.status == .paid }.count) Settled",
                                 isPositive: true,
                                 isNeutral: false
                             )
@@ -279,18 +279,18 @@ public struct ClientsListView: View {
                             ClientStatCard(
                                 icon: "clock",
                                 title: "Pending Invoices",
-                                value: "\(max(store.overdueInvoicesCount, 2))",
-                                trend: "0",
-                                isPositive: false,
-                                isNeutral: true
+                                value: "\(store.overdueInvoicesCount)",
+                                trend: store.overdueInvoicesCount > 0 ? "Due" : "Clear",
+                                isPositive: store.overdueInvoicesCount == 0,
+                                isNeutral: store.overdueInvoicesCount > 0
                             )
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // MARK: - All Clients Header & List
                         HStack {
                             Text("All Clients (\(filteredClients.count))")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.pjs(15, weight: .bold))
                                 .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                             Spacer()
                             Menu {
@@ -305,11 +305,11 @@ public struct ClientsListView: View {
                                     Image(systemName: "chevron.down")
                                         .font(.system(size: 10))
                                 }
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.pjs(12, weight: .semibold))
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // Client List Rows matching screenshot
                         VStack(spacing: 12) {
@@ -325,7 +325,7 @@ public struct ClientsListView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         Spacer().frame(height: 110)
                     }

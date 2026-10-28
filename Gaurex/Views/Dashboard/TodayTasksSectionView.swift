@@ -52,13 +52,13 @@ public struct TodayTasksSectionView: View {
                 .buttonStyle(.plain)
                 .tactilePress()
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 20)
             
             // Progress Bar
             if !store.todayTasks.isEmpty {
                 ProgressView(value: store.taskCompletionRate)
                     .tint(store.taskCompletionRate == 1.0 ? Color.green : Color.blue)
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 20)
             }
             
             if store.todayTasks.isEmpty {
@@ -89,14 +89,14 @@ public struct TodayTasksSectionView: View {
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 20)
             } else {
                 VStack(spacing: 8) {
                     ForEach(store.todayTasks) { task in
                         TaskRowCard(task: task)
                     }
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 20)
             }
         }
         .sheet(isPresented: $showingPlanMyDaySheet) {
@@ -242,12 +242,12 @@ public struct AiDayPlanSheet: View {
                                     .foregroundColor(.secondary)
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         Text("PROPOSED TIMELINE (\(plan.scheduledTasks.count) ACTIONS)")
                             .font(TypographyTokens.sectionHeader)
                             .foregroundColor(.secondary)
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         
                         VStack(spacing: 8) {
                             ForEach(plan.scheduledTasks) { task in
@@ -273,7 +273,7 @@ public struct AiDayPlanSheet: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         Spacer().frame(height: 60)
                     }

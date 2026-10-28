@@ -117,7 +117,7 @@ public struct WorkersListView: View {
                                     .foregroundColor(.white)
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .padding(.top, 8)
                         
                         // MARK: - Section Header Title + "+ Add Worker"
@@ -129,10 +129,10 @@ public struct WorkersListView: View {
                                 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Workers")
-                                        .font(.system(size: 22, weight: .bold))
+                                        .font(.pjs(22, weight: .bold))
                                         .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                                     Text("Manage your team, salaries, leaves and performance - all in one place.")
-                                        .font(.system(size: 11.5, weight: .regular))
+                                        .font(.pjs(11.5, weight: .regular))
                                         .foregroundColor(Color(uiColor: .secondaryLabel))
                                 }
                             }
@@ -146,7 +146,7 @@ public struct WorkersListView: View {
                                     Image(systemName: "plus")
                                         .font(.system(size: 12, weight: .bold))
                                     Text("Add Worker")
-                                        .font(.system(size: 12.5, weight: .bold))
+                                        .font(.pjs(12.5, weight: .bold))
                                 }
                                 .foregroundColor(.white)
                                 .padding(.horizontal, 14)
@@ -157,7 +157,7 @@ public struct WorkersListView: View {
                             }
                             .buttonStyle(.plain)
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // MARK: - Search Bar
                         HStack(spacing: 10) {
@@ -194,7 +194,7 @@ public struct WorkersListView: View {
                             RoundedRectangle(cornerRadius: 14, style: .continuous)
                                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                         )
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // MARK: - Filter Chips
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -227,16 +227,16 @@ public struct WorkersListView: View {
                                     selectedStatusFilter = .archived
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         }
                         
-                        // MARK: - 4 Stats Cards (2x2 Spacious)
-                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+                        // MARK: - 4 Stats Cards (2x2 Spacious with Real Data)
+                        LazyVGrid(columns: [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)], spacing: 14) {
                             WorkerStatCard(
                                 icon: "person",
                                 title: "Total Workers",
-                                value: "\(max(store.workers.count, 6))",
-                                trend: "+1",
+                                value: "\(store.workers.count)",
+                                trend: "\(store.workers.filter { $0.employmentStatus == .active }.count) Active",
                                 isPositive: true,
                                 isNeutral: false
                             )
@@ -244,8 +244,8 @@ public struct WorkersListView: View {
                             WorkerStatCard(
                                 icon: "clock",
                                 title: "Active",
-                                value: "\(max(store.workers.filter { $0.employmentStatus == .active }.count, 5))",
-                                trend: "+1",
+                                value: "\(store.workers.filter { $0.employmentStatus == .active }.count)",
+                                trend: "Verified",
                                 isPositive: true,
                                 isNeutral: false
                             )
@@ -253,28 +253,27 @@ public struct WorkersListView: View {
                             WorkerStatCard(
                                 icon: "calendar.badge.clock",
                                 title: "On Leave",
-                                value: "\(max(store.leaveRequests.filter { $0.status == .approved }.count, 1))",
-                                trend: "0",
+                                value: "\(store.leaveRequests.filter { $0.status == .approved }.count)",
+                                trend: "0 Today",
                                 isPositive: false,
                                 isNeutral: true
                             )
                             
-                            let totalMonthlyPayroll = store.totalMonthlyPayrollExpenses > 0 ? store.totalMonthlyPayrollExpenses : 240000.0
                             WorkerStatCard(
                                 icon: "indianrupeesign",
                                 title: "Total Salary",
-                                value: FinancialCalculator.shared.formatCurrency(totalMonthlyPayroll, symbol: store.settings.currencySymbol),
-                                trend: "+5%",
+                                value: FinancialCalculator.shared.formatCurrency(store.totalMonthlyPayrollExpenses, symbol: store.settings.currencySymbol),
+                                trend: "Monthly",
                                 isPositive: true,
                                 isNeutral: false
                             )
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // MARK: - Team Members Header & List
                         HStack {
                             Text("Team Members (\(filteredWorkers.count))")
-                                .font(.system(size: 15, weight: .bold))
+                                .font(.pjs(15, weight: .bold))
                                 .foregroundColor(colorScheme == .dark ? .white : deepPurple)
                             Spacer()
                             Menu {
@@ -286,11 +285,11 @@ public struct WorkersListView: View {
                                     Image(systemName: "chevron.down")
                                         .font(.system(size: 10))
                                 }
-                                .font(.system(size: 12, weight: .semibold))
+                                .font(.pjs(12, weight: .semibold))
                                 .foregroundColor(Color(uiColor: .secondaryLabel))
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // Worker List Rows matching screenshot
                         VStack(spacing: 12) {
@@ -306,7 +305,7 @@ public struct WorkersListView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         Spacer().frame(height: 110)
                     }

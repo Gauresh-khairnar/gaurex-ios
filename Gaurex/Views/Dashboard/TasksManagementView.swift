@@ -47,7 +47,7 @@ public struct TasksManagementView: View {
                             Text("Overdue (\(store.overdueTasksCount))").tag(3)
                         }
                         .pickerStyle(.segmented)
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .padding(.top, 4)
                         
                         // MARK: - Task List
@@ -67,7 +67,7 @@ public struct TasksManagementView: View {
                                     TaskRowCard(task: task)
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         }
                         
                         Spacer().frame(height: 80)

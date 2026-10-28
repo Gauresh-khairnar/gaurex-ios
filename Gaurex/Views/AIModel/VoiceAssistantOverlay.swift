@@ -166,10 +166,15 @@ public struct VoiceAssistantOverlay: View {
                                 
                                 Spacer()
                                 
-                                // Free on-device badge
-                                Text("100% Free On-Device AI")
-                                    .font(.system(size: 9.5, weight: .semibold))
-                                    .foregroundColor(.secondary)
+                                // Executive Founder Badge
+                                HStack(spacing: 4) {
+                                    Image(systemName: "crown.fill")
+                                        .font(.system(size: 9))
+                                        .foregroundColor(Color.gaurexWarmGold)
+                                    Text("Founder Edition • Mr. Gauresh")
+                                        .font(.pjs(9.5, weight: .bold))
+                                        .foregroundColor(.secondary)
+                                }
                             }
                             .padding(.top, 4)
                         }

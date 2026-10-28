@@ -58,6 +58,26 @@ fileRefs.push(`\t\t${assetsFileId} /* Assets.xcassets */ = {isa = PBXFileReferen
 buildFiles.push(`\t\t${assetsBuildId} /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ${assetsFileId} /* Assets.xcassets */; };`);
 mainGroupChildren.push(`\t\t\t\t${assetsFileId} /* Assets.xcassets */,`);
 
+let resourcesBuildPhase = [
+  `\t\t\t\t${assetsBuildId} /* Assets.xcassets in Resources */,`
+];
+
+// Fonts
+const fontsDir = path.join('Gaurex', 'Resources', 'Fonts');
+if (fs.existsSync(fontsDir)) {
+  const fontEntries = fs.readdirSync(fontsDir);
+  for (const fontFile of fontEntries) {
+    if (fontFile.endsWith('.ttf') || fontFile.endsWith('.otf')) {
+      const fId = nextId();
+      const bId = nextId();
+      fileRefs.push(`\t\t${fId} /* ${fontFile} */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/${fontFile}"; sourceTree = "<group>"; };`);
+      buildFiles.push(`\t\t${bId} /* ${fontFile} in Resources */ = {isa = PBXBuildFile; fileRef = ${fId} /* ${fontFile} */; };`);
+      mainGroupChildren.push(`\t\t\t\t${fId} /* ${fontFile} */,`);
+      resourcesBuildPhase.push(`\t\t\t\t${bId} /* ${fontFile} in Resources */,`);
+    }
+  }
+}
+
 // Info.plist
 const plistId = nextId();
 fileRefs.push(`\t\t${plistId} /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };`);
@@ -261,7 +281,7 @@ ${testGroupChildren.join('\n')}
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				${assetsBuildId} /* Assets.xcassets in Resources */,
+${resourcesBuildPhase.join('\n')}
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

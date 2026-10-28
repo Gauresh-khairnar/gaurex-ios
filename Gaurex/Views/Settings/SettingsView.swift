@@ -76,14 +76,14 @@ public struct SettingsView: View {
                                 }
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .padding(.top, 8)
                         
                         // MARK: - Title
                         Text("Settings")
                             .font(.system(size: 28, weight: .bold, design: .rounded))
                             .foregroundColor(.primary)
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         
                         // MARK: - Founder Profile Card
                         VStack(spacing: 14) {
@@ -175,14 +175,14 @@ public struct SettingsView: View {
                             RoundedRectangle(cornerRadius: 18, style: .continuous)
                                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                         )
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         
                         // MARK: - Appearance & Theme Section
                         VStack(alignment: .leading, spacing: 12) {
                             Text("APPEARANCE & THEME")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
+                                .padding(.horizontal, 20)
                             
                             // 4 Theme Cards Grid
                             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
@@ -246,7 +246,7 @@ public struct SettingsView: View {
                                     MotionTokens.selection()
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                             
                             // Theme Color Circles
                             HStack(spacing: 16) {
@@ -353,7 +353,7 @@ public struct SettingsView: View {
                                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                                     .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                             )
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         }
                         
                         // MARK: - App Features Section
@@ -361,7 +361,7 @@ public struct SettingsView: View {
                             Text("APP FEATURES")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
+                                .padding(.horizontal, 20)
                             
                             VStack(spacing: 0) {
                                 NavigationLink {
@@ -411,7 +411,7 @@ public struct SettingsView: View {
                                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                                     .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                             )
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         }
                         
                         // MARK: - System & Support Section
@@ -419,7 +419,7 @@ public struct SettingsView: View {
                             Text("SYSTEM & SUPPORT")
                                 .font(.system(size: 12, weight: .bold))
                                 .foregroundColor(.secondary)
-                                .padding(.horizontal, 16)
+                                .padding(.horizontal, 20)
                             
                             VStack(spacing: 0) {
                                 // Biometrics Row
@@ -448,7 +448,7 @@ public struct SettingsView: View {
                                             store.saveSettings()
                                         }
                                 }
-                                .padding(.horizontal, 16)
+                                .padding(.horizontal, 20)
                                 .padding(.vertical, 12)
                                 
                                 Divider().padding(.leading, 56)
@@ -481,7 +481,7 @@ public struct SettingsView: View {
                                 RoundedRectangle(cornerRadius: 18, style: .continuous)
                                     .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                             )
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         }
                         
                         // MARK: - Log Out Pill Button
@@ -506,7 +506,7 @@ public struct SettingsView: View {
                             )
                         }
                         .buttonStyle(.plain)
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .padding(.top, 4)
                         
                         Spacer().frame(height: 110)
@@ -664,7 +664,7 @@ private struct SettingsRow: View {
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundColor(Color(uiColor: .tertiaryLabel))
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 20)
         .padding(.vertical, 12)
         .contentShape(Rectangle())
     }
@@ -687,19 +687,19 @@ private struct NeoAssistantSettingsView: View {
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 20) {
                     
-                    // Card 0: Zero-Cost Private AI Status
+                    // Card 0: Executive Founder Intelligence Status
                     VStack(alignment: .leading, spacing: 8) {
                         HStack(spacing: 8) {
-                            Image(systemName: "checkmark.seal.fill")
+                            Image(systemName: "crown.fill")
                                 .font(.system(size: 16))
                                 .foregroundColor(warmGold)
-                            Text("100% Free On-Device Intelligence")
-                                .font(.system(size: 14, weight: .bold))
+                            Text("Executive Private Intelligence • Mr. Gauresh")
+                                .font(.pjs(14, weight: .bold))
                                 .foregroundColor(deepPlum)
                         }
                         
-                        Text("GAUREX AI Co-Founder uses native Apple SFSpeech and AVSpeech neural models. No cloud API subscriptions, no token meters, and no third-party data egress.")
-                            .font(.system(size: 12, weight: .regular))
+                        Text("GAUREX NEO AI is custom-engineered exclusively for Founder Gauresh Khairnar (OWNER). Powered by ultra-fast private inference, biometric security, and dedicated ledger reasoning.")
+                            .font(.pjs(12, weight: .regular))
                             .foregroundColor(.secondary)
                             .lineSpacing(2.5)
                     }
@@ -781,7 +781,7 @@ private struct NeoAssistantSettingsView: View {
                                 .padding(.vertical, 12)
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .background(Color(uiColor: .systemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                         .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
@@ -869,7 +869,7 @@ private struct NeoAssistantSettingsView: View {
                             }
                             .padding(.vertical, 14)
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .background(Color(uiColor: .systemBackground))
                         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                         .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)

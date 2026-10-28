@@ -66,6 +66,9 @@ public struct LiquidGlassTabBar: View {
     @Environment(\.colorScheme) private var colorScheme
     @State private var pressedTab: MainTab? = nil
     @State private var aiHaloPulse: Bool = false
+    @State private var aiOrbRotation: Double = 0
+    @State private var aiLevitate: Bool = false
+    @State private var aiSparkleTwinkle: Bool = false
     
     public init(selectedTab: Binding<MainTab>) {
         self._selectedTab = selectedTab
@@ -84,7 +87,7 @@ public struct LiquidGlassTabBar: View {
                 let isSelected = selectedTab == tab
                 
                 if tab == .aiModel {
-                    // MARK: - Center Elevated AI Co-Founder Action Button
+                    // MARK: - Center Elevated AI Co-Founder Action Button with Micro-Animations
                     Button {
                         let feedback = UIImpactFeedbackGenerator(style: .medium)
                         feedback.impactOccurred()
@@ -94,28 +97,55 @@ public struct LiquidGlassTabBar: View {
                     } label: {
                         VStack(spacing: 2) {
                             ZStack {
-                                // Subtle Breathing Halo Ring
+                                // 1. Multi-Layer Breathing Halo Aura
                                 Circle()
                                     .fill(
                                         RadialGradient(
                                             colors: [
-                                                (voiceAIService.isListening ? warmGold : deepPlum).opacity(aiHaloPulse ? 0.40 : 0.15),
+                                                (voiceAIService.isListening ? warmGold : warmGold).opacity(aiHaloPulse ? 0.45 : 0.12),
+                                                deepPlum.opacity(aiHaloPulse ? 0.25 : 0.05),
                                                 Color.clear
                                             ],
                                             center: .center,
-                                            startRadius: 10,
-                                            endRadius: 36
+                                            startRadius: 8,
+                                            endRadius: 38
                                         )
                                     )
-                                    .frame(width: 62, height: 62)
+                                    .frame(width: 66, height: 66)
+                                    .scaleEffect(aiHaloPulse ? 1.14 : 0.96)
                                 
-                                // Elevated Deep Plum Circle
+                                // 2. Outer Rotating Orbital Particle Ring
+                                Circle()
+                                    .stroke(
+                                        AngularGradient(
+                                            gradient: Gradient(colors: [
+                                                warmGold.opacity(0.85),
+                                                deepPlum.opacity(0.3),
+                                                warmGold.opacity(0.1),
+                                                warmGold.opacity(0.9)
+                                            ]),
+                                            center: .center
+                                        ),
+                                        lineWidth: 1.5
+                                    )
+                                    .frame(width: 53, height: 53)
+                                    .rotationEffect(.degrees(aiOrbRotation))
+                                
+                                // 3. Orbiting Gold Micro-Satellite Particle
+                                Circle()
+                                    .fill(warmGold)
+                                    .frame(width: 4.5, height: 4.5)
+                                    .shadow(color: warmGold.opacity(0.9), radius: 3)
+                                    .offset(x: 26.5)
+                                    .rotationEffect(.degrees(aiOrbRotation))
+                                
+                                // 4. Elevated Deep Plum Sphere Body
                                 Circle()
                                     .fill(
                                         LinearGradient(
                                             colors: [
                                                 deepPlum,
-                                                Color(red: 0.20, green: 0.05, blue: 0.18)
+                                                Color(red: 0.16, green: 0.04, blue: 0.15)
                                             ],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
@@ -124,34 +154,58 @@ public struct LiquidGlassTabBar: View {
                                     .frame(width: 48, height: 48)
                                     .overlay(
                                         Circle()
-                                            .stroke(warmGold.opacity(voiceAIService.isListening ? 0.8 : 0.35), lineWidth: voiceAIService.isListening ? 1.8 : 1)
+                                            .stroke(
+                                                LinearGradient(
+                                                    colors: [
+                                                        warmGold.opacity(voiceAIService.isListening ? 0.95 : 0.6),
+                                                        Color.white.opacity(0.3)
+                                                    ],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                ),
+                                                lineWidth: voiceAIService.isListening ? 1.8 : 1.1
+                                            )
                                     )
                                     .shadow(
-                                        color: deepPlum.opacity(0.45),
-                                        radius: 10,
+                                        color: deepPlum.opacity(0.50),
+                                        radius: 12,
                                         x: 0,
                                         y: 5
                                     )
                                 
+                                // 5. Animated AI Core Icon / Voice Waveform
                                 if voiceAIService.isListening {
-                                    // Active listening waveform pulse
-                                    HStack(spacing: 2.5) {
-                                        ForEach(0..<3) { i in
+                                    // Live Listening Dynamic Waveform
+                                    HStack(spacing: 2.8) {
+                                        ForEach(0..<4) { i in
                                             RoundedRectangle(cornerRadius: 1.5)
                                                 .fill(warmGold)
-                                                .frame(width: 3, height: 10 + CGFloat((i + 1) * 4))
+                                                .frame(width: 3, height: aiHaloPulse ? CGFloat((i % 2 == 0 ? 16 : 8)) : CGFloat((i % 2 == 0 ? 8 : 16)))
+                                                .animation(.easeInOut(duration: 0.35).repeatForever().delay(Double(i) * 0.08), value: aiHaloPulse)
                                         }
                                     }
                                 } else {
-                                    Image(systemName: "sparkles")
-                                        .font(.system(size: 20, weight: .semibold))
-                                        .foregroundColor(warmGold)
-                                        .scaleEffect(isSelected ? 1.08 : 1.0)
+                                    ZStack {
+                                        // Subtle golden glow backing
+                                        Image(systemName: "sparkles")
+                                            .font(.system(size: 21, weight: .bold))
+                                            .foregroundColor(warmGold.opacity(0.4))
+                                            .scaleEffect(aiSparkleTwinkle ? 1.25 : 0.95)
+                                            .blur(radius: 2)
+                                        
+                                        // Primary Sharp Sparkle
+                                        Image(systemName: "sparkles")
+                                            .font(.system(size: 20, weight: .semibold))
+                                            .foregroundColor(warmGold)
+                                            .scaleEffect(isSelected ? 1.12 : (aiSparkleTwinkle ? 1.05 : 0.98))
+                                            .rotationEffect(.degrees(aiSparkleTwinkle ? 6 : -6))
+                                    }
                                 }
                             }
+                            .offset(y: aiLevitate ? -2 : 1)
                             
                             Text("AI")
-                                .font(.system(size: 9.5, weight: isSelected ? .bold : .medium))
+                                .font(.pjs(10, weight: isSelected ? .bold : .medium))
                                 .foregroundColor(isSelected ? deepPlum : Color(uiColor: .secondaryLabel))
                         }
                         .frame(maxWidth: .infinity)
@@ -160,8 +214,17 @@ public struct LiquidGlassTabBar: View {
                     }
                     .buttonStyle(.plain)
                     .onAppear {
-                        withAnimation(.easeInOut(duration: 2.4).repeatForever(autoreverses: true)) {
+                        withAnimation(.easeInOut(duration: 2.2).repeatForever(autoreverses: true)) {
                             aiHaloPulse = true
+                        }
+                        withAnimation(.linear(duration: 8.0).repeatForever(autoreverses: false)) {
+                            aiOrbRotation = 360
+                        }
+                        withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
+                            aiLevitate = true
+                        }
+                        withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) {
+                            aiSparkleTwinkle = true
                         }
                     }
                 } else {
@@ -184,7 +247,7 @@ public struct LiquidGlassTabBar: View {
                                 .scaleEffect(isSelected ? 1.06 : 1.0)
                             
                             Text(tab.title)
-                                .font(.system(size: 10, weight: isSelected ? .bold : .medium))
+                                .font(.pjs(10, weight: isSelected ? .bold : .medium))
                                 .foregroundColor(
                                     isSelected
                                         ? (colorScheme == .dark ? Color.white : deepPurple)

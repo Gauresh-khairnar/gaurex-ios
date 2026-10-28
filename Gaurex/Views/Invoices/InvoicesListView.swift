@@ -45,11 +45,11 @@ public struct InvoicesListView: View {
                                 .textFieldStyle(.plain)
                                 .font(.system(size: 14))
                         }
-                        .padding(10)
+                        .padding(12)
                         .background(theme.cardBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 12).stroke(theme.glassBorderColor, lineWidth: 1))
-                        .padding(.horizontal, 16)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(theme.glassBorderColor, lineWidth: 1))
+                        .padding(.horizontal, 20)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 8) {
@@ -63,7 +63,7 @@ public struct InvoicesListView: View {
                                     }
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                         }
                     }
                     .padding(.top, 8)
@@ -93,7 +93,7 @@ public struct InvoicesListView: View {
                                     .buttonStyle(.plain)
                                 }
                             }
-                            .padding(.horizontal, 16)
+                            .padding(.horizontal, 20)
                             .padding(.vertical, 8)
                             Spacer().frame(height: 80)
                         }

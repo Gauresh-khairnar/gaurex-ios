@@ -41,8 +41,8 @@ public struct MainTabView: View {
             
             // Persistent Floating Liquid Glass Tab Bar (7 Tabs)
             LiquidGlassTabBar(selectedTab: $selectedTab)
-                .padding(.horizontal, 14)
-                .padding(.bottom, 6)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 8)
         }
         .onAppear {
             NeoCoFounderService.shared.greetFounderOnLaunch()

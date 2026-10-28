@@ -71,10 +71,15 @@
 		A00000000000000000000223 /* WorkerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000222 /* WorkerDetailView.swift */; };
 		A00000000000000000000225 /* WorkersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000224 /* WorkersListView.swift */; };
 		A00000000000000000000227 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000226 /* Assets.xcassets */; };
-		A00000000000000000000231 /* ExtendedModulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000230 /* ExtendedModulesTests.swift */; };
-		A00000000000000000000233 /* FinancialCalculationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000232 /* FinancialCalculationsTests.swift */; };
-		A00000000000000000000235 /* PayrollAndPDFTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000234 /* PayrollAndPDFTests.swift */; };
-		A00000000000000000000237 /* SecurityAndBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000236 /* SecurityAndBackupTests.swift */; };
+		A00000000000000000000229 /* PlusJakartaSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000228 /* PlusJakartaSans-Bold.ttf */; };
+		A00000000000000000000231 /* PlusJakartaSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000230 /* PlusJakartaSans-ExtraBold.ttf */; };
+		A00000000000000000000233 /* PlusJakartaSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000232 /* PlusJakartaSans-Medium.ttf */; };
+		A00000000000000000000235 /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000234 /* PlusJakartaSans-Regular.ttf */; };
+		A00000000000000000000237 /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000236 /* PlusJakartaSans-SemiBold.ttf */; };
+		A00000000000000000000241 /* ExtendedModulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000240 /* ExtendedModulesTests.swift */; };
+		A00000000000000000000243 /* FinancialCalculationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000242 /* FinancialCalculationsTests.swift */; };
+		A00000000000000000000245 /* PayrollAndPDFTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000244 /* PayrollAndPDFTests.swift */; };
+		A00000000000000000000247 /* SecurityAndBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000246 /* SecurityAndBackupTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -142,25 +147,30 @@
 		A00000000000000000000222 /* WorkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkerDetailView.swift"; sourceTree = "<group>"; };
 		A00000000000000000000224 /* WorkersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkersListView.swift"; sourceTree = "<group>"; };
 		A00000000000000000000226 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
-		A00000000000000000000228 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
-		A00000000000000000000229 /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex.entitlements"; sourceTree = "<group>"; };
-		A00000000000000000000230 /* ExtendedModulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExtendedModulesTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000232 /* FinancialCalculationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FinancialCalculationsTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000234 /* PayrollAndPDFTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayrollAndPDFTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000236 /* SecurityAndBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecurityAndBackupTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000238 /* Gaurex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gaurex.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A00000000000000000000239 /* GaurexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GaurexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000228 /* PlusJakartaSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Bold.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000230 /* PlusJakartaSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-ExtraBold.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000232 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000234 /* PlusJakartaSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Regular.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000236 /* PlusJakartaSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-SemiBold.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000238 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
+		A00000000000000000000239 /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex.entitlements"; sourceTree = "<group>"; };
+		A00000000000000000000240 /* ExtendedModulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExtendedModulesTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000242 /* FinancialCalculationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FinancialCalculationsTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000244 /* PayrollAndPDFTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayrollAndPDFTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000246 /* SecurityAndBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecurityAndBackupTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000248 /* Gaurex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gaurex.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000249 /* GaurexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GaurexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A00000000000000000000249 /* Frameworks */ = {
+		A00000000000000000000259 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000251 /* Frameworks */ = {
+		A00000000000000000000261 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -170,16 +180,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A00000000000000000000246 = {
+		A00000000000000000000256 = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000243 /* Gaurex */,
-				A00000000000000000000244 /* GaurexTests */,
-				A00000000000000000000245 /* Products */,
+				A00000000000000000000253 /* Gaurex */,
+				A00000000000000000000254 /* GaurexTests */,
+				A00000000000000000000255 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A00000000000000000000243 /* Gaurex */ = {
+		A00000000000000000000253 /* Gaurex */ = {
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000100 /* AppLaunchExperienceView.swift */,
@@ -246,28 +256,33 @@
 				A00000000000000000000222 /* WorkerDetailView.swift */,
 				A00000000000000000000224 /* WorkersListView.swift */,
 				A00000000000000000000226 /* Assets.xcassets */,
-				A00000000000000000000228 /* Info.plist */,
-				A00000000000000000000229 /* Gaurex.entitlements */,
+				A00000000000000000000228 /* PlusJakartaSans-Bold.ttf */,
+				A00000000000000000000230 /* PlusJakartaSans-ExtraBold.ttf */,
+				A00000000000000000000232 /* PlusJakartaSans-Medium.ttf */,
+				A00000000000000000000234 /* PlusJakartaSans-Regular.ttf */,
+				A00000000000000000000236 /* PlusJakartaSans-SemiBold.ttf */,
+				A00000000000000000000238 /* Info.plist */,
+				A00000000000000000000239 /* Gaurex.entitlements */,
 			);
 			path = Gaurex;
 			sourceTree = "<group>";
 		};
-		A00000000000000000000244 /* GaurexTests */ = {
+		A00000000000000000000254 /* GaurexTests */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000230 /* ExtendedModulesTests.swift */,
-				A00000000000000000000232 /* FinancialCalculationsTests.swift */,
-				A00000000000000000000234 /* PayrollAndPDFTests.swift */,
-				A00000000000000000000236 /* SecurityAndBackupTests.swift */,
+				A00000000000000000000240 /* ExtendedModulesTests.swift */,
+				A00000000000000000000242 /* FinancialCalculationsTests.swift */,
+				A00000000000000000000244 /* PayrollAndPDFTests.swift */,
+				A00000000000000000000246 /* SecurityAndBackupTests.swift */,
 			);
 			path = GaurexTests;
 			sourceTree = "<group>";
 		};
-		A00000000000000000000245 /* Products */ = {
+		A00000000000000000000255 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000238 /* Gaurex.app */,
-				A00000000000000000000239 /* GaurexTests.xctest */,
+				A00000000000000000000248 /* Gaurex.app */,
+				A00000000000000000000249 /* GaurexTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -275,13 +290,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A00000000000000000000240 /* Gaurex */ = {
+		A00000000000000000000250 /* Gaurex */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A00000000000000000000260 /* Build configuration list for PBXNativeTarget "Gaurex" */;
+			buildConfigurationList = A00000000000000000000270 /* Build configuration list for PBXNativeTarget "Gaurex" */;
 			buildPhases = (
-				A00000000000000000000247 /* Sources */,
-				A00000000000000000000249 /* Frameworks */,
-				A00000000000000000000248 /* Resources */,
+				A00000000000000000000257 /* Sources */,
+				A00000000000000000000259 /* Frameworks */,
+				A00000000000000000000258 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -289,16 +304,16 @@
 			);
 			name = Gaurex;
 			productName = Gaurex;
-			productReference = A00000000000000000000238 /* Gaurex.app */;
+			productReference = A00000000000000000000248 /* Gaurex.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A00000000000000000000241 /* GaurexTests */ = {
+		A00000000000000000000251 /* GaurexTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A00000000000000000000261 /* Build configuration list for PBXNativeTarget "GaurexTests" */;
+			buildConfigurationList = A00000000000000000000271 /* Build configuration list for PBXNativeTarget "GaurexTests" */;
 			buildPhases = (
-				A00000000000000000000250 /* Sources */,
-				A00000000000000000000251 /* Frameworks */,
-				A00000000000000000000252 /* Resources */,
+				A00000000000000000000260 /* Sources */,
+				A00000000000000000000261 /* Frameworks */,
+				A00000000000000000000262 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -306,28 +321,28 @@
 			);
 			name = GaurexTests;
 			productName = GaurexTests;
-			productReference = A00000000000000000000239 /* GaurexTests.xctest */;
+			productReference = A00000000000000000000249 /* GaurexTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A00000000000000000000242 /* Project object */ = {
+		A00000000000000000000252 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
-					A00000000000000000000240 = {
+					A00000000000000000000250 = {
 						CreatedOnToolsVersion = 15.4;
 					};
-					A00000000000000000000241 = {
+					A00000000000000000000251 = {
 						CreatedOnToolsVersion = 15.4;
-						TestTargetID = A00000000000000000000240;
+						TestTargetID = A00000000000000000000250;
 					};
 				};
 			};
-			buildConfigurationList = A00000000000000000000259 /* Build configuration list for PBXProject "Gaurex" */;
+			buildConfigurationList = A00000000000000000000269 /* Build configuration list for PBXProject "Gaurex" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -335,27 +350,32 @@
 				en,
 				Base,
 			);
-			mainGroup = A00000000000000000000246;
-			productRefGroup = A00000000000000000000245 /* Products */;
+			mainGroup = A00000000000000000000256;
+			productRefGroup = A00000000000000000000255 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A00000000000000000000240 /* Gaurex */,
-				A00000000000000000000241 /* GaurexTests */,
+				A00000000000000000000250 /* Gaurex */,
+				A00000000000000000000251 /* GaurexTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A00000000000000000000248 /* Resources */ = {
+		A00000000000000000000258 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				A00000000000000000000227 /* Assets.xcassets in Resources */,
+				A00000000000000000000229 /* PlusJakartaSans-Bold.ttf in Resources */,
+				A00000000000000000000231 /* PlusJakartaSans-ExtraBold.ttf in Resources */,
+				A00000000000000000000233 /* PlusJakartaSans-Medium.ttf in Resources */,
+				A00000000000000000000235 /* PlusJakartaSans-Regular.ttf in Resources */,
+				A00000000000000000000237 /* PlusJakartaSans-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000252 /* Resources */ = {
+		A00000000000000000000262 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -365,7 +385,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A00000000000000000000247 /* Sources */ = {
+		A00000000000000000000257 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -435,21 +455,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000250 /* Sources */ = {
+		A00000000000000000000260 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A00000000000000000000231 /* ExtendedModulesTests.swift in Sources */,
-				A00000000000000000000233 /* FinancialCalculationsTests.swift in Sources */,
-				A00000000000000000000235 /* PayrollAndPDFTests.swift in Sources */,
-				A00000000000000000000237 /* SecurityAndBackupTests.swift in Sources */,
+				A00000000000000000000241 /* ExtendedModulesTests.swift in Sources */,
+				A00000000000000000000243 /* FinancialCalculationsTests.swift in Sources */,
+				A00000000000000000000245 /* PayrollAndPDFTests.swift in Sources */,
+				A00000000000000000000247 /* SecurityAndBackupTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		A00000000000000000000257 /* Debug */ = {
+		A00000000000000000000267 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -476,7 +496,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000258 /* Release */ = {
+		A00000000000000000000268 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -498,7 +518,7 @@
 			};
 			name = Release;
 		};
-		A00000000000000000000253 /* Debug */ = {
+		A00000000000000000000263 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -521,7 +541,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000254 /* Release */ = {
+		A00000000000000000000264 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -544,7 +564,7 @@
 			};
 			name = Release;
 		};
-		A00000000000000000000255 /* Debug */ = {
+		A00000000000000000000265 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -559,7 +579,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000256 /* Release */ = {
+		A00000000000000000000266 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -577,29 +597,29 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A00000000000000000000259 /* Build configuration list for PBXProject "Gaurex" */ = {
+		A00000000000000000000269 /* Build configuration list for PBXProject "Gaurex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A00000000000000000000257 /* Debug */,
-				A00000000000000000000258 /* Release */,
+				A00000000000000000000267 /* Debug */,
+				A00000000000000000000268 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A00000000000000000000260 /* Build configuration list for PBXNativeTarget "Gaurex" */ = {
+		A00000000000000000000270 /* Build configuration list for PBXNativeTarget "Gaurex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A00000000000000000000253 /* Debug */,
-				A00000000000000000000254 /* Release */,
+				A00000000000000000000263 /* Debug */,
+				A00000000000000000000264 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A00000000000000000000261 /* Build configuration list for PBXNativeTarget "GaurexTests" */ = {
+		A00000000000000000000271 /* Build configuration list for PBXNativeTarget "GaurexTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A00000000000000000000255 /* Debug */,
-				A00000000000000000000256 /* Release */,
+				A00000000000000000000265 /* Debug */,
+				A00000000000000000000266 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -607,5 +627,5 @@
 /* End XCConfigurationList section */
 
 	};
-	rootObject = A00000000000000000000242 /* Project object */;
+	rootObject = A00000000000000000000252 /* Project object */;
 }

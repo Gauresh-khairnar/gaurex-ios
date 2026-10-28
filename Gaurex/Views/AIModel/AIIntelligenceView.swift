@@ -20,6 +20,7 @@ public struct AIIntelligenceView: View {
     @State private var showingDocumentExtraction = false
     @State private var showingClearHistoryAlert = false
     @State private var pulseAnimation = false
+    @State private var aiStatusPulse = false
     @State private var copiedMessageId: String? = nil
     
     private let deepPlum = Color.gaurexDeepPlum
@@ -78,39 +79,44 @@ public struct AIIntelligenceView: View {
                         VStack(alignment: .leading, spacing: 1) {
                             HStack(spacing: 0) {
                                 Text("G")
-                                    .font(.system(size: 22, weight: .bold))
+                                    .font(.pjs(22, weight: .bold))
                                     .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                                 Text("A")
-                                    .font(.system(size: 22, weight: .black))
+                                    .font(.pjs(22, weight: .black))
                                     .foregroundColor(warmGold)
                                 Text("UREX")
-                                    .font(.system(size: 22, weight: .bold))
+                                    .font(.pjs(22, weight: .bold))
                                     .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                             }
                             .tracking(1.5)
                             
-                            HStack(spacing: 4) {
-                                Circle()
-                                    .fill(Color(red: 0.06, green: 0.72, blue: 0.44))
-                                    .frame(width: 6, height: 6)
+                            HStack(spacing: 5) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color(red: 0.06, green: 0.72, blue: 0.44).opacity(aiStatusPulse ? 0.35 : 0.1))
+                                        .frame(width: 12, height: 12)
+                                    Circle()
+                                        .fill(Color(red: 0.06, green: 0.72, blue: 0.44))
+                                        .frame(width: 6, height: 6)
+                                }
                                 Text("NEO AI Co-Founder")
-                                    .font(.system(size: 11, weight: .semibold))
+                                    .font(.pjs(11, weight: .semibold))
                                     .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
                             }
                         }
                         
                         Spacer()
                         
-                        // 100% Free On-Device Badge
+                        // Exclusive Founder Badge
                         HStack(spacing: 4) {
-                            Image(systemName: "checkmark.seal.fill")
+                            Image(systemName: "crown.fill")
                                 .font(.system(size: 10))
                                 .foregroundColor(warmGold)
-                            Text("Free On-Device AI")
-                                .font(.system(size: 10, weight: .bold))
+                            Text("Founder Edition • Mr. Gauresh")
+                                .font(.pjs(10.5, weight: .bold))
                                 .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                         }
-                        .padding(.horizontal, 9)
+                        .padding(.horizontal, 10)
                         .padding(.vertical, 5)
                         .background(
                             Capsule()
@@ -118,7 +124,7 @@ public struct AIIntelligenceView: View {
                                 .shadow(color: Color.black.opacity(0.04), radius: 4, y: 1)
                         )
                         .overlay(
-                            Capsule().stroke(warmGold.opacity(0.3), lineWidth: 0.8)
+                            Capsule().stroke(warmGold.opacity(0.4), lineWidth: 0.8)
                         )
                         
                         // Voice Button
@@ -178,7 +184,7 @@ public struct AIIntelligenceView: View {
                                 )
                         }
                     }
-                    .padding(.horizontal, 16)
+                    .padding(.horizontal, 20)
                     .padding(.top, 8)
                     .padding(.bottom, 6)
                     
@@ -192,7 +198,7 @@ public struct AIIntelligenceView: View {
                                     voiceAI.setLanguage(lang)
                                 } label: {
                                     Text(lang.displayName)
-                                        .font(.system(size: 11, weight: isSelected ? .bold : .medium))
+                                        .font(.pjs(11, weight: isSelected ? .bold : .medium))
                                         .foregroundColor(isSelected ? .white : Color(uiColor: .label))
                                         .padding(.horizontal, 11)
                                         .padding(.vertical, 5)
@@ -206,7 +212,7 @@ public struct AIIntelligenceView: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.horizontal, 16)
+                        .padding(.horizontal, 20)
                         .padding(.bottom, 6)
                     }
                     
@@ -289,11 +295,11 @@ public struct AIIntelligenceView: View {
                                     // Welcome Text
                                     VStack(spacing: 6) {
                                         Text("Good Morning, Gauresh")
-                                            .font(.system(size: 22, weight: .bold, design: .rounded))
+                                            .font(.pjs(22, weight: .bold))
                                             .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                                         
                                         Text("I'm NEO, your executive AI co-founder.\nWhat would you like to analyze or execute across GAUREX?")
-                                            .font(.system(size: 13, weight: .regular))
+                                            .font(.pjs(13, weight: .regular))
                                             .foregroundColor(Color(uiColor: .secondaryLabel))
                                             .multilineTextAlignment(.center)
                                             .lineSpacing(3)
@@ -304,10 +310,10 @@ public struct AIIntelligenceView: View {
                                     HStack(spacing: 12) {
                                         HStack(spacing: 4) {
                                             Text("Cash:")
-                                                .font(.system(size: 11, weight: .medium))
+                                                .font(.pjs(11, weight: .medium))
                                                 .foregroundColor(.secondary)
                                             Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.revenueCollected))")
-                                                .font(.system(size: 12, weight: .bold))
+                                                .font(.pjs(12, weight: .bold))
                                                 .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
                                         }
                                         
@@ -315,10 +321,10 @@ public struct AIIntelligenceView: View {
                                         
                                         HStack(spacing: 4) {
                                             Text("Due:")
-                                                .font(.system(size: 11, weight: .medium))
+                                                .font(.pjs(11, weight: .medium))
                                                 .foregroundColor(.secondary)
                                             Text("\(currentContext.currencySymbol)\(String(format: "%.0f", currentContext.outstandingPayments))")
-                                                .font(.system(size: 12, weight: .bold))
+                                                .font(.pjs(12, weight: .bold))
                                                 .foregroundColor(.orange)
                                         }
                                         
@@ -326,10 +332,10 @@ public struct AIIntelligenceView: View {
                                         
                                         HStack(spacing: 4) {
                                             Text("Clients:")
-                                                .font(.system(size: 11, weight: .medium))
+                                                .font(.pjs(11, weight: .medium))
                                                 .foregroundColor(.secondary)
                                             Text("\(currentContext.totalClients)")
-                                                .font(.system(size: 12, weight: .bold))
+                                                .font(.pjs(12, weight: .bold))
                                                 .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                                         }
                                     }
@@ -347,7 +353,7 @@ public struct AIIntelligenceView: View {
                                     // 4 Curated High-Impact Prompt Cards (2x2 Grid)
                                     VStack(alignment: .leading, spacing: 10) {
                                         Text("SUGGESTED EXECUTIVE ACTIONS")
-                                            .font(.system(size: 11, weight: .bold))
+                                            .font(.pjs(11, weight: .bold))
                                             .foregroundColor(.secondary)
                                             .padding(.horizontal, 4)
                                         
@@ -389,7 +395,7 @@ public struct AIIntelligenceView: View {
                                             }
                                         }
                                     }
-                                    .padding(.horizontal, 16)
+                                    .padding(.horizontal, 20)
                                     .padding(.top, 4)
                                     
                                     Spacer().frame(height: 120)
@@ -434,7 +440,7 @@ public struct AIIntelligenceView: View {
                                             RoundedRectangle(cornerRadius: 14, style: .continuous)
                                                 .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
                                         )
-                                        .padding(.horizontal, 16)
+                                        .padding(.horizontal, 20)
                                         .id("ANALYSIS_LOADING")
                                     }
                                     
@@ -445,6 +451,9 @@ public struct AIIntelligenceView: View {
                         }
                         .onAppear {
                             pulseAnimation = true
+                            withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: true)) {
+                                aiStatusPulse = true
+                            }
                         }
                         .onChange(of: store.aiMessages.count) { _ in
                             if let lastId = store.aiMessages.last?.id {
@@ -476,7 +485,7 @@ public struct AIIntelligenceView: View {
                             
                             // Text Input Field
                             TextField("Ask NEO anything about your business...", text: $inputText)
-                                .font(.system(size: 14))
+                                .font(.pjs(14))
                                 .submitLabel(.send)
                                 .onSubmit {
                                     sendMessage(text: inputText)
@@ -513,8 +522,8 @@ public struct AIIntelligenceView: View {
                             RoundedRectangle(cornerRadius: 24, style: .continuous)
                                 .stroke(Color.primary.opacity(0.08), lineWidth: 0.8)
                         )
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 12)
+                        .padding(.horizontal, 20)
+                        .padding(.bottom, 14)
                     }
                 }
             }
@@ -629,7 +638,7 @@ private struct CleanAIMessageRow: View {
                 Spacer(minLength: 44)
                 
                 Text(message.content)
-                    .font(.system(size: 14, weight: .medium))
+                    .font(.pjs(14, weight: .medium))
                     .foregroundColor(.white)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 11)
@@ -643,18 +652,18 @@ private struct CleanAIMessageRow: View {
                             .font(.system(size: 12, weight: .bold))
                             .foregroundColor(warmGold)
                         Text("NEO")
-                            .font(.system(size: 12, weight: .bold))
+                            .font(.pjs(12, weight: .bold))
                             .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                         
                         Text("• Co-Founder")
-                            .font(.system(size: 11, weight: .regular))
+                            .font(.pjs(11, weight: .regular))
                             .foregroundColor(.secondary)
                         
                         Spacer()
                         
                         if message.isForecastEstimate {
                             Text("ML FORECAST")
-                                .font(.system(size: 9, weight: .bold))
+                                .font(.pjs(9, weight: .bold))
                                 .foregroundColor(.orange)
                                 .padding(.horizontal, 6)
                                 .padding(.vertical, 2)
@@ -665,7 +674,7 @@ private struct CleanAIMessageRow: View {
                     
                     // Message Content
                     Text(LocalizedStringKey(message.content))
-                        .font(.system(size: 14, weight: .regular))
+                        .font(.pjs(14, weight: .regular))
                         .foregroundColor(.primary)
                         .lineSpacing(3.5)
                     
@@ -673,10 +682,10 @@ private struct CleanAIMessageRow: View {
                     if let rec = message.actionRecommendation {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("EXECUTIVE RECOMMENDATION")
-                                .font(.system(size: 10, weight: .bold))
+                                .font(.pjs(10, weight: .bold))
                                 .foregroundColor(warmGold)
                             Text(rec)
-                                .font(.system(size: 12, weight: .medium))
+                                .font(.pjs(12, weight: .medium))
                                 .foregroundColor(.primary)
                         }
                         .padding(10)
@@ -698,7 +707,7 @@ private struct CleanAIMessageRow: View {
                                 Image(systemName: voiceAI.isSpeaking ? "speaker.wave.3.fill" : "speaker.wave.2.fill")
                                     .font(.system(size: 11))
                                 Text(voiceAI.isSpeaking ? "Speaking..." : "Listen")
-                                    .font(.system(size: 11, weight: .semibold))
+                                    .font(.pjs(11, weight: .semibold))
                             }
                             .foregroundColor(warmGold)
                             .padding(.horizontal, 8)
@@ -715,7 +724,7 @@ private struct CleanAIMessageRow: View {
                                 Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
                                     .font(.system(size: 11))
                                 Text(isCopied ? "Copied" : "Copy")
-                                    .font(.system(size: 11, weight: .semibold))
+                                    .font(.pjs(11, weight: .semibold))
                             }
                             .foregroundColor(.secondary)
                             .padding(.horizontal, 8)
@@ -743,7 +752,7 @@ private struct CleanAIMessageRow: View {
                 Spacer(minLength: 44)
             }
         }
-        .padding(.horizontal, 16)
+        .padding(.horizontal, 20)
     }
 }
 

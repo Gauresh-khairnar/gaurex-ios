@@ -379,53 +379,112 @@ public final class AIService: ObservableObject {
         var rec: String? = nil
         var isForecast = false
         
-        if lower.contains("revenue") || lower.contains("money") || lower.contains("cash") {
+        if lower.contains("revenue") || lower.contains("money") || lower.contains("cash") || lower.contains("कमाई") || lower.contains("उत्पन्न") {
             answer = """
-            ### 💰 Financial Health Briefing for Gauresh Khairnar (OWNER):
-            • **Collected Cash:** **\(sym)\(String(format: "%.2f", context.revenueCollected))** in verified liquid collections.
-            • **Total Invoiced:** **\(sym)\(String(format: "%.2f", context.totalInvoiced))** across all enterprise contracts.
-            • **Pending Receivables:** **\(sym)\(String(format: "%.2f", context.outstandingPayments))** awaiting collection.
-            • **Net Operating Profit:** **\(sym)\(String(format: "%.2f", context.netOperatingIncome))** after monthly expenses.
-            """
-            rec = "Prioritize collecting the \(sym)\(String(format: "%.2f", context.outstandingPayments)) in pending receivables."
-        } else if lower.contains("overdue") || lower.contains("invoice") {
-            answer = """
-            ### ⚠️ Outstanding Invoices Status:
-            There are currently **\(context.overdueInvoicesCount) overdue invoices** totaling **\(sym)\(String(format: "%.2f", context.outstandingPayments))**.
+            ### 💰 Strategic Financial Briefing • Exclusively for Gauresh Khairnar (OWNER)
             
-            **Recommended Action:** Issue WhatsApp and official email payment reminders to unlock these funds immediately.
+            • **Verified Liquid Cash:** **\(sym)\(String(format: "%.2f", context.revenueCollected))**
+            • **Total Invoiced:** **\(sym)\(String(format: "%.2f", context.totalInvoiced))**
+            • **Pending Client Receivables:** **\(sym)\(String(format: "%.2f", context.outstandingPayments))**
+            • **Monthly Operating Overhead:** **\(sym)\(String(format: "%.2f", context.monthlyOperatingExpenses))**
+            • **Net Operating Income:** **\(sym)\(String(format: "%.2f", context.netOperatingIncome))**
+            
+            #### 📈 Executive Cash Velocity Analysis:
+            1. **Collection Ratio:** \(context.totalInvoiced > 0 ? String(format: "%.1f%%", (context.revenueCollected / context.totalInvoiced) * 100) : "100%") of booked billings converted to liquid bank balance.
+            2. **Runway Index:** Verified cash reserves comfortably exceed monthly burn rate with zero reliance on debt.
+            3. **Growth Lever:** Accelerate follow-ups on pending invoices to immediately unlock **\(sym)\(String(format: "%.2f", context.outstandingPayments))** into working capital.
             """
-            rec = "Dispatch invoice settlement reminders to overdue accounts today."
-        } else if lower.contains("expense") || lower.contains("cost") || lower.contains("burn") {
+            rec = "Dispatch invoice settlement reminders to overdue accounts to convert \(sym)\(String(format: "%.2f", context.outstandingPayments)) into liquid cash."
+        } else if lower.contains("tax") || lower.contains("gst") || lower.contains("tds") || lower.contains("कर") {
             answer = """
-            ### 📊 Operational Cost Breakdown:
+            ### 🏛️ GAUREX Corporate Tax & Compliance Intelligence
+            
+            **Master Tax Protocol for Software & Enterprise IT (SAC 9983):**
+            • **GST Rate:** 18% (IGST for interstate/foreign or CGST 9% + SGST 9% for Maharashtra domestic).
+            • **TDS Compliance:** Section 194J applies to professional/technical services (10% or 2% for software royalties/call centers). Section 194C applies to contractors (1% for individuals/HUFs, 2% for corporate entities).
+            • **Advance Tax Deadlines:** 
+              - 15 June: 15% cumulative
+              - 15 September: 45% cumulative
+              - 15 December: 75% cumulative
+              - 15 March: 100% cumulative
+            • **Strategic Write-Offs & Depreciations:** Section 32 allows 40% accelerated depreciation on computer hardware/laptops and software licenses purchased for business development.
+            
+            **Actionable Advice for Mr. Gauresh:** Ensure all incoming client payments have TDS certificates (Form 16A) reconciled against Form 26AS/AIS quarterly to prevent credit leakage.
+            """
+            rec = "Reconcile TDS credits (Form 16A) against Form 26AS before quarterly advance tax submission."
+        } else if lower.contains("sales") || lower.contains("client") || lower.contains("grow") || lower.contains("scale") || lower.contains("ग्राहक") {
+            answer = """
+            ### 🚀 Enterprise Growth & Pipeline Strategy for Gauresh Khairnar
+            
+            **Target:** Accelerating enterprise contract value and recurring retained revenue.
+            
+            #### 1. High-Ticket Retainer Packaging
+            • Shift one-time software deliveries into **Monthly SLA Retainers** (₹ 1,25,000 - ₹ 2,50,000/mo).
+            • Offer 24/7 DevOps, microservice maintenance, and priority AI engineering in every retainer tier.
+            
+            #### 2. Enterprise Sales Execution (MEDDIC Model)
+            • **Metrics:** Quantify ROI for the client before sending quotes (e.g., "This automation saves 120 manual hours/week").
+            • **Economic Buyer:** Ensure direct access to founders/CTOs to bypass procurement delays.
+            • **Decision Criteria:** Emphasize custom proprietary ownership, zero licensing lock-in, and military-grade security.
+            
+            #### 3. Client Retention & Upselling
+            • Current Client Base: **\(context.totalClients) accounts** (\(context.activeClients) actively generating revenue).
+            • Upsell active accounts with AI workflow agents to increase average contract value by 35%.
+            """
+            rec = "Target the top 3 active enterprise clients with an AI integration upgrade proposal."
+        } else if lower.contains("overdue") || lower.contains("invoice") || lower.contains("बाकी") || lower.contains("थकबाकी") {
+            answer = """
+            ### ⚠️ Receivables & Collections Radar
+            
+            • **Total Overdue Invoices:** **\(context.overdueInvoicesCount)**
+            • **Capital at Risk:** **\(sym)\(String(format: "%.2f", context.outstandingPayments))**
+            
+            #### ⚡ 3-Stage Executive Collection Protocol:
+            1. **Day 1-7 (Polite Reminder):** Automated payment link sent via WhatsApp Business and PDF statement.
+            2. **Day 8-15 (Executive Check-In):** Personal outreach referencing contract delivery milestones completed.
+            3. **Day 16+ (Service Hold):** Soft pause on production staging deployment until milestone payment is verified.
+            """
+            rec = "Issue automated payment notifications for the \(context.overdueInvoicesCount) pending accounts today."
+        } else if lower.contains("expense") || lower.contains("cost") || lower.contains("burn") || lower.contains("खर्च") {
+            answer = """
+            ### 📊 Operational Burn & Margin Defense
+            
             • **Monthly Operating Overhead:** **\(sym)\(String(format: "%.2f", context.monthlyOperatingExpenses))**
             • **Team Payroll Commitment:** **\(sym)\(String(format: "%.2f", context.monthlyPayrollExpenses))**
             • **Total Monthly Burn:** **\(sym)\(String(format: "%.2f", context.monthlyOperatingExpenses + context.monthlyPayrollExpenses))**
-            • **Net Profit Margin:** **\(context.revenueCollected > 0 ? String(format: "%.1f", (context.netOperatingIncome / context.revenueCollected) * 100) : "0")%**
+            • **Operating Profit:** **\(sym)\(String(format: "%.2f", context.netOperatingIncome))**
+            
+            **Rule of 40 Benchmark:** Maintain combined revenue growth rate + EBITDA margin above 40% to achieve elite startup valuation.
             """
-            rec = "Maintain operating expenses below 20% of monthly collections to protect net margins."
-        } else if lower.contains("plan") || lower.contains("today") || lower.contains("priority") {
+            rec = "Cap infrastructure and software subscriptions to less than 15% of monthly gross collections."
+        } else if lower.contains("plan") || lower.contains("today") || lower.contains("priority") || lower.contains("काम") {
             answer = """
-            ### ⚡ Executive Day Plan for Gauresh Khairnar:
-            1. **High-Ticket Sales Outreach:** Follow up with qualified enterprise pipeline prospects.
-            2. **Receivable Recovery:** Collect on **\(sym)\(String(format: "%.2f", context.outstandingPayments))** in pending client balances.
-            3. **Delivery Quality Assurance:** Check milestone progress with active team members.
+            ### ⚡ Executive Day Plan • Gauresh Khairnar (OWNER)
+            
+            **Priority 1: High-Leverage Revenue Generation**
+            • Follow up on enterprise proposal discussions and close outstanding negotiations.
+            
+            **Priority 2: Working Capital Protection**
+            • Recover **\(sym)\(String(format: "%.2f", context.outstandingPayments))** in pending client balances.
+            
+            **Priority 3: Architecture & Delivery Assurance**
+            • Review milestone velocity across active development streams with \(context.totalWorkers) core team members.
             """
             rec = "Execute on sales follow-ups and receivable collections to maintain high cash velocity."
         } else {
             answer = """
-            ### 👑 GAUREX Executive Chief of Staff Briefing:
-            **Founder & Owner:** Gauresh Khairnar
-            • **Active Clients:** \(context.activeClients) (\(context.totalClients) in CRM)
-            • **Collected Cash:** \(sym)\(String(format: "%.2f", context.revenueCollected))
-            • **Net Operating Income:** \(sym)\(String(format: "%.2f", context.netOperatingIncome))
-            • **Pending Receivables:** \(sym)\(String(format: "%.2f", context.outstandingPayments))
-            • **Core Team:** \(context.totalWorkers) members on \(context.activeProjectsCount) active projects
+            ### 👑 GAUREX Executive AI Co-Founder Briefing
+            **Prepared Exclusively for Founder & Owner Gauresh Khairnar (OWNER)**
             
-            How can I assist your strategic decision-making today, Gauresh?
+            • **Active Enterprise Contracts:** \(context.activeClients) accounts (\(context.totalClients) in CRM)
+            • **Verified Liquid Cash:** \(sym)\(String(format: "%.2f", context.revenueCollected))
+            • **Pending Client Receivables:** \(sym)\(String(format: "%.2f", context.outstandingPayments))
+            • **Net Operating Income:** \(sym)\(String(format: "%.2f", context.netOperatingIncome))
+            • **Team Capacity:** \(context.totalWorkers) core members on \(context.activeProjectsCount) active projects
+            
+            I have ingested your complete verified ledger, client pipelines, and architectural benchmarks. How shall we direct GAUREX operations today, Gauresh?
             """
-            rec = "Ask for revenue forecasts, cashflow breakdown, or tactical day plans."
+            rec = "Ask for detailed cashflow projections, contract negotiation templates, or tax optimization."
         }
         
         let msg = AIMessage(
