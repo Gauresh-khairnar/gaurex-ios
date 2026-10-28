@@ -657,75 +657,130 @@ private struct SettingsRow: View {
 // MARK: - NEO Assistant Settings Subview
 private struct NeoAssistantSettingsView: View {
     @ObservedObject private var neo = NeoCoFounderService.shared
-    @State private var testPhrase = ""
+    @Environment(\.colorScheme) private var colorScheme
     
     var body: some View {
-        Form {
-            Section("Voice Co-Founder") {
-                Toggle("Autonomous Voice Greeting", isOn: $neo.isVoiceGreetingEnabled)
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Speech Rate: \(String(format: "%.2f", neo.speechRate))")
-                        .font(.system(size: 14))
-                    Slider(value: $neo.speechRate, in: 0.3...0.7, step: 0.05)
-                }
-                .padding(.vertical, 4)
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Voice Pitch: \(String(format: "%.2f", neo.speechPitch))")
-                        .font(.system(size: 14))
-                    Slider(value: $neo.speechPitch, in: 0.7...1.3, step: 0.05)
-                }
-                .padding(.vertical, 4)
-                
-                Button {
-                    neo.speakBriefing(
-                        context: AIAnalysisContext(
-                            totalRevenue: 2845000,
-                            totalExpenses: 890000,
-                            netProfit: 1955000,
-                            pendingInvoicesCount: 4,
-                            pendingInvoicesAmount: 320000,
-                            activeClientsCount: 14,
-                            totalWorkers: 8,
-                            totalInvoiced: 3165000,
-                            cashCollectionRate: 0.89
-                        ),
-                        force: true
-                    )
-                } label: {
-                    HStack {
-                        Image(systemName: "waveform")
-                        Text("Test Co-Founder Greeting Now")
-                    }
-                    .foregroundColor(Color(red: 0.90, green: 0.65, blue: 0.15))
-                }
-            }
+        ZStack {
+            (colorScheme == .dark ? Color(red: 0.07, green: 0.07, blue: 0.09) : Color(red: 0.96, green: 0.96, blue: 0.98))
+                .ignoresSafeArea()
             
-            Section("Intelligence Engines") {
-                HStack {
-                    Text("Predictive ML Engine")
-                    Spacer()
-                    Text("Active (v2.0)")
-                        .foregroundColor(.green)
-                        .font(.system(size: 14, weight: .semibold))
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 20) {
+                    // Card 1: Voice Co-Founder
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("VOICE CO-FOUNDER")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.secondary)
+                        
+                        VStack(spacing: 0) {
+                            HStack {
+                                Text("Autonomous Voice Greeting")
+                                    .font(.system(size: 15, weight: .medium))
+                                Spacer()
+                                Toggle("", isOn: $neo.isVoiceGreetingEnabled)
+                                    .labelsHidden()
+                            }
+                            .padding(.vertical, 14)
+                            
+                            Divider()
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text("Speech Rate")
+                                        .font(.system(size: 15, weight: .medium))
+                                    Spacer()
+                                    Text(String(format: "%.2fx", neo.speechRate))
+                                        .font(.system(size: 13, weight: .bold))
+                                        .foregroundColor(.secondary)
+                                }
+                                Slider(value: $neo.speechRate, in: 0.3...0.7, step: 0.05)
+                            }
+                            .padding(.vertical, 12)
+                            
+                            Divider()
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                HStack {
+                                    Text("Voice Pitch")
+                                        .font(.system(size: 15, weight: .medium))
+                                    Spacer()
+                                    Text(String(format: "%.2fx", neo.speechPitch))
+                                        .font(.system(size: 13, weight: .bold))
+                                        .foregroundColor(.secondary)
+                                }
+                                Slider(value: $neo.speechPitch, in: 0.7...1.3, step: 0.05)
+                            }
+                            .padding(.vertical, 12)
+                            
+                            Divider()
+                            
+                            Button {
+                                neo.greetFounderOnLaunch(force: true)
+                            } label: {
+                                HStack {
+                                    Image(systemName: "waveform")
+                                    Text("Test Co-Founder Greeting Now")
+                                        .font(.system(size: 15, weight: .semibold))
+                                }
+                                .foregroundColor(Color(red: 0.90, green: 0.65, blue: 0.15))
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 14)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .background(Color(uiColor: .systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
+                    }
+                    
+                    // Card 2: Intelligence Engines
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("INTELLIGENCE ENGINES")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(.secondary)
+                        
+                        VStack(spacing: 0) {
+                            HStack {
+                                Text("Predictive ML Engine")
+                                    .font(.system(size: 15, weight: .medium))
+                                Spacer()
+                                Text("Active (v2.0)")
+                                    .foregroundColor(.green)
+                                    .font(.system(size: 14, weight: .bold))
+                            }
+                            .padding(.vertical, 14)
+                            
+                            Divider()
+                            
+                            HStack {
+                                Text("Cash Runway Forecasting")
+                                    .font(.system(size: 15, weight: .medium))
+                                Spacer()
+                                Text("Active")
+                                    .foregroundColor(.green)
+                                    .font(.system(size: 14, weight: .bold))
+                            }
+                            .padding(.vertical, 14)
+                            
+                            Divider()
+                            
+                            HStack {
+                                Text("RFM Segmentation & Churn")
+                                    .font(.system(size: 15, weight: .medium))
+                                Spacer()
+                                Text("Active")
+                                    .foregroundColor(.green)
+                                    .font(.system(size: 14, weight: .bold))
+                            }
+                            .padding(.vertical, 14)
+                        }
+                        .padding(.horizontal, 16)
+                        .background(Color(uiColor: .systemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
+                    }
                 }
-                
-                HStack {
-                    Text("Cash Runway Forecasting")
-                    Spacer()
-                    Text("Active")
-                        .foregroundColor(.green)
-                        .font(.system(size: 14, weight: .semibold))
-                }
-                
-                HStack {
-                    Text("RFM Segmentation & Churn")
-                    Spacer()
-                    Text("Active")
-                        .foregroundColor(.green)
-                        .font(.system(size: 14, weight: .semibold))
-                }
+                .padding(20)
             }
         }
         .navigationTitle("NEO AI Co-Founder")
@@ -744,7 +799,7 @@ private struct EditProfileSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("Founder Information") {
+                SwiftUI.Section {
                     TextField("Founder Full Name", text: $founderName)
                     TextField("Company Name", text: $companyName)
                     TextField("Official Email", text: $officialEmail)
@@ -752,6 +807,8 @@ private struct EditProfileSheet: View {
                         .autocapitalization(.none)
                     TextField("Official Phone", text: $officialPhone)
                         .keyboardType(.phonePad)
+                } header: {
+                    Text("Founder Information")
                 }
             }
             .navigationTitle("Edit Profile")
