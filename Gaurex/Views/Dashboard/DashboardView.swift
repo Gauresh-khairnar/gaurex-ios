@@ -203,7 +203,7 @@ public struct DashboardView: View {
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                                         .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
-                                raid: )
+                                )
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                                         .stroke(goldAccent.opacity(0.2), lineWidth: 0.6)
