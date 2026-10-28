@@ -6,11 +6,9 @@
 //
 
 import Foundation
-#if canImport(ActivityKit)
 import ActivityKit
-#endif
 
-public struct GaurexActivityAttributes: #if canImport(ActivityKit) ActivityAttributes #else Codable, Hashable #endif {
+public struct GaurexActivityAttributes: ActivityAttributes {
     public struct ContentState: Codable, Hashable {
         public var mode: ActivityMode
         

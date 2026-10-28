@@ -109,17 +109,26 @@ public final class DynamicIslandActivityService: ObservableObject {
             // End any stale existing activities
             for act in Activity<GaurexActivityAttributes>.activities {
                 Task {
-                    await act.end(using: nil, dismissalPolicy: .immediate)
+                    await act.end(nil, dismissalPolicy: .immediate)
                 }
             }
             
             let attributes = GaurexActivityAttributes()
             do {
-                _ = try Activity.request(
-                    attributes: attributes,
-                    contentState: currentState,
-                    pushType: nil
-                )
+                if #available(iOS 16.2, *) {
+                    let content = ActivityContent(state: currentState, staleDate: nil)
+                    _ = try Activity.request(
+                        attributes: attributes,
+                        content: content,
+                        pushType: nil
+                    )
+                } else {
+                    _ = try Activity.request(
+                        attributes: attributes,
+                        contentState: currentState,
+                        pushType: nil
+                    )
+                }
             } catch {
                 print("Failed to start ActivityKit activity: \(error)")
             }
@@ -132,7 +141,12 @@ public final class DynamicIslandActivityService: ObservableObject {
         if #available(iOS 16.1, *) {
             Task {
                 for act in Activity<GaurexActivityAttributes>.activities {
-                    await act.update(using: currentState)
+                    if #available(iOS 16.2, *) {
+                        let content = ActivityContent(state: currentState, staleDate: nil)
+                        await act.update(content)
+                    } else {
+                        await act.update(using: currentState)
+                    }
                 }
             }
         }
