@@ -41,7 +41,7 @@ public struct WorkersListView: View {
         if sortOption == "Name" {
             list.sort { $0.fullName.localizedCompare($1.fullName) == .orderedAscending }
         } else if sortOption == "Salary" {
-            list.sort { $0.salaryStructure.monthlyBaseSalary > $1.salaryStructure.monthlyBaseSalary }
+            list.sort { $0.monthlySalary > $1.monthlySalary }
         }
         return list
     }
@@ -216,10 +216,10 @@ public struct WorkersListView: View {
                                 }
                                 
                                 WorkerFilterPillButton(
-                                    title: "Inactive (\(store.workers.filter { $0.employmentStatus == .terminated }.count))",
-                                    isSelected: selectedStatusFilter == .terminated
+                                    title: "Inactive (\(store.workers.filter { $0.employmentStatus == .archived }.count))",
+                                    isSelected: selectedStatusFilter == .archived
                                 ) {
-                                    selectedStatusFilter = .terminated
+                                    selectedStatusFilter = .archived
                                 }
                             }
                             .padding(.horizontal, 20)
@@ -482,7 +482,7 @@ private struct WorkerImageMatchRow: View {
             
             // Monthly Salary + Status Pill + Chevron
             VStack(alignment: .trailing, spacing: 4) {
-                let monthly = worker.salaryStructure.monthlyBaseSalary > 0 ? worker.salaryStructure.monthlyBaseSalary : 35000.0
+                let monthly = worker.monthlySalary > 0 ? worker.monthlySalary : 35000.0
                 Text("\(FinancialCalculator.shared.formatCurrency(monthly))/mo")
                     .font(.system(size: 12, weight: .bold))
                     .foregroundColor(colorScheme == .dark ? .white : deepPurple)

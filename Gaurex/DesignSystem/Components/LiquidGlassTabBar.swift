@@ -231,3 +231,36 @@ public struct LiquidGlassTabBar: View {
         )
     }
 }
+
+// MARK: - Global Reusable Filter Chip
+public struct FilterChip: View {
+    @ObservedObject private var theme = ThemeManager.shared
+    @Environment(\.colorScheme) private var colorScheme
+    public var title: String
+    public var isSelected: Bool
+    public var action: () -> Void
+    
+    public init(title: String, isSelected: Bool, action: @escaping () -> Void) {
+        self.title = title
+        self.isSelected = isSelected
+        self.action = action
+    }
+    
+    public var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 11, weight: isSelected ? .bold : .medium))
+                .foregroundColor(isSelected ? .white : .primary)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background {
+                    if isSelected {
+                        Capsule().fill(Color(red: 0.18, green: 0.08, blue: 0.28))
+                    } else {
+                        Capsule().fill(theme.cardBackground).overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
+                    }
+                }
+        }
+        .buttonStyle(.plain)
+    }
+}

@@ -18,6 +18,9 @@ public final class NeoCoFounderService: NSObject, ObservableObject, AVSpeechSynt
     @Published public var spokenTranscript: String = ""
     @Published public var lastSpokenBriefing: String = ""
     @Published public var isVoiceGreetingMuted: Bool = false
+    @Published public var isVoiceGreetingEnabled: Bool = true
+    @Published public var speechRate: Double = 0.50
+    @Published public var speechPitch: Double = 1.02
     @Published public var audioLevel: CGFloat = 0.2
     
     private let synthesizer = AVSpeechSynthesizer()
@@ -94,16 +97,21 @@ public final class NeoCoFounderService: NSObject, ObservableObject, AVSpeechSynt
     }
     
     // MARK: - Speech Synthesis
+    public func speakBriefing(context: AIAnalysisContext? = nil, force: Bool = false) {
+        greetFounderOnLaunch(force: force)
+    }
+
     public func speak(text: String) {
         stopSpeaking()
+        guard isVoiceGreetingEnabled && !isVoiceGreetingMuted else { return }
         
         let utterance = AVSpeechUtterance(string: text)
         // High quality natural voice
         if let enVoice = AVSpeechSynthesisVoice(language: "en-US") {
             utterance.voice = enVoice
         }
-        utterance.rate = 0.50
-        utterance.pitchMultiplier = 1.02
+        utterance.rate = Float(speechRate)
+        utterance.pitchMultiplier = Float(speechPitch)
         utterance.preUtteranceDelay = 0.1
         utterance.postUtteranceDelay = 0.1
         
