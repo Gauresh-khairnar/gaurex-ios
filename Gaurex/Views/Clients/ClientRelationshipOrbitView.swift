@@ -381,7 +381,7 @@ fileprivate struct OrbitingPlanetNodeView: View {
         .position(positionPoint)
         .onTapGesture {
             MotionTokens.impact(style: .medium)
-            withAnimation(MotionTokens.bouncySpring) {
+            withAnimation(MotionTokens.snappySpring) {
                 onSelect()
             }
         }
