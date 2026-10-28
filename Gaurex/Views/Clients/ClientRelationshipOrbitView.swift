@@ -232,8 +232,54 @@ public struct ClientRelationshipOrbitView: View {
         }
         .sheet(isPresented: $showingWhatsAppSheet) {
             if let client = clientForWhatsApp {
-                WhatsAppSettlerModal(client: client)
+                NavigationStack {
+                    VStack(spacing: 20) {
+                        Image(systemName: "message.badge.filled.fill")
+                            .font(.system(size: 44))
+                            .foregroundColor(Color.green)
+                        
+                        Text("WhatsApp Executive Settler")
+                            .font(.pjs(20, weight: .bold))
+                        
+                        Text("Send automated executive payment settlement reminder to \(client.name) for \(store.settings.currencySymbol)\(Int(client.outstandingBalance)).")
+                            .font(.pjs(13, weight: .regular))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(Color(uiColor: .secondaryLabel))
+                            .padding(.horizontal, 20)
+                        
+                        Button {
+                            sendWhatsAppClientNudge(for: client)
+                            showingWhatsAppSheet = false
+                        } label: {
+                            HStack {
+                                Image(systemName: "paperplane.fill")
+                                Text("Dispatch via WhatsApp")
+                                    .font(.pjs(14, weight: .bold))
+                            }
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color.green)
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                        }
+                        .padding(.horizontal, 24)
+                    }
+                    .padding(24)
+                    .presentationDetents([.fraction(0.38)])
+                }
             }
+        }
+    }
+    
+    private func sendWhatsAppClientNudge(for client: Client) {
+        let cleanPhone = client.phone.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "+", with: "")
+        let message = "Dear \(client.name), this is Gauresh Khairnar from GAUREX. A friendly executive reminder regarding your outstanding balance of \(store.settings.currencySymbol)\(Int(client.outstandingBalance)). Please let us know if you require any invoice or bank wire details. Thank you."
+        guard let encoded = message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
+        let urlString = !cleanPhone.isEmpty ? "whatsapp://send?phone=\(cleanPhone)&text=\(encoded)" : "whatsapp://send?text=\(encoded)"
+        if let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        } else if let webUrl = URL(string: "https://api.whatsapp.com/send?text=\(encoded)") {
+            UIApplication.shared.open(webUrl)
         }
     }
     
@@ -318,15 +364,15 @@ fileprivate struct ClientPlanetView: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-        case .lead:
+        case .prospective, .onHold:
             return LinearGradient(
                 colors: [Color.gaurexDeepPlum, Color(red: 0.95, green: 0.55, blue: 0.20)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-        case .inactive:
+        case .inactive, .completed, .archived:
             return LinearGradient(
-                colors: [Color.gray, Color.slateNavy],
+                colors: [Color.gray, Color(red: 0.15, green: 0.18, blue: 0.25)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
