@@ -52,10 +52,6 @@
     </dict>
     <key>LSRequiresIPhoneOS</key>
     <true/>
-    <key>NSSupportsLiveActivities</key>
-    <true/>
-    <key>NSSupportsLiveActivitiesFrequentUpdates</key>
-    <true/>
     <key>NSFaceIDUsageDescription</key>
     <string>GAUREX requires Face ID to protect financial data, client records, and executive operations.</string>
     <key>NSCameraUsageDescription</key>

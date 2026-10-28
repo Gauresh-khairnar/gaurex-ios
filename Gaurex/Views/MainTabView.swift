@@ -13,47 +13,39 @@ public struct MainTabView: View {
     public init() {}
     
     public var body: some View {
-        ZStack(alignment: .top) {
-            ZStack(alignment: .bottom) {
-                AuroraLivingBackground()
-                
-                Group {
-                    switch selectedTab {
-                    case .home:
-                        DashboardView(selectedTab: $selectedTab)
-                    case .tasks:
-                        TasksManagementView()
-                    case .finance:
-                        FinanceProfitCenterView()
-                    case .clients:
-                        ClientsListView()
-                    case .workers:
-                        WorkersListView()
-                    case .aiModel:
-                        AIIntelligenceView()
-                    case .settings:
-                        SettingsView()
-                    }
+        ZStack(alignment: .bottom) {
+            AuroraLivingBackground()
+            
+            Group {
+                switch selectedTab {
+                case .home:
+                    DashboardView(selectedTab: $selectedTab)
+                case .tasks:
+                    TasksManagementView()
+                case .finance:
+                    FinanceProfitCenterView()
+                case .clients:
+                    ClientsListView()
+                case .workers:
+                    WorkersListView()
+                case .aiModel:
+                    AIIntelligenceView()
+                case .settings:
+                    SettingsView()
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .safeAreaInset(edge: .bottom) {
-                    Color.clear.frame(height: 72)
-                }
-                
-                // Persistent Floating Liquid Glass Tab Bar (7 Tabs)
-                LiquidGlassTabBar(selectedTab: $selectedTab)
-                    .padding(.horizontal, 18)
-                    .padding(.bottom, 8)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .safeAreaInset(edge: .bottom) {
+                Color.clear.frame(height: 72)
             }
             
-            // Executive Interactive Dynamic Island HUD
-            ExecutiveDynamicIslandHUD()
-                .padding(.top, 4)
-                .zIndex(100)
+            // Persistent Floating Liquid Glass Tab Bar (7 Tabs)
+            LiquidGlassTabBar(selectedTab: $selectedTab)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 8)
         }
         .onAppear {
             NeoCoFounderService.shared.greetFounderOnLaunch()
-            DynamicIslandActivityService.shared.requestSystemLiveActivity()
         }
         .preferredColorScheme(theme.colorScheme)
     }
@@ -68,75 +60,76 @@ public struct BiometricUnlockOverlay: View {
     
     public var body: some View {
         ZStack {
-            theme.backgroundColor.ignoresSafeArea()
+            AuroraLivingBackground()
             
             VStack(spacing: 24) {
                 Spacer()
                 
-                Image("GaurexLogo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 80, height: 80)
-                    .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .stroke(theme.glassBorderColor, lineWidth: 1)
-                    )
-                    .shadow(color: Color.black.opacity(0.15), radius: 12, x: 0, y: 6)
-                
-                VStack(spacing: 6) {
-                    HStack(spacing: 8) {
-                        Text("GAUREX")
-                            .font(TypographyTokens.executiveTitle)
-                            .tracking(2.0)
-                        OwnerBadge()
-                    }
+                ZStack {
+                    Circle()
+                        .fill(Color.gaurexDeepPlum)
+                        .frame(width: 90, height: 90)
+                        .overlay(Circle().stroke(Color.gaurexWarmGold.opacity(0.8), lineWidth: 2))
                     
-                    Text("Executive Security Vault")
-                        .font(TypographyTokens.caption)
+                    Image(systemName: "faceid")
+                        .font(.system(size: 44, weight: .semibold))
+                        .foregroundColor(Color.gaurexWarmGold)
+                }
+                
+                VStack(spacing: 8) {
+                    Text("GAUREX Executive Vault")
+                        .font(.pjs(22, weight: .bold))
+                        .foregroundColor(theme.colorScheme == .dark ? .white : Color.gaurexDeepPlum)
+                    
+                    Text("Founder authentication required")
+                        .font(.pjs(13, weight: .medium))
                         .foregroundColor(.secondary)
+                    
+                    Text("Founder & Owner: Gauresh Khairnar (OWNER)")
+                        .font(.pjs(11, weight: .semibold))
+                        .foregroundColor(Color.gaurexWarmGold)
+                        .padding(.top, 4)
                 }
-                
-                Spacer()
-                
-                Button {
-                    authenticate()
-                } label: {
-                    HStack(spacing: 8) {
-                        Image(systemName: "faceid")
-                            .font(.system(size: 18, weight: .semibold))
-                        Text("Unlock with \(bioAuth.biometricTypeString)")
-                            .font(.system(size: 15, weight: .bold))
-                    }
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Color.primary)
-                    .clipShape(Capsule())
-                }
-                .buttonStyle(.plain)
-                .tactilePress()
-                .padding(.horizontal, 32)
                 
                 if let err = authErrorMessage {
                     Text(err)
-                        .font(.system(size: 12))
+                        .font(.pjs(12, weight: .semibold))
                         .foregroundColor(.red)
+                        .multilineTextAlignment(.center)
                         .padding(.horizontal, 32)
                 }
                 
-                Spacer().frame(height: 40)
+                Button {
+                    let impact = UIImpactFeedbackGenerator(style: .medium)
+                    impact.impactOccurred()
+                    bioAuth.authenticateUser { success, error in
+                        if !success {
+                            authErrorMessage = error ?? "Biometric verification unsuccessful"
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "faceid")
+                        Text("Authenticate with Face ID")
+                    }
+                    .font(.pjs(14, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 14)
+                    .background(Color.gaurexDeepPlum)
+                    .clipShape(Capsule())
+                    .overlay(Capsule().stroke(Color.gaurexWarmGold.opacity(0.5), lineWidth: 1))
+                }
+                
+                Spacer()
             }
+            .padding(.horizontal, 24)
         }
         .onAppear {
-            authenticate()
-        }
-    }
-    
-    private func authenticate() {
-        bioAuth.authenticateOwner { success, error in
-            if !success {
-                authErrorMessage = error ?? "Biometric authentication required."
+            bioAuth.authenticateUser { success, error in
+                if !success {
+                    authErrorMessage = error
+                }
             }
         }
     }
