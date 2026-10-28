@@ -71,8 +71,10 @@ public struct LiquidGlassTabBar: View {
         self._selectedTab = selectedTab
     }
     
-    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
-    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
+    @ObservedObject private var voiceAIService = VoiceAssistantService.shared
+    
+    private let deepPlum = Color.gaurexDeepPlum
+    private let warmGold = Color.gaurexWarmGold
     
     public var body: some View {
         HStack(spacing: 0) {
@@ -95,7 +97,7 @@ public struct LiquidGlassTabBar: View {
                                     .fill(
                                         RadialGradient(
                                             colors: [
-                                                Color(red: 0.55, green: 0.30, blue: 0.75).opacity(aiHaloPulse ? 0.35 : 0.15),
+                                                (voiceAIService.isListening ? warmGold : deepPlum).opacity(aiHaloPulse ? 0.40 : 0.15),
                                                 Color.clear
                                             ],
                                             center: .center,
@@ -105,13 +107,13 @@ public struct LiquidGlassTabBar: View {
                                     )
                                     .frame(width: 62, height: 62)
                                 
-                                // Elevated Gradient Circle
+                                // Elevated Deep Plum Circle
                                 Circle()
                                     .fill(
                                         LinearGradient(
                                             colors: [
-                                                Color(red: 0.24, green: 0.10, blue: 0.36),
-                                                Color(red: 0.14, green: 0.05, blue: 0.22)
+                                                deepPlum,
+                                                Color(red: 0.20, green: 0.05, blue: 0.18)
                                             ],
                                             startPoint: .topLeading,
                                             endPoint: .bottomTrailing
@@ -120,24 +122,35 @@ public struct LiquidGlassTabBar: View {
                                     .frame(width: 48, height: 48)
                                     .overlay(
                                         Circle()
-                                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                                            .stroke(warmGold.opacity(voiceAIService.isListening ? 0.8 : 0.35), lineWidth: voiceAIService.isListening ? 1.8 : 1)
                                     )
                                     .shadow(
-                                        color: Color(red: 0.24, green: 0.10, blue: 0.36).opacity(0.40),
+                                        color: deepPlum.opacity(0.45),
                                         radius: 10,
                                         x: 0,
                                         y: 5
                                     )
                                 
-                                Image(systemName: "sparkles")
-                                    .font(.system(size: 20, weight: .semibold))
-                                    .foregroundColor(.white)
-                                    .scaleEffect(isSelected ? 1.08 : 1.0)
+                                if voiceAIService.isListening {
+                                    // Active listening waveform pulse
+                                    HStack(spacing: 2.5) {
+                                        ForEach(0..<3) { i in
+                                            RoundedRectangle(cornerRadius: 1.5)
+                                                .fill(warmGold)
+                                                .frame(width: 3, height: 10 + CGFloat((i + 1) * 4))
+                                        }
+                                    }
+                                } else {
+                                    Image(systemName: "sparkles")
+                                        .font(.system(size: 20, weight: .semibold))
+                                        .foregroundColor(warmGold)
+                                        .scaleEffect(isSelected ? 1.08 : 1.0)
+                                }
                             }
                             
                             Text("AI")
                                 .font(.system(size: 9.5, weight: isSelected ? .bold : .medium))
-                                .foregroundColor(isSelected ? deepPurple : Color(uiColor: .secondaryLabel))
+                                .foregroundColor(isSelected ? deepPlum : Color(uiColor: .secondaryLabel))
                         }
                         .frame(maxWidth: .infinity)
                         .offset(y: -10)

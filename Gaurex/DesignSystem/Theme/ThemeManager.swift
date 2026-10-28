@@ -6,6 +6,18 @@
 
 import SwiftUI
 
+// MARK: - GAUREX Phase 2 Official Brand Palette
+extension Color {
+    /// Mist Gray (#DDE3E8) - Premium supporting background & subtle surface
+    public static let gaurexMistGray = Color(red: 0xDD / 255.0, green: 0xE3 / 255.0, blue: 0xE8 / 255.0)
+    
+    /// Deep Plum (#3A0F34) - Primary executive brand element & active state
+    public static let gaurexDeepPlum = Color(red: 0x3A / 255.0, green: 0x0F / 255.0, blue: 0x34 / 255.0)
+    
+    /// Warm Gold (#EAAA00) - Precious highlight & status indicator
+    public static let gaurexWarmGold = Color(red: 0xEA / 255.0, green: 0xAA / 255.0, blue: 0x00 / 255.0)
+}
+
 public enum AppTheme: String, CaseIterable, Identifiable {
     case system = "System"
     case light = "Pure Light"

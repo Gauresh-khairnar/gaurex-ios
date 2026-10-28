@@ -22,8 +22,9 @@ public struct WorkersListView: View {
     
     public init() {}
     
-    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
-    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
+    private let deepPurple = Color.gaurexDeepPlum
+    private let goldAccent = Color.gaurexWarmGold
+    private let mistGray = Color.gaurexMistGray
     
     public var filteredWorkers: [Worker] {
         var list = store.workers

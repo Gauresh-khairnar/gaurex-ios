@@ -2,189 +2,362 @@
 //  VoiceAssistantOverlay.swift
 //  GAUREX Dashboard
 //  Founder & Owner: Gauresh Khairnar (OWNER)
+//  Phase 2: Free On-Device Multilingual Voice AI Overlay (Hindi, Marathi, Hinglish, English)
 //
 
 import SwiftUI
 
 public struct VoiceAssistantOverlay: View {
-    @ObservedObject private var voiceService = VoiceAssistantService.shared
+    @ObservedObject private var voiceAI = MultilingualVoiceAIService.shared
     @ObservedObject private var store = FirestoreDataStore.shared
     @ObservedObject private var theme = ThemeManager.shared
     @Environment(\.dismiss) private var dismiss
+    
+    private let deepPlum = Color.gaurexDeepPlum
+    private let warmGold = Color.gaurexWarmGold
+    private let mistGray = Color.gaurexMistGray
     
     public init() {}
     
     public var body: some View {
         NavigationStack {
             ZStack {
-                theme.backgroundColor.ignoresSafeArea()
+                (theme.colorScheme == .dark ? Color(red: 0.08, green: 0.08, blue: 0.10) : mistGray.opacity(0.35))
+                    .ignoresSafeArea()
                 
-                VStack(spacing: 24) {
+                VStack(spacing: 20) {
+                    
+                    // MARK: - Language Selector Bar
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(VoiceAILanguage.allCases) { lang in
+                                let isSelected = voiceAI.selectedLanguage == lang
+                                Button {
+                                    MotionTokens.selection()
+                                    voiceAI.setLanguage(lang)
+                                } label: {
+                                    Text(lang.displayName)
+                                        .font(.system(size: 11.5, weight: isSelected ? .bold : .medium))
+                                        .foregroundColor(isSelected ? .white : Color(uiColor: .label))
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(isSelected ? deepPlum : Color.white)
+                                        .clipShape(Capsule())
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(isSelected ? warmGold.opacity(0.6) : Color.black.opacity(0.08), lineWidth: 1)
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+                    }
+                    
                     Spacer()
                     
-                    // Waveform Visualizer
-                    HStack(spacing: 6) {
-                        ForEach(0..<7) { i in
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(theme.accentColor)
-                                .frame(width: 6, height: voiceService.isListening ? max(12, voiceService.audioLevel * CGFloat(i % 2 == 0 ? 60 : 40)) : 12)
-                                .animation(MotionTokens.interactiveSpring, value: voiceService.audioLevel)
+                    // MARK: - Live Waveform Visualizer
+                    HStack(spacing: 5) {
+                        ForEach(0..<9) { i in
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [deepPlum, warmGold],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
+                                )
+                                .frame(
+                                    width: 5,
+                                    height: voiceAI.isListening
+                                        ? max(12, voiceAI.audioLevel * CGFloat([35, 65, 45, 80, 55, 75, 40, 60, 30][i]))
+                                        : 12
+                                )
+                                .animation(.spring(response: 0.2, dampingFraction: 0.6), value: voiceAI.audioLevel)
                         }
                     }
-                    .frame(height: 70)
+                    .frame(height: 85)
                     
+                    // Status & Transcript
                     VStack(spacing: 8) {
-                        Text(voiceService.isListening ? "Listening for Executive Command..." : "Tap to Speak")
-                            .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(.primary)
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(voiceAI.isListening ? Color.green : warmGold)
+                                .frame(width: 8, height: 8)
+                            Text(voiceAI.isListening ? "Listening / बोलिए / ऐकत आहे..." : "Tap Mic to Speak")
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundColor(.primary)
+                        }
                         
-                        Text(voiceService.liveTranscript.isEmpty ? "e.g. \"Show my overdue invoices\", \"Plan my day\", \"Show revenue collected\"" : "\"\(voiceService.liveTranscript)\"")
-                            .font(.system(size: 13, weight: .regular))
+                        Text(voiceAI.liveTranscript.isEmpty
+                             ? (voiceAI.selectedLanguage == .hindi ? "उदा. \"आज की कमाई कितनी है?\", \"पेंडिंग बिल दिखाओ\"" :
+                                voiceAI.selectedLanguage == .marathi ? "उदा. \"आजचे एकूण उत्पन्न किती?\", \"थकबाकी दाखवा\"" :
+                                "e.g. \"Show today's revenue\", \"Check overdue payments\"")
+                             : "\"\(voiceAI.liveTranscript)\"")
+                            .font(.system(size: 13, weight: .medium))
                             .foregroundColor(.secondary)
                             .multilineTextAlignment(.center)
+                            .lineLimit(3)
                             .padding(.horizontal, 32)
                     }
                     
-                    if let res = voiceService.lastResult {
-                        GlassCard {
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
-                                    Image(systemName: "sparkles")
-                                        .foregroundColor(theme.accentColor)
-                                    Text("NEO • AI Co-Founder")
-                                        .font(.system(size: 13, weight: .bold))
-                                    Spacer()
-                                    OwnerBadge()
+                    // MARK: - Response Card with Speech Controls
+                    if let res = voiceAI.lastResult {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack {
+                                Image(systemName: "sparkles")
+                                    .foregroundColor(warmGold)
+                                Text("NEO AI Co-Founder")
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(deepPlum)
+                                
+                                Spacer()
+                                
+                                Text(res.detectedLanguage.displayName)
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundColor(deepPlum)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 3)
+                                    .background(warmGold.opacity(0.18))
+                                    .clipShape(Capsule())
+                            }
+                            
+                            Text(res.responseText)
+                                .font(.system(size: 13.5, weight: .regular))
+                                .foregroundColor(.primary)
+                                .lineSpacing(3)
+                            
+                            // Audio Playback Controls Bar
+                            HStack(spacing: 12) {
+                                Button {
+                                    if voiceAI.isSpeaking {
+                                        voiceAI.pauseSpeaking()
+                                    } else if voiceAI.isPaused {
+                                        voiceAI.resumeSpeaking()
+                                    } else {
+                                        voiceAI.speak(res.spokenResponseText, languageOverride: res.detectedLanguage)
+                                    }
+                                } label: {
+                                    HStack(spacing: 5) {
+                                        Image(systemName: voiceAI.isSpeaking ? "pause.fill" : "play.fill")
+                                        Text(voiceAI.isSpeaking ? "Pause Audio" : (voiceAI.isPaused ? "Resume Audio" : "Listen"))
+                                    }
+                                    .font(.system(size: 11, weight: .bold))
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(deepPlum)
+                                    .clipShape(Capsule())
                                 }
                                 
-                                Text(res.responseText)
-                                    .font(.system(size: 13))
-                                    .foregroundColor(.primary)
+                                if voiceAI.isSpeaking || voiceAI.isPaused {
+                                    Button {
+                                        voiceAI.stopSpeaking()
+                                    } label: {
+                                        Image(systemName: "stop.fill")
+                                            .font(.system(size: 11, weight: .bold))
+                                            .foregroundColor(.red)
+                                            .padding(6)
+                                            .background(Color.red.opacity(0.1))
+                                            .clipShape(Circle())
+                                    }
+                                }
                                 
-                                if res.requiresConfirmation, let action = res.proposedActionSummary {
-                                    VStack(alignment: .leading, spacing: 4) {
-                                        Text("CONFIRMATION REQUIRED")
-                                            .font(TypographyTokens.caption)
-                                            .foregroundColor(.orange)
-                                        Text(action)
-                                            .font(.system(size: 12, weight: .semibold))
-                                        
-                                        Button("Confirm & Execute") {
-                                            store.showToast(title: "Voice Command Executed")
-                                            dismiss()
-                                        }
+                                Spacer()
+                                
+                                // Free on-device badge
+                                Text("100% Free On-Device AI")
+                                    .font(.system(size: 9.5, weight: .semibold))
+                                    .foregroundColor(.secondary)
+                            }
+                            .padding(.top, 4)
+                        }
+                        .padding(16)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .stroke(Color.black.opacity(0.06), lineWidth: 1)
+                        )
+                        .padding(.horizontal, 20)
+                    }
+                    
+                    // MARK: - Sensitive Action Confirmation Card
+                    if let action = voiceAI.pendingAction, !action.isAuthorized {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Image(systemName: "exclamationmark.shield.fill")
+                                    .foregroundColor(action.riskLevel.badgeColor)
+                                Text("AUTHORIZATION REQUIRED")
+                                    .font(.system(size: 11, weight: .bold))
+                                    .foregroundColor(action.riskLevel.badgeColor)
+                                Spacer()
+                                Text(action.riskLevel.rawValue)
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundColor(action.riskLevel.badgeColor)
+                                    .padding(.horizontal, 6)
+                                    .padding(.vertical, 2)
+                                    .background(action.riskLevel.badgeColor.opacity(0.15))
+                                    .clipShape(Capsule())
+                            }
+                            
+                            Text(action.title)
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(.primary)
+                            
+                            Text(action.description)
+                                .font(.system(size: 11.5, weight: .regular))
+                                .foregroundColor(.secondary)
+                            
+                            HStack(spacing: 10) {
+                                Button {
+                                    voiceAI.authorizePendingAction(id: action.id)
+                                    store.showToast(title: "Action Authorized by Gauresh Khairnar (OWNER)")
+                                } label: {
+                                    Text("Authorize as Gauresh (OWNER)")
                                         .font(.system(size: 12, weight: .bold))
                                         .foregroundColor(.white)
                                         .padding(.horizontal, 14)
-                                        .padding(.vertical, 7)
-                                        .background(Color.primary)
+                                        .padding(.vertical, 8)
+                                        .background(deepPlum)
                                         .clipShape(Capsule())
-                                        .padding(.top, 4)
-                                    }
-                                    .padding(8)
-                                    .background(theme.backgroundColor.opacity(0.5))
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
                                 }
+                                
+                                Button("Cancel") {
+                                    voiceAI.cancelPendingAction()
+                                }
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundColor(.secondary)
                             }
+                            .padding(.top, 4)
                         }
-                        .padding(.horizontal, 24)
+                        .padding(14)
+                        .background(Color.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .stroke(action.riskLevel.badgeColor.opacity(0.4), lineWidth: 1.2)
+                        )
+                        .padding(.horizontal, 20)
                     }
                     
-                    // Suggested Voice Queries
+                    // MARK: - Multilingual Sample Query Pills
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            Button("📊 Business Pulse") {
-                                voiceService.stopListeningAndProcess(spokenQuery: "Executive business summary")
+                            Button("🇮🇳 आज की कमाई") {
+                                voiceAI.setLanguage(.hindi)
+                                voiceAI.stopListeningAndProcess(explicitText: "गौरेक्स की आज की कमाई कितनी है?")
                             }
                             .buttonStyle(.plain)
                             .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(theme.accentColor)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(theme.accentColor.opacity(0.12))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(Color.white)
                             .clipShape(Capsule())
-                            .overlay(Capsule().stroke(theme.accentColor.opacity(0.3), lineWidth: 1))
+                            .overlay(Capsule().stroke(Color.black.opacity(0.08), lineWidth: 1))
                             
-                            Button("Show Overdue Invoices") {
-                                voiceService.stopListeningAndProcess(spokenQuery: "Show my overdue invoices")
+                            Button("🚩 आजचे उत्पन्न") {
+                                voiceAI.setLanguage(.marathi)
+                                voiceAI.stopListeningAndProcess(explicitText: "गौरेक्सचे आजचे एकूण उत्पन्न किती आहे?")
                             }
                             .buttonStyle(.plain)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.primary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(theme.cardBackground)
+                            .font(.system(size: 11, weight: .bold))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(Color.white)
                             .clipShape(Capsule())
-                            .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
+                            .overlay(Capsule().stroke(Color.black.opacity(0.08), lineWidth: 1))
                             
-                            Button("Plan My Day") {
-                                voiceService.stopListeningAndProcess(spokenQuery: "Plan my day")
+                            Button("⚠️ Pending Payments") {
+                                voiceAI.setLanguage(.hinglish)
+                                voiceAI.stopListeningAndProcess(explicitText: "Gaurex ke pending invoices dikhao")
                             }
                             .buttonStyle(.plain)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.primary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(theme.cardBackground)
+                            .font(.system(size: 11, weight: .bold))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(Color.white)
                             .clipShape(Capsule())
-                            .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
+                            .overlay(Capsule().stroke(Color.black.opacity(0.08), lineWidth: 1))
                             
-                            Button("Revenue Collected") {
-                                voiceService.stopListeningAndProcess(spokenQuery: "Total revenue collected")
+                            Button("👥 Workers & Payroll") {
+                                voiceAI.setLanguage(.english)
+                                voiceAI.stopListeningAndProcess(explicitText: "Show total workers and monthly payroll")
                             }
                             .buttonStyle(.plain)
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundColor(.primary)
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 6)
-                            .background(theme.cardBackground)
+                            .font(.system(size: 11, weight: .bold))
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 7)
+                            .background(Color.white)
                             .clipShape(Capsule())
-                            .overlay(Capsule().stroke(theme.glassBorderColor, lineWidth: 1))
+                            .overlay(Capsule().stroke(Color.black.opacity(0.08), lineWidth: 1))
                         }
-                        .padding(.horizontal, 24)
+                        .padding(.horizontal, 20)
                     }
                     
                     Spacer()
                     
-                    // Microphone Activation Button with Siri-Style Harmonic Pulsing Orb
-                    VStack(spacing: 12) {
-                        Button {
-                            if voiceService.isListening {
-                                voiceService.stopListeningAndProcess()
-                            } else {
-                                voiceService.startListening()
-                            }
-                        } label: {
-                            HarmonicPulsingVoiceOrb(
-                                isListening: voiceService.isListening,
-                                isSpeaking: voiceService.isSpeaking
-                            )
+                    // MARK: - Primary Tap-To-Talk Microphone Capsule
+                    Button {
+                        let feedback = UIImpactFeedbackGenerator(style: .medium)
+                        feedback.impactOccurred()
+                        if voiceAI.isListening {
+                            voiceAI.stopListeningAndProcess()
+                        } else {
+                            voiceAI.startListening()
                         }
-                        .buttonStyle(.plain)
-                        .tactilePress(scale: 0.94)
-                        
-                        if voiceService.isSpeaking {
-                            Button {
-                                voiceService.stopSpeaking()
-                            } label: {
-                                HStack(spacing: 4) {
-                                    Image(systemName: "speaker.slash.fill")
-                                    Text("Stop Speaking")
-                                }
-                                .font(.system(size: 11, weight: .bold))
-                                .foregroundColor(.secondary)
-                            }
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(voiceAI.isListening ? warmGold.opacity(0.25) : deepPlum.opacity(0.12))
+                                .frame(width: 76, height: 76)
+                            
+                            Circle()
+                                .fill(
+                                    LinearGradient(
+                                        colors: voiceAI.isListening
+                                            ? [warmGold, Color(red: 0.95, green: 0.70, blue: 0.10)]
+                                            : [deepPlum, Color(red: 0.22, green: 0.05, blue: 0.20)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                                .frame(width: 62, height: 62)
+                                .shadow(color: deepPlum.opacity(0.35), radius: 8, y: 4)
+                            
+                            Image(systemName: voiceAI.isListening ? "stop.fill" : "mic.fill")
+                                .font(.system(size: 24, weight: .semibold))
+                                .foregroundColor(.white)
                         }
                     }
-                    
-                    Spacer().frame(height: 30)
+                    .buttonStyle(.plain)
+                    .padding(.bottom, 14)
                 }
             }
-            .navigationTitle("Voice Assistant")
+            .navigationTitle("Multilingual Voice Co-Founder")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) { Button("Close") { dismiss() } }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Done") {
+                        voiceAI.stopSpeaking()
+                        voiceAI.stopListening()
+                        dismiss()
+                    }
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(deepPlum)
+                }
             }
+        }
+        .onAppear {
+            if !voiceAI.isListening {
+                voiceAI.startListening()
+            }
+        }
+        .onDisappear {
+            voiceAI.stopSpeaking()
+            voiceAI.stopListening()
         }
     }
 }

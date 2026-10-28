@@ -22,8 +22,10 @@ public struct AIIntelligenceView: View {
     @State private var pulseAnimation = false
     @State private var copiedMessageId: String? = nil
     
-    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
-    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
+    private let deepPlum = Color.gaurexDeepPlum
+    private let warmGold = Color.gaurexWarmGold
+    private let mistGray = Color.gaurexMistGray
+    @ObservedObject private var voiceAI = MultilingualVoiceAIService.shared
     
     public init() {}
     
@@ -75,13 +77,13 @@ public struct AIIntelligenceView: View {
                             HStack(spacing: 0) {
                                 Text("G")
                                     .font(.system(size: 22, weight: .bold))
-                                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                    .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                                 Text("A")
                                     .font(.system(size: 22, weight: .black))
-                                    .foregroundColor(goldAccent)
+                                    .foregroundColor(warmGold)
                                 Text("UREX")
                                     .font(.system(size: 22, weight: .bold))
-                                    .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                    .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                             }
                             .tracking(1.5)
                             
@@ -89,7 +91,7 @@ public struct AIIntelligenceView: View {
                                 Circle()
                                     .fill(Color(red: 0.06, green: 0.72, blue: 0.44))
                                     .frame(width: 6, height: 6)
-                                Text("NEO 2.0 • Online")
+                                Text("NEO AI Co-Founder")
                                     .font(.system(size: 11, weight: .semibold))
                                     .foregroundColor(Color(red: 0.06, green: 0.72, blue: 0.44))
                             }
@@ -97,16 +99,16 @@ public struct AIIntelligenceView: View {
                         
                         Spacer()
                         
-                        // Live Ledger Summary Capsule
-                        HStack(spacing: 6) {
-                            Image(systemName: "bolt.shield.fill")
-                                .font(.system(size: 11))
-                                .foregroundColor(goldAccent)
-                            Text("Live Ledger")
-                                .font(.system(size: 11, weight: .bold))
-                                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                        // 100% Free On-Device Badge
+                        HStack(spacing: 4) {
+                            Image(systemName: "checkmark.seal.fill")
+                                .font(.system(size: 10))
+                                .foregroundColor(warmGold)
+                            Text("Free On-Device AI")
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                         }
-                        .padding(.horizontal, 10)
+                        .padding(.horizontal, 9)
                         .padding(.vertical, 5)
                         .background(
                             Capsule()
@@ -114,7 +116,7 @@ public struct AIIntelligenceView: View {
                                 .shadow(color: Color.black.opacity(0.04), radius: 4, y: 1)
                         )
                         .overlay(
-                            Capsule().stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                            Capsule().stroke(warmGold.opacity(0.3), lineWidth: 0.8)
                         )
                         
                         // Voice Button
@@ -124,7 +126,7 @@ public struct AIIntelligenceView: View {
                         } label: {
                             Image(systemName: "mic.fill")
                                 .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                                 .padding(9)
                                 .background(
                                     Circle()
@@ -178,6 +180,34 @@ public struct AIIntelligenceView: View {
                     .padding(.top, 8)
                     .padding(.bottom, 6)
                     
+                    // MARK: - Multilingual Language Quick Selector
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            ForEach(VoiceAILanguage.allCases) { lang in
+                                let isSelected = voiceAI.selectedLanguage == lang
+                                Button {
+                                    MotionTokens.selection()
+                                    voiceAI.setLanguage(lang)
+                                } label: {
+                                    Text(lang.displayName)
+                                        .font(.system(size: 11, weight: isSelected ? .bold : .medium))
+                                        .foregroundColor(isSelected ? .white : Color(uiColor: .label))
+                                        .padding(.horizontal, 11)
+                                        .padding(.vertical, 5)
+                                        .background(isSelected ? deepPlum : Color.white)
+                                        .clipShape(Capsule())
+                                        .overlay(
+                                            Capsule()
+                                                .stroke(isSelected ? warmGold.opacity(0.6) : Color.black.opacity(0.06), lineWidth: 0.9)
+                                        )
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 6)
+                    }
+                    
                     // MARK: - Conversational Stream Area
                     ScrollViewReader { proxy in
                         ScrollView(showsIndicators: false) {
@@ -193,8 +223,8 @@ public struct AIIntelligenceView: View {
                                             .fill(
                                                 RadialGradient(
                                                     colors: [
-                                                        goldAccent.opacity(0.20),
-                                                        deepPurple.opacity(0.05),
+                                                        warmGold.opacity(0.20),
+                                                        deepPlum.opacity(0.05),
                                                         Color.clear
                                                     ],
                                                     center: .center,
@@ -214,7 +244,7 @@ public struct AIIntelligenceView: View {
                                             .stroke(
                                                 LinearGradient(
                                                     colors: [
-                                                        goldAccent.opacity(0.6),
+                                                        warmGold.opacity(0.6),
                                                         Color(red: 0.65, green: 0.35, blue: 0.85).opacity(0.4)
                                                     ],
                                                     startPoint: .topLeading,
@@ -234,8 +264,8 @@ public struct AIIntelligenceView: View {
                                             .fill(
                                                 LinearGradient(
                                                     colors: [
-                                                        Color(red: 0.24, green: 0.12, blue: 0.36),
-                                                        Color(red: 0.12, green: 0.05, blue: 0.20)
+                                                        deepPlum,
+                                                        Color(red: 0.18, green: 0.05, blue: 0.16)
                                                     ],
                                                     startPoint: .topLeading,
                                                     endPoint: .bottomTrailing
@@ -244,13 +274,13 @@ public struct AIIntelligenceView: View {
                                             .frame(width: 70, height: 70)
                                             .overlay(
                                                 Circle()
-                                                    .stroke(goldAccent.opacity(0.5), lineWidth: 1.5)
+                                                    .stroke(warmGold.opacity(0.5), lineWidth: 1.5)
                                             )
-                                            .shadow(color: deepPurple.opacity(0.3), radius: 10, y: 4)
+                                            .shadow(color: deepPlum.opacity(0.3), radius: 10, y: 4)
                                         
                                         Image(systemName: "sparkles")
                                             .font(.system(size: 26, weight: .semibold))
-                                            .foregroundColor(goldAccent)
+                                            .foregroundColor(warmGold)
                                     }
                                     .padding(.top, 10)
                                     
@@ -258,7 +288,7 @@ public struct AIIntelligenceView: View {
                                     VStack(spacing: 6) {
                                         Text("Good Morning, Gauresh")
                                             .font(.system(size: 22, weight: .bold, design: .rounded))
-                                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                                            .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                                         
                                         Text("I'm NEO, your executive AI co-founder.\nWhat would you like to analyze or execute across GAUREX?")
                                             .font(.system(size: 13, weight: .regular))
@@ -534,7 +564,7 @@ private struct QuickAIPromptTile: View {
     let subtitle: String
     let action: () -> Void
     
-    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
+    private let deepPlum = Color.gaurexDeepPlum
     
     var body: some View {
         Button(action: action) {
@@ -551,7 +581,7 @@ private struct QuickAIPromptTile: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title)
                         .font(.system(size: 13, weight: .bold))
-                        .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                        .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                         .lineLimit(1)
                     
                     Text(subtitle)
@@ -584,8 +614,10 @@ private struct CleanAIMessageRow: View {
     let onCopy: () -> Void
     let isCopied: Bool
     
-    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
-    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
+    private let deepPlum = Color.gaurexDeepPlum
+    private let warmGold = Color.gaurexWarmGold
+    private let mistGray = Color.gaurexMistGray
+    @ObservedObject private var voiceAI = MultilingualVoiceAIService.shared
     
     var body: some View {
         HStack {
@@ -597,7 +629,7 @@ private struct CleanAIMessageRow: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 11)
-                    .background(deepPurple)
+                    .background(deepPlum)
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             } else {
                 VStack(alignment: .leading, spacing: 8) {
@@ -605,10 +637,10 @@ private struct CleanAIMessageRow: View {
                     HStack(spacing: 6) {
                         Image(systemName: "sparkles")
                             .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(goldAccent)
+                            .foregroundColor(warmGold)
                         Text("NEO")
                             .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(colorScheme == .dark ? .white : deepPurple)
+                            .foregroundColor(colorScheme == .dark ? .white : deepPlum)
                         
                         Text("• Co-Founder")
                             .font(.system(size: 11, weight: .regular))
@@ -638,7 +670,7 @@ private struct CleanAIMessageRow: View {
                         VStack(alignment: .leading, spacing: 4) {
                             Text("EXECUTIVE RECOMMENDATION")
                                 .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(goldAccent)
+                                .foregroundColor(warmGold)
                             Text(rec)
                                 .font(.system(size: 12, weight: .medium))
                                 .foregroundColor(.primary)
@@ -649,25 +681,25 @@ private struct CleanAIMessageRow: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                         .overlay(
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .stroke(goldAccent.opacity(0.3), lineWidth: 0.8)
+                                .stroke(warmGold.opacity(0.3), lineWidth: 0.8)
                         )
                     }
                     
                     // Footer: Speak aloud & Copy actions
                     HStack(spacing: 12) {
                         Button {
-                            onSpeak()
+                            voiceAI.speak(message.content)
                         } label: {
                             HStack(spacing: 4) {
-                                Image(systemName: "speaker.wave.2.fill")
+                                Image(systemName: voiceAI.isSpeaking ? "speaker.wave.3.fill" : "speaker.wave.2.fill")
                                     .font(.system(size: 11))
-                                Text("Listen")
+                                Text(voiceAI.isSpeaking ? "Speaking..." : "Listen")
                                     .font(.system(size: 11, weight: .semibold))
                             }
-                            .foregroundColor(goldAccent)
+                            .foregroundColor(warmGold)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
-                            .background(goldAccent.opacity(0.10))
+                            .background(warmGold.opacity(0.10))
                             .clipShape(Capsule())
                         }
                         .buttonStyle(.plain)
@@ -675,6 +707,41 @@ private struct CleanAIMessageRow: View {
                         Button {
                             onCopy()
                         } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                                    .font(.system(size: 11))
+                                Text(isCopied ? "Copied" : "Copy")
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .foregroundColor(.secondary)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.secondary.opacity(0.10))
+                            .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        
+                        Spacer()
+                    }
+                    .padding(.top, 2)
+                }
+                .padding(15)
+                .background(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(colorScheme == .dark ? Color(red: 0.15, green: 0.15, blue: 0.19) : Color.white)
+                        .shadow(color: Color.black.opacity(colorScheme == .dark ? 0.2 : 0.03), radius: 8, x: 0, y: 3)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+                )
+                
+                Spacer(minLength: 44)
+            }
+        }
+        .padding(.horizontal, 16)
+    }
+}
                             HStack(spacing: 4) {
                                 Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
                                     .font(.system(size: 11))

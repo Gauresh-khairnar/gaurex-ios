@@ -20,59 +20,61 @@
 		A00000000000000000000121 /* BusinessGoal.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000120 /* BusinessGoal.swift */; };
 		A00000000000000000000123 /* BusinessSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000122 /* BusinessSettings.swift */; };
 		A00000000000000000000125 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000124 /* Client.swift */; };
-		A00000000000000000000127 /* DocumentVaultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000126 /* DocumentVaultItem.swift */; };
-		A00000000000000000000129 /* ExtendedBusinessModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000128 /* ExtendedBusinessModels.swift */; };
-		A00000000000000000000131 /* Invoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000130 /* Invoice.swift */; };
-		A00000000000000000000133 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000132 /* Package.swift */; };
-		A00000000000000000000135 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000134 /* Payment.swift */; };
-		A00000000000000000000137 /* PayrollRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000136 /* PayrollRecord.swift */; };
-		A00000000000000000000139 /* SalesLead.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000138 /* SalesLead.swift */; };
-		A00000000000000000000141 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000140 /* Task.swift */; };
-		A00000000000000000000143 /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000142 /* Worker.swift */; };
-		A00000000000000000000145 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000144 /* AIService.swift */; };
-		A00000000000000000000147 /* AuditAndBackupServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000146 /* AuditAndBackupServices.swift */; };
-		A00000000000000000000149 /* DocumentExtractionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000148 /* DocumentExtractionService.swift */; };
-		A00000000000000000000151 /* FinancialCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000150 /* FinancialCalculator.swift */; };
-		A00000000000000000000153 /* FirestoreDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000152 /* FirestoreDataStore.swift */; };
-		A00000000000000000000155 /* NeoCoFounderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000154 /* NeoCoFounderService.swift */; };
-		A00000000000000000000157 /* NeoMLIntelligenceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000156 /* NeoMLIntelligenceEngine.swift */; };
-		A00000000000000000000159 /* PDFGeneratorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000158 /* PDFGeneratorService.swift */; };
-		A00000000000000000000161 /* SecurityServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000160 /* SecurityServices.swift */; };
-		A00000000000000000000163 /* SmartReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000162 /* SmartReminderService.swift */; };
-		A00000000000000000000165 /* TaskPlannerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000164 /* TaskPlannerService.swift */; };
-		A00000000000000000000167 /* VoiceAssistantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000166 /* VoiceAssistantService.swift */; };
-		A00000000000000000000169 /* AIIntelligenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000168 /* AIIntelligenceView.swift */; };
-		A00000000000000000000171 /* VoiceAssistantOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000170 /* VoiceAssistantOverlay.swift */; };
-		A00000000000000000000173 /* AddEditClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000172 /* AddEditClientView.swift */; };
-		A00000000000000000000175 /* ClientDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000174 /* ClientDetailView.swift */; };
-		A00000000000000000000177 /* ClientsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000176 /* ClientsListView.swift */; };
-		A00000000000000000000179 /* SalesPipelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000178 /* SalesPipelineView.swift */; };
-		A00000000000000000000181 /* ChartsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000180 /* ChartsSectionView.swift */; };
-		A00000000000000000000183 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000182 /* DashboardView.swift */; };
-		A00000000000000000000185 /* FinanceProfitCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000184 /* FinanceProfitCenterView.swift */; };
-		A00000000000000000000187 /* FounderCommandCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000186 /* FounderCommandCenterView.swift */; };
-		A00000000000000000000189 /* TasksManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000188 /* TasksManagementView.swift */; };
-		A00000000000000000000191 /* TodayTasksSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000190 /* TodayTasksSectionView.swift */; };
-		A00000000000000000000193 /* CreateInvoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000192 /* CreateInvoiceView.swift */; };
-		A00000000000000000000195 /* InvoiceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000194 /* InvoiceDetailView.swift */; };
-		A00000000000000000000197 /* InvoicesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000196 /* InvoicesListView.swift */; };
-		A00000000000000000000199 /* PDFPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000198 /* PDFPreviewView.swift */; };
-		A00000000000000000000201 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000200 /* MainTabView.swift */; };
-		A00000000000000000000203 /* BusinessSettingsAndAuditViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000202 /* BusinessSettingsAndAuditViews.swift */; };
-		A00000000000000000000205 /* DocumentVaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000204 /* DocumentVaultView.swift */; };
-		A00000000000000000000207 /* IntegrationsAndCurrencyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000206 /* IntegrationsAndCurrencyViews.swift */; };
-		A00000000000000000000209 /* PackageManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000208 /* PackageManagementView.swift */; };
-		A00000000000000000000211 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000210 /* SettingsView.swift */; };
-		A00000000000000000000213 /* AddEditWorkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000212 /* AddEditWorkerView.swift */; };
-		A00000000000000000000215 /* AttendanceAndLeaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000214 /* AttendanceAndLeaveView.swift */; };
-		A00000000000000000000217 /* GenerateSalarySlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000216 /* GenerateSalarySlipView.swift */; };
-		A00000000000000000000219 /* WorkerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000218 /* WorkerDetailView.swift */; };
-		A00000000000000000000221 /* WorkersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000220 /* WorkersListView.swift */; };
-		A00000000000000000000223 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000222 /* Assets.xcassets */; };
-		A00000000000000000000227 /* ExtendedModulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000226 /* ExtendedModulesTests.swift */; };
-		A00000000000000000000229 /* FinancialCalculationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000228 /* FinancialCalculationsTests.swift */; };
-		A00000000000000000000231 /* PayrollAndPDFTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000230 /* PayrollAndPDFTests.swift */; };
-		A00000000000000000000233 /* SecurityAndBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000232 /* SecurityAndBackupTests.swift */; };
+		A00000000000000000000127 /* DatasetSchemas.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000126 /* DatasetSchemas.swift */; };
+		A00000000000000000000129 /* DocumentVaultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000128 /* DocumentVaultItem.swift */; };
+		A00000000000000000000131 /* ExtendedBusinessModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000130 /* ExtendedBusinessModels.swift */; };
+		A00000000000000000000133 /* Invoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000132 /* Invoice.swift */; };
+		A00000000000000000000135 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000134 /* Package.swift */; };
+		A00000000000000000000137 /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000136 /* Payment.swift */; };
+		A00000000000000000000139 /* PayrollRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000138 /* PayrollRecord.swift */; };
+		A00000000000000000000141 /* SalesLead.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000140 /* SalesLead.swift */; };
+		A00000000000000000000143 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000142 /* Task.swift */; };
+		A00000000000000000000145 /* Worker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000144 /* Worker.swift */; };
+		A00000000000000000000147 /* AIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000146 /* AIService.swift */; };
+		A00000000000000000000149 /* AuditAndBackupServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000148 /* AuditAndBackupServices.swift */; };
+		A00000000000000000000151 /* DocumentExtractionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000150 /* DocumentExtractionService.swift */; };
+		A00000000000000000000153 /* FinancialCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000152 /* FinancialCalculator.swift */; };
+		A00000000000000000000155 /* FirestoreDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000154 /* FirestoreDataStore.swift */; };
+		A00000000000000000000157 /* MultilingualVoiceAIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000156 /* MultilingualVoiceAIService.swift */; };
+		A00000000000000000000159 /* NeoCoFounderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000158 /* NeoCoFounderService.swift */; };
+		A00000000000000000000161 /* NeoMLIntelligenceEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000160 /* NeoMLIntelligenceEngine.swift */; };
+		A00000000000000000000163 /* PDFGeneratorService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000162 /* PDFGeneratorService.swift */; };
+		A00000000000000000000165 /* SecurityServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000164 /* SecurityServices.swift */; };
+		A00000000000000000000167 /* SmartReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000166 /* SmartReminderService.swift */; };
+		A00000000000000000000169 /* TaskPlannerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000168 /* TaskPlannerService.swift */; };
+		A00000000000000000000171 /* VoiceAssistantService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000170 /* VoiceAssistantService.swift */; };
+		A00000000000000000000173 /* AIIntelligenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000172 /* AIIntelligenceView.swift */; };
+		A00000000000000000000175 /* VoiceAssistantOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000174 /* VoiceAssistantOverlay.swift */; };
+		A00000000000000000000177 /* AddEditClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000176 /* AddEditClientView.swift */; };
+		A00000000000000000000179 /* ClientDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000178 /* ClientDetailView.swift */; };
+		A00000000000000000000181 /* ClientsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000180 /* ClientsListView.swift */; };
+		A00000000000000000000183 /* SalesPipelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000182 /* SalesPipelineView.swift */; };
+		A00000000000000000000185 /* ChartsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000184 /* ChartsSectionView.swift */; };
+		A00000000000000000000187 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000186 /* DashboardView.swift */; };
+		A00000000000000000000189 /* FinanceProfitCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000188 /* FinanceProfitCenterView.swift */; };
+		A00000000000000000000191 /* FounderCommandCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000190 /* FounderCommandCenterView.swift */; };
+		A00000000000000000000193 /* TasksManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000192 /* TasksManagementView.swift */; };
+		A00000000000000000000195 /* TodayTasksSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000194 /* TodayTasksSectionView.swift */; };
+		A00000000000000000000197 /* CreateInvoiceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000196 /* CreateInvoiceView.swift */; };
+		A00000000000000000000199 /* InvoiceDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000198 /* InvoiceDetailView.swift */; };
+		A00000000000000000000201 /* InvoicesListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000200 /* InvoicesListView.swift */; };
+		A00000000000000000000203 /* PDFPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000202 /* PDFPreviewView.swift */; };
+		A00000000000000000000205 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000204 /* MainTabView.swift */; };
+		A00000000000000000000207 /* BusinessSettingsAndAuditViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000206 /* BusinessSettingsAndAuditViews.swift */; };
+		A00000000000000000000209 /* DocumentVaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000208 /* DocumentVaultView.swift */; };
+		A00000000000000000000211 /* IntegrationsAndCurrencyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000210 /* IntegrationsAndCurrencyViews.swift */; };
+		A00000000000000000000213 /* PackageManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000212 /* PackageManagementView.swift */; };
+		A00000000000000000000215 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000214 /* SettingsView.swift */; };
+		A00000000000000000000217 /* AddEditWorkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000216 /* AddEditWorkerView.swift */; };
+		A00000000000000000000219 /* AttendanceAndLeaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000218 /* AttendanceAndLeaveView.swift */; };
+		A00000000000000000000221 /* GenerateSalarySlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000220 /* GenerateSalarySlipView.swift */; };
+		A00000000000000000000223 /* WorkerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000222 /* WorkerDetailView.swift */; };
+		A00000000000000000000225 /* WorkersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000224 /* WorkersListView.swift */; };
+		A00000000000000000000227 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000226 /* Assets.xcassets */; };
+		A00000000000000000000231 /* ExtendedModulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000230 /* ExtendedModulesTests.swift */; };
+		A00000000000000000000233 /* FinancialCalculationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000232 /* FinancialCalculationsTests.swift */; };
+		A00000000000000000000235 /* PayrollAndPDFTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000234 /* PayrollAndPDFTests.swift */; };
+		A00000000000000000000237 /* SecurityAndBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000236 /* SecurityAndBackupTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,74 +91,76 @@
 		A00000000000000000000120 /* BusinessGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/BusinessGoal.swift"; sourceTree = "<group>"; };
 		A00000000000000000000122 /* BusinessSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/BusinessSettings.swift"; sourceTree = "<group>"; };
 		A00000000000000000000124 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Client.swift"; sourceTree = "<group>"; };
-		A00000000000000000000126 /* DocumentVaultItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/DocumentVaultItem.swift"; sourceTree = "<group>"; };
-		A00000000000000000000128 /* ExtendedBusinessModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/ExtendedBusinessModels.swift"; sourceTree = "<group>"; };
-		A00000000000000000000130 /* Invoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Invoice.swift"; sourceTree = "<group>"; };
-		A00000000000000000000132 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Package.swift"; sourceTree = "<group>"; };
-		A00000000000000000000134 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Payment.swift"; sourceTree = "<group>"; };
-		A00000000000000000000136 /* PayrollRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/PayrollRecord.swift"; sourceTree = "<group>"; };
-		A00000000000000000000138 /* SalesLead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/SalesLead.swift"; sourceTree = "<group>"; };
-		A00000000000000000000140 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Task.swift"; sourceTree = "<group>"; };
-		A00000000000000000000142 /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Worker.swift"; sourceTree = "<group>"; };
-		A00000000000000000000144 /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/AIService.swift"; sourceTree = "<group>"; };
-		A00000000000000000000146 /* AuditAndBackupServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/AuditAndBackupServices.swift"; sourceTree = "<group>"; };
-		A00000000000000000000148 /* DocumentExtractionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/DocumentExtractionService.swift"; sourceTree = "<group>"; };
-		A00000000000000000000150 /* FinancialCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/FinancialCalculator.swift"; sourceTree = "<group>"; };
-		A00000000000000000000152 /* FirestoreDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/FirestoreDataStore.swift"; sourceTree = "<group>"; };
-		A00000000000000000000154 /* NeoCoFounderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/NeoCoFounderService.swift"; sourceTree = "<group>"; };
-		A00000000000000000000156 /* NeoMLIntelligenceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/NeoMLIntelligenceEngine.swift"; sourceTree = "<group>"; };
-		A00000000000000000000158 /* PDFGeneratorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/PDFGeneratorService.swift"; sourceTree = "<group>"; };
-		A00000000000000000000160 /* SecurityServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/SecurityServices.swift"; sourceTree = "<group>"; };
-		A00000000000000000000162 /* SmartReminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/SmartReminderService.swift"; sourceTree = "<group>"; };
-		A00000000000000000000164 /* TaskPlannerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/TaskPlannerService.swift"; sourceTree = "<group>"; };
-		A00000000000000000000166 /* VoiceAssistantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/VoiceAssistantService.swift"; sourceTree = "<group>"; };
-		A00000000000000000000168 /* AIIntelligenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/AIModel/AIIntelligenceView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000170 /* VoiceAssistantOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/AIModel/VoiceAssistantOverlay.swift"; sourceTree = "<group>"; };
-		A00000000000000000000172 /* AddEditClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Clients/AddEditClientView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000174 /* ClientDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Clients/ClientDetailView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000176 /* ClientsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Clients/ClientsListView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000178 /* SalesPipelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Clients/SalesPipelineView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000180 /* ChartsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/ChartsSectionView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000182 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/DashboardView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000184 /* FinanceProfitCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/FinanceProfitCenterView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000186 /* FounderCommandCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/FounderCommandCenterView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000188 /* TasksManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/TasksManagementView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000190 /* TodayTasksSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/TodayTasksSectionView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000192 /* CreateInvoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/CreateInvoiceView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000194 /* InvoiceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/InvoiceDetailView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000196 /* InvoicesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/InvoicesListView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000198 /* PDFPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/PDFPreviewView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000200 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/MainTabView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000202 /* BusinessSettingsAndAuditViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/BusinessSettingsAndAuditViews.swift"; sourceTree = "<group>"; };
-		A00000000000000000000204 /* DocumentVaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/DocumentVaultView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000206 /* IntegrationsAndCurrencyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/IntegrationsAndCurrencyViews.swift"; sourceTree = "<group>"; };
-		A00000000000000000000208 /* PackageManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/PackageManagementView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000210 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/SettingsView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000212 /* AddEditWorkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/AddEditWorkerView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000214 /* AttendanceAndLeaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/AttendanceAndLeaveView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000216 /* GenerateSalarySlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/GenerateSalarySlipView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000218 /* WorkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkerDetailView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000220 /* WorkersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkersListView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000222 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
-		A00000000000000000000224 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
-		A00000000000000000000225 /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex.entitlements"; sourceTree = "<group>"; };
-		A00000000000000000000226 /* ExtendedModulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExtendedModulesTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000228 /* FinancialCalculationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FinancialCalculationsTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000230 /* PayrollAndPDFTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayrollAndPDFTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000232 /* SecurityAndBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecurityAndBackupTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000234 /* Gaurex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gaurex.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A00000000000000000000235 /* GaurexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GaurexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000126 /* DatasetSchemas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/DatasetSchemas.swift"; sourceTree = "<group>"; };
+		A00000000000000000000128 /* DocumentVaultItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/DocumentVaultItem.swift"; sourceTree = "<group>"; };
+		A00000000000000000000130 /* ExtendedBusinessModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/ExtendedBusinessModels.swift"; sourceTree = "<group>"; };
+		A00000000000000000000132 /* Invoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Invoice.swift"; sourceTree = "<group>"; };
+		A00000000000000000000134 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Package.swift"; sourceTree = "<group>"; };
+		A00000000000000000000136 /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Payment.swift"; sourceTree = "<group>"; };
+		A00000000000000000000138 /* PayrollRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/PayrollRecord.swift"; sourceTree = "<group>"; };
+		A00000000000000000000140 /* SalesLead.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/SalesLead.swift"; sourceTree = "<group>"; };
+		A00000000000000000000142 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Task.swift"; sourceTree = "<group>"; };
+		A00000000000000000000144 /* Worker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Models/Worker.swift"; sourceTree = "<group>"; };
+		A00000000000000000000146 /* AIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/AIService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000148 /* AuditAndBackupServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/AuditAndBackupServices.swift"; sourceTree = "<group>"; };
+		A00000000000000000000150 /* DocumentExtractionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/DocumentExtractionService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000152 /* FinancialCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/FinancialCalculator.swift"; sourceTree = "<group>"; };
+		A00000000000000000000154 /* FirestoreDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/FirestoreDataStore.swift"; sourceTree = "<group>"; };
+		A00000000000000000000156 /* MultilingualVoiceAIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/MultilingualVoiceAIService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000158 /* NeoCoFounderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/NeoCoFounderService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000160 /* NeoMLIntelligenceEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/NeoMLIntelligenceEngine.swift"; sourceTree = "<group>"; };
+		A00000000000000000000162 /* PDFGeneratorService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/PDFGeneratorService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000164 /* SecurityServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/SecurityServices.swift"; sourceTree = "<group>"; };
+		A00000000000000000000166 /* SmartReminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/SmartReminderService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000168 /* TaskPlannerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/TaskPlannerService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000170 /* VoiceAssistantService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Services/VoiceAssistantService.swift"; sourceTree = "<group>"; };
+		A00000000000000000000172 /* AIIntelligenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/AIModel/AIIntelligenceView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000174 /* VoiceAssistantOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/AIModel/VoiceAssistantOverlay.swift"; sourceTree = "<group>"; };
+		A00000000000000000000176 /* AddEditClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Clients/AddEditClientView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000178 /* ClientDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Clients/ClientDetailView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000180 /* ClientsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Clients/ClientsListView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000182 /* SalesPipelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Clients/SalesPipelineView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000184 /* ChartsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/ChartsSectionView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000186 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/DashboardView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000188 /* FinanceProfitCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/FinanceProfitCenterView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000190 /* FounderCommandCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/FounderCommandCenterView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000192 /* TasksManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/TasksManagementView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000194 /* TodayTasksSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Dashboard/TodayTasksSectionView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000196 /* CreateInvoiceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/CreateInvoiceView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000198 /* InvoiceDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/InvoiceDetailView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000200 /* InvoicesListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/InvoicesListView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000202 /* PDFPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/PDFPreviewView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000204 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/MainTabView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000206 /* BusinessSettingsAndAuditViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/BusinessSettingsAndAuditViews.swift"; sourceTree = "<group>"; };
+		A00000000000000000000208 /* DocumentVaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/DocumentVaultView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000210 /* IntegrationsAndCurrencyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/IntegrationsAndCurrencyViews.swift"; sourceTree = "<group>"; };
+		A00000000000000000000212 /* PackageManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/PackageManagementView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000214 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/SettingsView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000216 /* AddEditWorkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/AddEditWorkerView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000218 /* AttendanceAndLeaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/AttendanceAndLeaveView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000220 /* GenerateSalarySlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/GenerateSalarySlipView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000222 /* WorkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkerDetailView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000224 /* WorkersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkersListView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000226 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
+		A00000000000000000000228 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
+		A00000000000000000000229 /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex.entitlements"; sourceTree = "<group>"; };
+		A00000000000000000000230 /* ExtendedModulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExtendedModulesTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000232 /* FinancialCalculationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FinancialCalculationsTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000234 /* PayrollAndPDFTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayrollAndPDFTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000236 /* SecurityAndBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecurityAndBackupTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000238 /* Gaurex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gaurex.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000239 /* GaurexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GaurexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A00000000000000000000245 /* Frameworks */ = {
+		A00000000000000000000249 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000247 /* Frameworks */ = {
+		A00000000000000000000251 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -166,16 +170,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A00000000000000000000242 = {
+		A00000000000000000000246 = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000239 /* Gaurex */,
-				A00000000000000000000240 /* GaurexTests */,
-				A00000000000000000000241 /* Products */,
+				A00000000000000000000243 /* Gaurex */,
+				A00000000000000000000244 /* GaurexTests */,
+				A00000000000000000000245 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A00000000000000000000239 /* Gaurex */ = {
+		A00000000000000000000243 /* Gaurex */ = {
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000100 /* AppLaunchExperienceView.swift */,
@@ -191,77 +195,79 @@
 				A00000000000000000000120 /* BusinessGoal.swift */,
 				A00000000000000000000122 /* BusinessSettings.swift */,
 				A00000000000000000000124 /* Client.swift */,
-				A00000000000000000000126 /* DocumentVaultItem.swift */,
-				A00000000000000000000128 /* ExtendedBusinessModels.swift */,
-				A00000000000000000000130 /* Invoice.swift */,
-				A00000000000000000000132 /* Package.swift */,
-				A00000000000000000000134 /* Payment.swift */,
-				A00000000000000000000136 /* PayrollRecord.swift */,
-				A00000000000000000000138 /* SalesLead.swift */,
-				A00000000000000000000140 /* Task.swift */,
-				A00000000000000000000142 /* Worker.swift */,
-				A00000000000000000000144 /* AIService.swift */,
-				A00000000000000000000146 /* AuditAndBackupServices.swift */,
-				A00000000000000000000148 /* DocumentExtractionService.swift */,
-				A00000000000000000000150 /* FinancialCalculator.swift */,
-				A00000000000000000000152 /* FirestoreDataStore.swift */,
-				A00000000000000000000154 /* NeoCoFounderService.swift */,
-				A00000000000000000000156 /* NeoMLIntelligenceEngine.swift */,
-				A00000000000000000000158 /* PDFGeneratorService.swift */,
-				A00000000000000000000160 /* SecurityServices.swift */,
-				A00000000000000000000162 /* SmartReminderService.swift */,
-				A00000000000000000000164 /* TaskPlannerService.swift */,
-				A00000000000000000000166 /* VoiceAssistantService.swift */,
-				A00000000000000000000168 /* AIIntelligenceView.swift */,
-				A00000000000000000000170 /* VoiceAssistantOverlay.swift */,
-				A00000000000000000000172 /* AddEditClientView.swift */,
-				A00000000000000000000174 /* ClientDetailView.swift */,
-				A00000000000000000000176 /* ClientsListView.swift */,
-				A00000000000000000000178 /* SalesPipelineView.swift */,
-				A00000000000000000000180 /* ChartsSectionView.swift */,
-				A00000000000000000000182 /* DashboardView.swift */,
-				A00000000000000000000184 /* FinanceProfitCenterView.swift */,
-				A00000000000000000000186 /* FounderCommandCenterView.swift */,
-				A00000000000000000000188 /* TasksManagementView.swift */,
-				A00000000000000000000190 /* TodayTasksSectionView.swift */,
-				A00000000000000000000192 /* CreateInvoiceView.swift */,
-				A00000000000000000000194 /* InvoiceDetailView.swift */,
-				A00000000000000000000196 /* InvoicesListView.swift */,
-				A00000000000000000000198 /* PDFPreviewView.swift */,
-				A00000000000000000000200 /* MainTabView.swift */,
-				A00000000000000000000202 /* BusinessSettingsAndAuditViews.swift */,
-				A00000000000000000000204 /* DocumentVaultView.swift */,
-				A00000000000000000000206 /* IntegrationsAndCurrencyViews.swift */,
-				A00000000000000000000208 /* PackageManagementView.swift */,
-				A00000000000000000000210 /* SettingsView.swift */,
-				A00000000000000000000212 /* AddEditWorkerView.swift */,
-				A00000000000000000000214 /* AttendanceAndLeaveView.swift */,
-				A00000000000000000000216 /* GenerateSalarySlipView.swift */,
-				A00000000000000000000218 /* WorkerDetailView.swift */,
-				A00000000000000000000220 /* WorkersListView.swift */,
-				A00000000000000000000222 /* Assets.xcassets */,
-				A00000000000000000000224 /* Info.plist */,
-				A00000000000000000000225 /* Gaurex.entitlements */,
+				A00000000000000000000126 /* DatasetSchemas.swift */,
+				A00000000000000000000128 /* DocumentVaultItem.swift */,
+				A00000000000000000000130 /* ExtendedBusinessModels.swift */,
+				A00000000000000000000132 /* Invoice.swift */,
+				A00000000000000000000134 /* Package.swift */,
+				A00000000000000000000136 /* Payment.swift */,
+				A00000000000000000000138 /* PayrollRecord.swift */,
+				A00000000000000000000140 /* SalesLead.swift */,
+				A00000000000000000000142 /* Task.swift */,
+				A00000000000000000000144 /* Worker.swift */,
+				A00000000000000000000146 /* AIService.swift */,
+				A00000000000000000000148 /* AuditAndBackupServices.swift */,
+				A00000000000000000000150 /* DocumentExtractionService.swift */,
+				A00000000000000000000152 /* FinancialCalculator.swift */,
+				A00000000000000000000154 /* FirestoreDataStore.swift */,
+				A00000000000000000000156 /* MultilingualVoiceAIService.swift */,
+				A00000000000000000000158 /* NeoCoFounderService.swift */,
+				A00000000000000000000160 /* NeoMLIntelligenceEngine.swift */,
+				A00000000000000000000162 /* PDFGeneratorService.swift */,
+				A00000000000000000000164 /* SecurityServices.swift */,
+				A00000000000000000000166 /* SmartReminderService.swift */,
+				A00000000000000000000168 /* TaskPlannerService.swift */,
+				A00000000000000000000170 /* VoiceAssistantService.swift */,
+				A00000000000000000000172 /* AIIntelligenceView.swift */,
+				A00000000000000000000174 /* VoiceAssistantOverlay.swift */,
+				A00000000000000000000176 /* AddEditClientView.swift */,
+				A00000000000000000000178 /* ClientDetailView.swift */,
+				A00000000000000000000180 /* ClientsListView.swift */,
+				A00000000000000000000182 /* SalesPipelineView.swift */,
+				A00000000000000000000184 /* ChartsSectionView.swift */,
+				A00000000000000000000186 /* DashboardView.swift */,
+				A00000000000000000000188 /* FinanceProfitCenterView.swift */,
+				A00000000000000000000190 /* FounderCommandCenterView.swift */,
+				A00000000000000000000192 /* TasksManagementView.swift */,
+				A00000000000000000000194 /* TodayTasksSectionView.swift */,
+				A00000000000000000000196 /* CreateInvoiceView.swift */,
+				A00000000000000000000198 /* InvoiceDetailView.swift */,
+				A00000000000000000000200 /* InvoicesListView.swift */,
+				A00000000000000000000202 /* PDFPreviewView.swift */,
+				A00000000000000000000204 /* MainTabView.swift */,
+				A00000000000000000000206 /* BusinessSettingsAndAuditViews.swift */,
+				A00000000000000000000208 /* DocumentVaultView.swift */,
+				A00000000000000000000210 /* IntegrationsAndCurrencyViews.swift */,
+				A00000000000000000000212 /* PackageManagementView.swift */,
+				A00000000000000000000214 /* SettingsView.swift */,
+				A00000000000000000000216 /* AddEditWorkerView.swift */,
+				A00000000000000000000218 /* AttendanceAndLeaveView.swift */,
+				A00000000000000000000220 /* GenerateSalarySlipView.swift */,
+				A00000000000000000000222 /* WorkerDetailView.swift */,
+				A00000000000000000000224 /* WorkersListView.swift */,
+				A00000000000000000000226 /* Assets.xcassets */,
+				A00000000000000000000228 /* Info.plist */,
+				A00000000000000000000229 /* Gaurex.entitlements */,
 			);
 			path = Gaurex;
 			sourceTree = "<group>";
 		};
-		A00000000000000000000240 /* GaurexTests */ = {
+		A00000000000000000000244 /* GaurexTests */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000226 /* ExtendedModulesTests.swift */,
-				A00000000000000000000228 /* FinancialCalculationsTests.swift */,
-				A00000000000000000000230 /* PayrollAndPDFTests.swift */,
-				A00000000000000000000232 /* SecurityAndBackupTests.swift */,
+				A00000000000000000000230 /* ExtendedModulesTests.swift */,
+				A00000000000000000000232 /* FinancialCalculationsTests.swift */,
+				A00000000000000000000234 /* PayrollAndPDFTests.swift */,
+				A00000000000000000000236 /* SecurityAndBackupTests.swift */,
 			);
 			path = GaurexTests;
 			sourceTree = "<group>";
 		};
-		A00000000000000000000241 /* Products */ = {
+		A00000000000000000000245 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000234 /* Gaurex.app */,
-				A00000000000000000000235 /* GaurexTests.xctest */,
+				A00000000000000000000238 /* Gaurex.app */,
+				A00000000000000000000239 /* GaurexTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -269,13 +275,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A00000000000000000000236 /* Gaurex */ = {
+		A00000000000000000000240 /* Gaurex */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A00000000000000000000256 /* Build configuration list for PBXNativeTarget "Gaurex" */;
+			buildConfigurationList = A00000000000000000000260 /* Build configuration list for PBXNativeTarget "Gaurex" */;
 			buildPhases = (
-				A00000000000000000000243 /* Sources */,
-				A00000000000000000000245 /* Frameworks */,
-				A00000000000000000000244 /* Resources */,
+				A00000000000000000000247 /* Sources */,
+				A00000000000000000000249 /* Frameworks */,
+				A00000000000000000000248 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -283,16 +289,16 @@
 			);
 			name = Gaurex;
 			productName = Gaurex;
-			productReference = A00000000000000000000234 /* Gaurex.app */;
+			productReference = A00000000000000000000238 /* Gaurex.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A00000000000000000000237 /* GaurexTests */ = {
+		A00000000000000000000241 /* GaurexTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A00000000000000000000257 /* Build configuration list for PBXNativeTarget "GaurexTests" */;
+			buildConfigurationList = A00000000000000000000261 /* Build configuration list for PBXNativeTarget "GaurexTests" */;
 			buildPhases = (
-				A00000000000000000000246 /* Sources */,
-				A00000000000000000000247 /* Frameworks */,
-				A00000000000000000000248 /* Resources */,
+				A00000000000000000000250 /* Sources */,
+				A00000000000000000000251 /* Frameworks */,
+				A00000000000000000000252 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -300,28 +306,28 @@
 			);
 			name = GaurexTests;
 			productName = GaurexTests;
-			productReference = A00000000000000000000235 /* GaurexTests.xctest */;
+			productReference = A00000000000000000000239 /* GaurexTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A00000000000000000000238 /* Project object */ = {
+		A00000000000000000000242 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
-					A00000000000000000000236 = {
+					A00000000000000000000240 = {
 						CreatedOnToolsVersion = 15.4;
 					};
-					A00000000000000000000237 = {
+					A00000000000000000000241 = {
 						CreatedOnToolsVersion = 15.4;
-						TestTargetID = A00000000000000000000236;
+						TestTargetID = A00000000000000000000240;
 					};
 				};
 			};
-			buildConfigurationList = A00000000000000000000255 /* Build configuration list for PBXProject "Gaurex" */;
+			buildConfigurationList = A00000000000000000000259 /* Build configuration list for PBXProject "Gaurex" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -329,27 +335,27 @@
 				en,
 				Base,
 			);
-			mainGroup = A00000000000000000000242;
-			productRefGroup = A00000000000000000000241 /* Products */;
+			mainGroup = A00000000000000000000246;
+			productRefGroup = A00000000000000000000245 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A00000000000000000000236 /* Gaurex */,
-				A00000000000000000000237 /* GaurexTests */,
+				A00000000000000000000240 /* Gaurex */,
+				A00000000000000000000241 /* GaurexTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A00000000000000000000244 /* Resources */ = {
+		A00000000000000000000248 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A00000000000000000000223 /* Assets.xcassets in Resources */,
+				A00000000000000000000227 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000248 /* Resources */ = {
+		A00000000000000000000252 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -359,7 +365,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A00000000000000000000243 /* Sources */ = {
+		A00000000000000000000247 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -376,72 +382,74 @@
 				A00000000000000000000121 /* BusinessGoal.swift in Sources */,
 				A00000000000000000000123 /* BusinessSettings.swift in Sources */,
 				A00000000000000000000125 /* Client.swift in Sources */,
-				A00000000000000000000127 /* DocumentVaultItem.swift in Sources */,
-				A00000000000000000000129 /* ExtendedBusinessModels.swift in Sources */,
-				A00000000000000000000131 /* Invoice.swift in Sources */,
-				A00000000000000000000133 /* Package.swift in Sources */,
-				A00000000000000000000135 /* Payment.swift in Sources */,
-				A00000000000000000000137 /* PayrollRecord.swift in Sources */,
-				A00000000000000000000139 /* SalesLead.swift in Sources */,
-				A00000000000000000000141 /* Task.swift in Sources */,
-				A00000000000000000000143 /* Worker.swift in Sources */,
-				A00000000000000000000145 /* AIService.swift in Sources */,
-				A00000000000000000000147 /* AuditAndBackupServices.swift in Sources */,
-				A00000000000000000000149 /* DocumentExtractionService.swift in Sources */,
-				A00000000000000000000151 /* FinancialCalculator.swift in Sources */,
-				A00000000000000000000153 /* FirestoreDataStore.swift in Sources */,
-				A00000000000000000000155 /* NeoCoFounderService.swift in Sources */,
-				A00000000000000000000157 /* NeoMLIntelligenceEngine.swift in Sources */,
-				A00000000000000000000159 /* PDFGeneratorService.swift in Sources */,
-				A00000000000000000000161 /* SecurityServices.swift in Sources */,
-				A00000000000000000000163 /* SmartReminderService.swift in Sources */,
-				A00000000000000000000165 /* TaskPlannerService.swift in Sources */,
-				A00000000000000000000167 /* VoiceAssistantService.swift in Sources */,
-				A00000000000000000000169 /* AIIntelligenceView.swift in Sources */,
-				A00000000000000000000171 /* VoiceAssistantOverlay.swift in Sources */,
-				A00000000000000000000173 /* AddEditClientView.swift in Sources */,
-				A00000000000000000000175 /* ClientDetailView.swift in Sources */,
-				A00000000000000000000177 /* ClientsListView.swift in Sources */,
-				A00000000000000000000179 /* SalesPipelineView.swift in Sources */,
-				A00000000000000000000181 /* ChartsSectionView.swift in Sources */,
-				A00000000000000000000183 /* DashboardView.swift in Sources */,
-				A00000000000000000000185 /* FinanceProfitCenterView.swift in Sources */,
-				A00000000000000000000187 /* FounderCommandCenterView.swift in Sources */,
-				A00000000000000000000189 /* TasksManagementView.swift in Sources */,
-				A00000000000000000000191 /* TodayTasksSectionView.swift in Sources */,
-				A00000000000000000000193 /* CreateInvoiceView.swift in Sources */,
-				A00000000000000000000195 /* InvoiceDetailView.swift in Sources */,
-				A00000000000000000000197 /* InvoicesListView.swift in Sources */,
-				A00000000000000000000199 /* PDFPreviewView.swift in Sources */,
-				A00000000000000000000201 /* MainTabView.swift in Sources */,
-				A00000000000000000000203 /* BusinessSettingsAndAuditViews.swift in Sources */,
-				A00000000000000000000205 /* DocumentVaultView.swift in Sources */,
-				A00000000000000000000207 /* IntegrationsAndCurrencyViews.swift in Sources */,
-				A00000000000000000000209 /* PackageManagementView.swift in Sources */,
-				A00000000000000000000211 /* SettingsView.swift in Sources */,
-				A00000000000000000000213 /* AddEditWorkerView.swift in Sources */,
-				A00000000000000000000215 /* AttendanceAndLeaveView.swift in Sources */,
-				A00000000000000000000217 /* GenerateSalarySlipView.swift in Sources */,
-				A00000000000000000000219 /* WorkerDetailView.swift in Sources */,
-				A00000000000000000000221 /* WorkersListView.swift in Sources */,
+				A00000000000000000000127 /* DatasetSchemas.swift in Sources */,
+				A00000000000000000000129 /* DocumentVaultItem.swift in Sources */,
+				A00000000000000000000131 /* ExtendedBusinessModels.swift in Sources */,
+				A00000000000000000000133 /* Invoice.swift in Sources */,
+				A00000000000000000000135 /* Package.swift in Sources */,
+				A00000000000000000000137 /* Payment.swift in Sources */,
+				A00000000000000000000139 /* PayrollRecord.swift in Sources */,
+				A00000000000000000000141 /* SalesLead.swift in Sources */,
+				A00000000000000000000143 /* Task.swift in Sources */,
+				A00000000000000000000145 /* Worker.swift in Sources */,
+				A00000000000000000000147 /* AIService.swift in Sources */,
+				A00000000000000000000149 /* AuditAndBackupServices.swift in Sources */,
+				A00000000000000000000151 /* DocumentExtractionService.swift in Sources */,
+				A00000000000000000000153 /* FinancialCalculator.swift in Sources */,
+				A00000000000000000000155 /* FirestoreDataStore.swift in Sources */,
+				A00000000000000000000157 /* MultilingualVoiceAIService.swift in Sources */,
+				A00000000000000000000159 /* NeoCoFounderService.swift in Sources */,
+				A00000000000000000000161 /* NeoMLIntelligenceEngine.swift in Sources */,
+				A00000000000000000000163 /* PDFGeneratorService.swift in Sources */,
+				A00000000000000000000165 /* SecurityServices.swift in Sources */,
+				A00000000000000000000167 /* SmartReminderService.swift in Sources */,
+				A00000000000000000000169 /* TaskPlannerService.swift in Sources */,
+				A00000000000000000000171 /* VoiceAssistantService.swift in Sources */,
+				A00000000000000000000173 /* AIIntelligenceView.swift in Sources */,
+				A00000000000000000000175 /* VoiceAssistantOverlay.swift in Sources */,
+				A00000000000000000000177 /* AddEditClientView.swift in Sources */,
+				A00000000000000000000179 /* ClientDetailView.swift in Sources */,
+				A00000000000000000000181 /* ClientsListView.swift in Sources */,
+				A00000000000000000000183 /* SalesPipelineView.swift in Sources */,
+				A00000000000000000000185 /* ChartsSectionView.swift in Sources */,
+				A00000000000000000000187 /* DashboardView.swift in Sources */,
+				A00000000000000000000189 /* FinanceProfitCenterView.swift in Sources */,
+				A00000000000000000000191 /* FounderCommandCenterView.swift in Sources */,
+				A00000000000000000000193 /* TasksManagementView.swift in Sources */,
+				A00000000000000000000195 /* TodayTasksSectionView.swift in Sources */,
+				A00000000000000000000197 /* CreateInvoiceView.swift in Sources */,
+				A00000000000000000000199 /* InvoiceDetailView.swift in Sources */,
+				A00000000000000000000201 /* InvoicesListView.swift in Sources */,
+				A00000000000000000000203 /* PDFPreviewView.swift in Sources */,
+				A00000000000000000000205 /* MainTabView.swift in Sources */,
+				A00000000000000000000207 /* BusinessSettingsAndAuditViews.swift in Sources */,
+				A00000000000000000000209 /* DocumentVaultView.swift in Sources */,
+				A00000000000000000000211 /* IntegrationsAndCurrencyViews.swift in Sources */,
+				A00000000000000000000213 /* PackageManagementView.swift in Sources */,
+				A00000000000000000000215 /* SettingsView.swift in Sources */,
+				A00000000000000000000217 /* AddEditWorkerView.swift in Sources */,
+				A00000000000000000000219 /* AttendanceAndLeaveView.swift in Sources */,
+				A00000000000000000000221 /* GenerateSalarySlipView.swift in Sources */,
+				A00000000000000000000223 /* WorkerDetailView.swift in Sources */,
+				A00000000000000000000225 /* WorkersListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000246 /* Sources */ = {
+		A00000000000000000000250 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A00000000000000000000227 /* ExtendedModulesTests.swift in Sources */,
-				A00000000000000000000229 /* FinancialCalculationsTests.swift in Sources */,
-				A00000000000000000000231 /* PayrollAndPDFTests.swift in Sources */,
-				A00000000000000000000233 /* SecurityAndBackupTests.swift in Sources */,
+				A00000000000000000000231 /* ExtendedModulesTests.swift in Sources */,
+				A00000000000000000000233 /* FinancialCalculationsTests.swift in Sources */,
+				A00000000000000000000235 /* PayrollAndPDFTests.swift in Sources */,
+				A00000000000000000000237 /* SecurityAndBackupTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		A00000000000000000000253 /* Debug */ = {
+		A00000000000000000000257 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -468,7 +476,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000254 /* Release */ = {
+		A00000000000000000000258 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -490,7 +498,7 @@
 			};
 			name = Release;
 		};
-		A00000000000000000000249 /* Debug */ = {
+		A00000000000000000000253 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -513,7 +521,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000250 /* Release */ = {
+		A00000000000000000000254 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -536,7 +544,7 @@
 			};
 			name = Release;
 		};
-		A00000000000000000000251 /* Debug */ = {
+		A00000000000000000000255 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -551,7 +559,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000252 /* Release */ = {
+		A00000000000000000000256 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -569,7 +577,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A00000000000000000000255 /* Build configuration list for PBXProject "Gaurex" */ = {
+		A00000000000000000000259 /* Build configuration list for PBXProject "Gaurex" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000257 /* Debug */,
+				A00000000000000000000258 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000260 /* Build configuration list for PBXNativeTarget "Gaurex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A00000000000000000000253 /* Debug */,
@@ -578,20 +595,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A00000000000000000000256 /* Build configuration list for PBXNativeTarget "Gaurex" */ = {
+		A00000000000000000000261 /* Build configuration list for PBXNativeTarget "GaurexTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A00000000000000000000249 /* Debug */,
-				A00000000000000000000250 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A00000000000000000000257 /* Build configuration list for PBXNativeTarget "GaurexTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A00000000000000000000251 /* Debug */,
-				A00000000000000000000252 /* Release */,
+				A00000000000000000000255 /* Debug */,
+				A00000000000000000000256 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -599,5 +607,5 @@
 /* End XCConfigurationList section */
 
 	};
-	rootObject = A00000000000000000000238 /* Project object */;
+	rootObject = A00000000000000000000242 /* Project object */;
 }

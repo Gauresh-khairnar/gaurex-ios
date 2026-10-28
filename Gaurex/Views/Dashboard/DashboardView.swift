@@ -42,14 +42,15 @@ public struct DashboardView: View {
         return "Good Evening,"
     }
     
-    private let deepPurple = Color(red: 0.18, green: 0.08, blue: 0.28)
-    private let goldAccent = Color(red: 0.90, green: 0.65, blue: 0.15)
+    private let deepPurple = Color.gaurexDeepPlum
+    private let goldAccent = Color.gaurexWarmGold
+    private let mistGray = Color.gaurexMistGray
     
     public var body: some View {
         NavigationStack {
             ZStack {
-                // Background tint matching screenshot
-                (colorScheme == .dark ? Color(red: 0.07, green: 0.07, blue: 0.09) : Color(red: 0.96, green: 0.96, blue: 0.98))
+                // Background tint with subtle Mist Gray (#DDE3E8)
+                (colorScheme == .dark ? Color(red: 0.07, green: 0.07, blue: 0.09) : mistGray.opacity(0.35))
                     .ignoresSafeArea()
                 
                 ScrollView(showsIndicators: false) {
