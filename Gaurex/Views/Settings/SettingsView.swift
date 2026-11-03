@@ -25,6 +25,7 @@ public struct SettingsView: View {
     @State private var companyName: String = "GAUREX"
     @State private var showingResetAlert: Bool = false
     @State private var showingGhostSimulatorSheet: Bool = false
+    @State private var showingWarGameSheet: Bool = false
     
     private let accentColors: [Color] = [
         Color(red: 0.18, green: 0.08, blue: 0.28), // Deep Royal Purple
@@ -179,102 +180,11 @@ public struct SettingsView: View {
                         )
                         .padding(.horizontal, 24)
                         
-                        // MARK: - Appearance & Theme Section
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("APPEARANCE & THEME")
-                                .font(.system(size: 12, weight: .bold))
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 24)
-                            
-                            // 4 Theme Cards Grid
-                            LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                                ThemeCard(
-                                    title: "Light",
-                                    subtitle: "Clean & Fresh",
-                                    icon: "sun.max.fill",
-                                    isSelected: theme.currentTheme == .light || theme.currentTheme == .pureWhite,
-                                    color: .orange
-                                ) {
-                                    withAnimation(MotionTokens.interactiveSpring) {
-                                        theme.currentTheme = .light
-                                        store.settings.activeThemeRaw = AppTheme.light.rawValue
-                                        store.saveSettings()
-                                    }
-                                    MotionTokens.selection()
-                                }
-                                
-                                ThemeCard(
-                                    title: "Dark",
-                                    subtitle: "Bold & Focused",
-                                    icon: "moon.stars.fill",
-                                    isSelected: theme.currentTheme == .dark || theme.currentTheme == .midnight,
-                                    color: .indigo
-                                ) {
-                                    withAnimation(MotionTokens.interactiveSpring) {
-                                        theme.currentTheme = .dark
-                                        store.settings.activeThemeRaw = AppTheme.dark.rawValue
-                                        store.saveSettings()
-                                    }
-                                    MotionTokens.selection()
-                                }
-                                
-                                ThemeCard(
-                                    title: "Purple",
-                                    subtitle: "Modern & Elegant",
-                                    icon: "sparkles",
-                                    isSelected: theme.currentTheme == .purple,
-                                    color: Color(red: 0.55, green: 0.25, blue: 0.75)
-                                ) {
-                                    withAnimation(MotionTokens.interactiveSpring) {
-                                        theme.currentTheme = .purple
-                                        store.settings.activeThemeRaw = AppTheme.purple.rawValue
-                                        store.saveSettings()
-                                    }
-                                    MotionTokens.selection()
-                                }
-                                
-                                ThemeCard(
-                                    title: "Gold",
-                                    subtitle: "Luxury & Premium",
-                                    icon: "crown.fill",
-                                    isSelected: theme.currentTheme == .gold || theme.currentTheme == .gaurexAccent,
-                                    color: Color(red: 0.90, green: 0.65, blue: 0.15)
-                                ) {
-                                    withAnimation(MotionTokens.interactiveSpring) {
-                                        theme.currentTheme = .gold
-                                        store.settings.activeThemeRaw = AppTheme.gold.rawValue
-                                        store.saveSettings()
-                                    }
-                                    MotionTokens.selection()
-                                }
-                            }
-                            .padding(.horizontal, 24)
-                            
-                            // Theme Color Circles
-                            HStack(spacing: 16) {
-                                ForEach(0..<accentColors.count, id: \.self) { idx in
-                                    Button {
-                                        withAnimation(MotionTokens.interactiveSpring) {
-                                            selectedColorIndex = idx
-                                        }
-                                        MotionTokens.selection()
-                                    } label: {
-                                        Circle()
-                                            .fill(accentColors[idx])
-                                            .frame(width: 32, height: 32)
-                                            .overlay(
-                                                Circle()
-                                                    .stroke(Color.primary.opacity(selectedColorIndex == idx ? 0.8 : 0.15), lineWidth: selectedColorIndex == idx ? 3 : 1)
-                                                    .padding(-3)
-                                            )
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                                Spacer()
-                            }
-                            .padding(.horizontal, 24)
-                            .padding(.top, 4)
-                        }
+                        // MARK: - Appearance & Perfected Themes Section
+                        appearanceAndThemeSection
+                        
+                        // MARK: - Application Accent Color Section
+                        applicationAccentColorSection
                         
                         // MARK: - Business Settings Section
                         VStack(alignment: .leading, spacing: 10) {
@@ -431,70 +341,8 @@ public struct SettingsView: View {
                             .padding(.horizontal, 24)
                         }
                         
-                        // MARK: - Ghost Mode & Executive Privacy Section
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text("GHOST MODE & STEALTH PRIVACY")
-                                .font(.system(size: 12, weight: .bold))
-                                .foregroundColor(.secondary)
-                                .padding(.horizontal, 24)
-                            
-                            VStack(spacing: 0) {
-                                // 1. Ghost Stealth Mode Toggle
-                                HStack(spacing: 14) {
-                                    Image(systemName: store.isStealthPrivacyActive ? "eye.slash.fill" : "eye.fill")
-                                        .font(.system(size: 16, weight: .semibold))
-                                        .foregroundColor(store.isStealthPrivacyActive ? .red : Color.gaurexDeepPlum)
-                                        .frame(width: 32, height: 32)
-                                        .background((store.isStealthPrivacyActive ? Color.red : Color.gaurexDeepPlum).opacity(0.12))
-                                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                                    
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text("Ghost Stealth Mode")
-                                            .font(.system(size: 15, weight: .semibold))
-                                            .foregroundColor(.primary)
-                                        Text(store.isStealthPrivacyActive ? "Numbers hidden behind frosted shield" : "Tap to disguise all ledger balances")
-                                            .font(.system(size: 12))
-                                            .foregroundColor(.secondary)
-                                    }
-                                    
-                                    Spacer()
-                                    
-                                    Toggle("", isOn: $store.isStealthPrivacyActive)
-                                        .labelsHidden()
-                                        .tint(Color.gaurexWarmGold)
-                                        .onChange(of: store.isStealthPrivacyActive) { _ in
-                                            MotionTokens.impact(style: .medium)
-                                        }
-                                }
-                                .padding(.horizontal, 24)
-                                .padding(.vertical, 12)
-                                
-                                Divider().padding(.leading, 56)
-                                
-                                // 2. Ghost Runway Simulator Quick Access
-                                Button {
-                                    showingGhostSimulatorSheet = true
-                                    MotionTokens.selection()
-                                } label: {
-                                    SettingsRow(
-                                        icon: "wand.and.stars",
-                                        iconColor: .orange,
-                                        title: "Ghost Runway Simulator",
-                                        subtitle: "Run what-if strategic business war games",
-                                        badgeText: "War Games"
-                                    )
-                                }
-                                .buttonStyle(.plain)
-                            }
-                            .background(Color(uiColor: .systemBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-                            .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
-                            )
-                            .padding(.horizontal, 24)
-                        }
+                        // MARK: - War Game Combat Drills & Ghost Mode
+                        warGameAndGhostSection
                         
                         // MARK: - System & Support Section
                         VStack(alignment: .leading, spacing: 10) {
@@ -619,6 +467,12 @@ public struct SettingsView: View {
                     }
                 )
             }
+            .sheet(isPresented: $showingGhostSimulatorSheet) {
+                GhostRunwaySimulatorSheet()
+            }
+            .sheet(isPresented: $showingWarGameSheet) {
+                WarGameCommandCenterView()
+            }
             .alert("Confirm Lock / Session Exit", isPresented: $showingLogoutAlert) {
                 Button("Lock Application", role: .destructive) {
                     bioAuth.lockApp()
@@ -627,6 +481,259 @@ public struct SettingsView: View {
             } message: {
                 Text("This will immediately terminate the current session and require Face ID or passcode to re-enter GAUREX.")
             }
+        }
+    }
+    
+    // MARK: - Subviews for Themes, Colors & War Game
+    @ViewBuilder
+    private var appearanceAndThemeSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("APPEARANCE & THEMES")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.secondary)
+                Spacer()
+                Text(theme.currentTheme.rawValue)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(theme.accentColor)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 2)
+                    .background(theme.accentColor.opacity(0.12))
+                    .clipShape(Capsule())
+            }
+            .padding(.horizontal, 24)
+            
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                ForEach(AppTheme.allCases) { th in
+                    ThemeCard(
+                        title: th.rawValue,
+                        subtitle: th.subtitle,
+                        icon: th.iconName,
+                        isSelected: theme.currentTheme == th,
+                        color: themeColorFor(th)
+                    ) {
+                        withAnimation(MotionTokens.interactiveSpring) {
+                            theme.currentTheme = th
+                            store.settings.activeThemeRaw = th.rawValue
+                            store.saveSettings()
+                        }
+                        GaurexSoundEffectsService.shared.playMilestoneCompletedSound()
+                    }
+                }
+            }
+            .padding(.horizontal, 24)
+        }
+    }
+    
+    @ViewBuilder
+    private var applicationAccentColorSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("APPLICATION ACCENT COLOR")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.secondary)
+                Spacer()
+                Text(theme.currentAccentColor.rawValue)
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundColor(theme.currentAccentColor.color)
+            }
+            .padding(.horizontal, 24)
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(AppAccentColor.allCases) { acc in
+                        let isSelected = theme.currentAccentColor == acc
+                        Button {
+                            withAnimation(MotionTokens.interactiveSpring) {
+                                theme.currentAccentColor = acc
+                            }
+                            GaurexSoundEffectsService.shared.playStealthModeClick()
+                        } label: {
+                            VStack(spacing: 6) {
+                                ZStack {
+                                    Circle()
+                                        .fill(acc.color)
+                                        .frame(width: 36, height: 36)
+                                        .shadow(color: acc.color.opacity(0.4), radius: isSelected ? 6 : 2)
+                                    
+                                    if isSelected {
+                                        Image(systemName: "checkmark")
+                                            .font(.system(size: 14, weight: .bold))
+                                            .foregroundColor(.white)
+                                    }
+                                }
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.primary.opacity(isSelected ? 0.9 : 0.15), lineWidth: isSelected ? 2.5 : 1)
+                                        .padding(-3)
+                                )
+                                
+                                Text(acc.rawValue)
+                                    .font(.system(size: 10, weight: isSelected ? .bold : .medium))
+                                    .foregroundColor(isSelected ? .primary : .secondary)
+                                    .lineLimit(1)
+                            }
+                            .frame(width: 78)
+                            .padding(.vertical, 8)
+                            .background(isSelected ? theme.cardBackground : Color.clear)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(isSelected ? acc.color.opacity(0.5) : Color.clear, lineWidth: 1)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 4)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var warGameAndGhostSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Text("STRATEGIC WAR GAME & GHOST PRIVACY")
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.secondary)
+                Spacer()
+                if theme.isWarGameActive {
+                    HStack(spacing: 4) {
+                        Circle().fill(Color.red).frame(width: 6, height: 6)
+                        Text("DEFCON \(theme.warGameDefconLevel) ACTIVE")
+                            .font(.system(size: 10, weight: .black))
+                            .foregroundColor(.red)
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Color.red.opacity(0.12))
+                    .clipShape(Capsule())
+                }
+            }
+            .padding(.horizontal, 24)
+            
+            VStack(spacing: 0) {
+                // 1. War Game Mode Master Toggle
+                HStack(spacing: 14) {
+                    Image(systemName: "bolt.shield.fill")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(theme.isWarGameActive ? .red : Color.gaurexWarmGold)
+                        .frame(width: 32, height: 32)
+                        .background((theme.isWarGameActive ? Color.red : Color.gaurexWarmGold).opacity(0.15))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("War Game Simulation Mode")
+                            .font(.system(size: 15, weight: .bold))
+                            .foregroundColor(.primary)
+                        Text(theme.isWarGameActive ? "Active strategic combat drills & runway defense" : "Turn on to simulate market stress & crisis drills")
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                    
+                    Toggle("", isOn: $theme.isWarGameActive)
+                        .labelsHidden()
+                        .tint(.red)
+                        .onChange(of: theme.isWarGameActive) { active in
+                            GaurexSoundEffectsService.shared.playStealthModeClick()
+                            if active {
+                                showingWarGameSheet = true
+                            }
+                        }
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+                
+                Divider().padding(.leading, 56)
+                
+                // 2. Launch War Room Command Center
+                Button {
+                    showingWarGameSheet = true
+                    GaurexSoundEffectsService.shared.playStealthModeClick()
+                } label: {
+                    SettingsRow(
+                        icon: "shield.checkered",
+                        iconColor: .red,
+                        title: "War Game Command Center",
+                        subtitle: "Defcon threat levels, black swan churn & revenue blitz",
+                        badgeText: theme.isWarGameActive ? "ACTIVE" : "Launch"
+                    )
+                }
+                .buttonStyle(.plain)
+                
+                Divider().padding(.leading, 56)
+                
+                // 3. Ghost Runway Simulator
+                Button {
+                    showingGhostSimulatorSheet = true
+                    MotionTokens.selection()
+                } label: {
+                    SettingsRow(
+                        icon: "wand.and.stars",
+                        iconColor: .orange,
+                        title: "Ghost Runway Simulator",
+                        subtitle: "What-if mathematical runway cashflow projections",
+                        badgeText: "Simulation"
+                    )
+                }
+                .buttonStyle(.plain)
+                
+                Divider().padding(.leading, 56)
+                
+                // 4. Ghost Stealth Mode Toggle
+                HStack(spacing: 14) {
+                    Image(systemName: store.isStealthPrivacyActive ? "eye.slash.fill" : "eye.fill")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(store.isStealthPrivacyActive ? .purple : Color.gaurexDeepPlum)
+                        .frame(width: 32, height: 32)
+                        .background((store.isStealthPrivacyActive ? Color.purple : Color.gaurexDeepPlum).opacity(0.12))
+                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Ghost Stealth Privacy")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(.primary)
+                        Text(store.isStealthPrivacyActive ? "Numbers frosted from prying eyes" : "Disguise ledger figures in public")
+                            .font(.system(size: 12))
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                    
+                    Toggle("", isOn: $store.isStealthPrivacyActive)
+                        .labelsHidden()
+                        .tint(Color.gaurexWarmGold)
+                        .onChange(of: store.isStealthPrivacyActive) { _ in
+                            GaurexSoundEffectsService.shared.playStealthModeClick()
+                        }
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+            }
+            .background(Color(uiColor: .systemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .shadow(color: Color.black.opacity(0.04), radius: 8, y: 3)
+            .overlay(
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                    .stroke(Color.primary.opacity(0.06), lineWidth: 0.8)
+            )
+            .padding(.horizontal, 24)
+        }
+    }
+    
+    private func themeColorFor(_ th: AppTheme) -> Color {
+        switch th {
+        case .light, .pureWhite: return .orange
+        case .dark, .midnight: return .indigo
+        case .purple, .gaurexAccent: return Color.gaurexDeepPlum
+        case .gold: return Color.gaurexWarmGold
+        case .oceanBlue: return Color(red: 0x1E / 255.0, green: 0x60 / 255.0, blue: 0xFF / 255.0)
+        case .graphite: return Color(red: 0x64 / 255.0, green: 0x74 / 255.0, blue: 0x8B / 255.0)
+        case .system: return .primary
         }
     }
     
@@ -676,7 +783,7 @@ private struct ThemeCard: View {
                     if isSelected {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(Color(red: 0.18, green: 0.08, blue: 0.28))
+                            .foregroundColor(ThemeManager.shared.accentColor)
                     }
                 }
                 
@@ -695,7 +802,7 @@ private struct ThemeCard: View {
             .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(isSelected ? Color(red: 0.18, green: 0.08, blue: 0.28) : Color.primary.opacity(0.06), lineWidth: isSelected ? 2 : 0.8)
+                    .stroke(isSelected ? ThemeManager.shared.accentColor : Color.primary.opacity(0.06), lineWidth: isSelected ? 2 : 0.8)
             )
             .shadow(color: Color.black.opacity(0.03), radius: 6, y: 2)
         }
