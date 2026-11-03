@@ -167,11 +167,12 @@ public struct DocumentVaultView: View {
             EmptyStateView(
                 icon: "doc.text.magnifyingglass",
                 title: "Vault is Empty",
-                subtitle: searchText.isEmpty ? "Tap 'Scan via Camera' or 'Upload Gallery' to add business contracts, GST certificates, and receipts." : "No documents match '\(searchText)'",
-                actionTitle: searchText.isEmpty ? "Add First Document" : nil
-            ) {
-                showingUploadModal = true
-            }
+                description: searchText.isEmpty ? "Tap 'Scan via Camera' or 'Upload Gallery' to add business contracts, GST certificates, and receipts." : "No documents match '\(searchText)'",
+                actionTitle: searchText.isEmpty ? "Add First Document" : nil,
+                action: {
+                    showingUploadModal = true
+                }
+            )
             .frame(maxHeight: .infinity)
         } else {
             ScrollView {
