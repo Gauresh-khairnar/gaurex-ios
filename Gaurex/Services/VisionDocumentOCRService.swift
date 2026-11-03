@@ -94,7 +94,7 @@ public final class VisionDocumentOCRService {
                 if result.extractedCompany.isEmpty {
                     result.extractedCompany = clean
                 }
-            } else if result.extractedName.isEmpty && clean.split(separator: " ").count in 2...4 {
+            } else if result.extractedName.isEmpty && (2...4).contains(clean.split(separator: " ").count) {
                 result.extractedName = clean
             }
         }
