@@ -433,15 +433,19 @@ public struct ReceiveUPIPaymentModal: View {
         // 1. Play bespoke cash bell acoustic sound
         GaurexSoundEffectsService.shared.playCashSettledSound()
         
-        // 2. Create Payment record in FirestoreDataStore
-        let payment = Payment(
+        // 2. Create PaymentRecord in FirestoreDataStore
+        let txnRef = "UPI-\(Int(Date().timeIntervalSince1970))"
+        let paymentRecord = PaymentRecord(
             invoiceId: selectedClientId ?? UUID().uuidString,
+            clientId: selectedClientId ?? UUID().uuidString,
             amount: numericAmount,
-            date: Date(),
-            method: .upi,
+            paymentDate: Date(),
+            paymentMethod: .upi,
+            transactionReference: txnRef,
             notes: "UPI Terminal payment received via \(upiId) from \(clientName.isEmpty ? "Client" : clientName)"
         )
-        store.addPayment(payment)
+        store.payments.insert(paymentRecord, at: 0)
+        store.savePayments()
         
         // 3. Save receipt into Document Vault
         let receiptDoc = VaultDocument(
@@ -452,7 +456,7 @@ public struct ReceiveUPIPaymentModal: View {
             relatedEntityId: selectedClientId,
             extractedFields: ExtractedDocumentFields(
                 detectedType: "UPI Payment Receipt",
-                documentNumber: "UPI-\(Date().timeIntervalSince1970.formatted())",
+                documentNumber: txnRef,
                 entityName: clientName.isEmpty ? "Client Payment" : clientName,
                 totalAmount: numericAmount,
                 confidenceScore: 1.0
