@@ -11,20 +11,40 @@ import Speech
 import AVFoundation
 
 public enum VoiceAILanguage: String, CaseIterable, Identifiable {
+    case auto = "auto"
     case english = "en"
+    case hindi = "hi"
+    case marathi = "mr"
+    case hinglish = "hi-en"
     
     public var id: String { rawValue }
     
     public var displayName: String {
-        return "English"
+        switch self {
+        case .auto: return "Auto (स्वयंचलित)"
+        case .english: return "English"
+        case .hindi: return "हिंदी (Hindi)"
+        case .marathi: return "मराठी (Marathi)"
+        case .hinglish: return "Hinglish"
+        }
     }
     
     public var speechLocaleIdentifier: String {
-        return "en-US"
+        switch self {
+        case .auto, .english: return "en-IN"
+        case .hindi: return "hi-IN"
+        case .marathi: return "mr-IN"
+        case .hinglish: return "hi-IN"
+        }
     }
     
     public var ttsVoiceIdentifier: String {
-        return "en-US"
+        switch self {
+        case .auto, .english: return "en-IN"
+        case .hindi: return "hi-IN"
+        case .marathi: return "mr-IN"
+        case .hinglish: return "hi-IN"
+        }
     }
 }
 
@@ -555,3 +575,4 @@ public final class MultilingualVoiceAIService: NSObject, ObservableObject, AVSpe
         stopSpeaking()
     }
 }
+
