@@ -22,6 +22,7 @@ public struct DashboardView: View {
     @State private var showingNewProjectSheet = false
     @State private var showingAddExpenseSheet = false
     @State private var showingGhostSimulatorSheet = false
+    @State private var showingReceiveUPISheet = false
     
     // Opening & Micro-Animation States
     @State private var animateHeader = false
@@ -219,6 +220,63 @@ public struct DashboardView: View {
                         .offset(y: animateStatsGrid ? 0 : 25)
                         .opacity(animateStatsGrid ? 1 : 0)
                         
+                        // MARK: - Instant UPI Payment Gateway Banner
+                        Button {
+                            showingReceiveUPISheet = true
+                            GaurexSoundEffectsService.shared.playStealthModeClick()
+                        } label: {
+                            HStack(spacing: 12) {
+                                ZStack {
+                                    Circle()
+                                        .fill(Color.gaurexWarmGold)
+                                        .frame(width: 44, height: 44)
+                                    Image(systemName: "qrcode.viewfinder")
+                                        .font(.system(size: 22, weight: .bold))
+                                        .foregroundColor(.black)
+                                }
+                                
+                                VStack(alignment: .leading, spacing: 2) {
+                                    HStack(spacing: 6) {
+                                        Text("Receive UPI Payment")
+                                            .font(.pjs(15, weight: .bold))
+                                            .foregroundColor(.white)
+                                        Text("9579098477@slc")
+                                            .font(.system(size: 10, weight: .bold))
+                                            .foregroundColor(Color.gaurexWarmGold)
+                                            .padding(.horizontal, 6)
+                                            .padding(.vertical, 2)
+                                            .background(Color.gaurexWarmGold.opacity(0.18))
+                                            .clipShape(Capsule())
+                                    }
+                                    Text("Generate dynamic scanner QR with exact client amount")
+                                        .font(.pjs(11, weight: .regular))
+                                        .foregroundColor(.white.opacity(0.7))
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(Color.gaurexWarmGold)
+                            }
+                            .padding(14)
+                            .background(
+                                LinearGradient(
+                                    colors: [Color.gaurexDeepPlum, Color(red: 0.16, green: 0.05, blue: 0.18)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                    .stroke(Color.gaurexWarmGold.opacity(0.5), lineWidth: 1.2)
+                            )
+                            .shadow(color: Color.gaurexDeepPlum.opacity(0.3), radius: 8, y: 4)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal, 24)
+                        
                         // MARK: - Quick Actions Section (2x2 Spacious)
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Quick Actions")
@@ -310,6 +368,9 @@ public struct DashboardView: View {
             }
             .sheet(isPresented: $showingGhostSimulatorSheet) {
                 GhostRunwaySimulatorSheet()
+            }
+            .sheet(isPresented: $showingReceiveUPISheet) {
+                ReceiveUPIPaymentModal()
             }
             .onAppear {
                 triggerAppOpeningAnimations()
