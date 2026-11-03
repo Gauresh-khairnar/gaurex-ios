@@ -414,6 +414,31 @@ public struct SettingsView: View {
                             .padding(.horizontal, 24)
                         }
                         
+                        // MARK: - Factory Reset / Clear All Data Button
+                        Button {
+                            showingResetAlert = true
+                            GaurexSoundEffectsService.shared.playStealthModeClick()
+                        } label: {
+                            HStack(spacing: 8) {
+                                Image(systemName: "trash.fill")
+                                    .font(.system(size: 15, weight: .semibold))
+                                Text("Clear All Previous Data (Clean Slate)")
+                                    .font(.system(size: 15, weight: .bold))
+                            }
+                            .foregroundColor(.orange)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(Color.orange.opacity(0.10))
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                    .stroke(Color.orange.opacity(0.35), lineWidth: 1)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.horizontal, 24)
+                        .padding(.top, 4)
+                        
                         // MARK: - Log Out Pill Button
                         Button {
                             showingLogoutAlert = true
@@ -480,6 +505,15 @@ public struct SettingsView: View {
                 Button("Cancel", role: .cancel) {}
             } message: {
                 Text("This will immediately terminate the current session and require Face ID or passcode to re-enter GAUREX.")
+            }
+            .alert("Clear All Previous Data?", isPresented: $showingResetAlert) {
+                Button("Wipe & Clear All Data", role: .destructive) {
+                    store.clearAllOperationalData()
+                    GaurexSoundEffectsService.shared.playMilestoneCompletedSound()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to permanently delete all clients, invoices, payments, workers, expenses, and documents? This will reset your database to a clean production slate.")
             }
         }
     }
