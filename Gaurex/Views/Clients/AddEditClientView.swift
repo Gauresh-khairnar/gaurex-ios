@@ -41,6 +41,13 @@ public struct AddEditClientView: View {
     @State private var showingValidationError = false
     @State private var validationMessage = ""
     
+    // Camera & OCR Scanner states
+    @State private var showingMediaPicker = false
+    @State private var mediaPickerSource: MediaPickerSource = .camera
+    @State private var isProcessingOCR = false
+    @State private var showingAgreementSheetAfterSave = false
+    @State private var newlyCreatedClient: Client? = nil
+    
     public init(clientToEdit: Client? = nil) {
         self.clientToEdit = clientToEdit
     }
@@ -80,6 +87,49 @@ public struct AddEditClientView: View {
     public var body: some View {
         NavigationStack {
             Form {
+                // Section 0: Vision OCR Auto-Fill Quick Action
+                Section(header: Text("Smart Onboarding / OCR Scanner")) {
+                    HStack(spacing: 12) {
+                        Button {
+                            mediaPickerSource = .camera
+                            showingMediaPicker = true
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "camera.viewfinder")
+                                    .foregroundColor(.purple)
+                                Text("Camera Scan Card")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                        }
+                        .buttonStyle(.borderless)
+                        
+                        Divider().frame(height: 20)
+                        
+                        Button {
+                            mediaPickerSource = .photoLibrary
+                            showingMediaPicker = true
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "photo.badge.plus")
+                                    .foregroundColor(.orange)
+                                Text("Upload Card / Doc")
+                                    .font(.system(size: 13, weight: .semibold))
+                            }
+                        }
+                        .buttonStyle(.borderless)
+                    }
+                    .padding(.vertical, 4)
+                    
+                    if isProcessingOCR {
+                        HStack(spacing: 8) {
+                            ProgressView()
+                            Text("Apple Vision OCR scanning card & details...")
+                                .font(.system(size: 12))
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
+                
                 // Section 1: Basic Information
                 Section(header: Text("Client & Organization Details")) {
                     TextField("Client Full Name *", text: $name)
@@ -262,6 +312,29 @@ public struct AddEditClientView: View {
             .onAppear {
                 loadExistingIfEditing()
             }
+            .sheet(isPresented: $showingMediaPicker) {
+                NativeMediaPicker(sourceType: mediaPickerSource) { image in
+                    self.isProcessingOCR = true
+                    VisionDocumentOCRService.shared.recognizeText(from: image) { parsed in
+                        self.isProcessingOCR = false
+                        if !parsed.extractedName.isEmpty { self.name = parsed.extractedName }
+                        if !parsed.extractedCompany.isEmpty { self.companyName = parsed.extractedCompany }
+                        if !parsed.extractedEmail.isEmpty { self.email = parsed.extractedEmail }
+                        if !parsed.extractedPhone.isEmpty {
+                            self.phone = parsed.extractedPhone
+                            self.whatsapp = parsed.extractedPhone
+                        }
+                        store.showToast(title: "Contact Extracted via Apple Vision")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingAgreementSheetAfterSave, onDismiss: {
+                dismiss()
+            }) {
+                if let c = newlyCreatedClient {
+                    ClientAgreementBuilderView(client: c)
+                }
+            }
         }
     }
     
@@ -410,6 +483,11 @@ public struct AddEditClientView: View {
                     )
                 }
             }
+            
+            // Auto-prompt agreement builder for newly created clients
+            self.newlyCreatedClient = newClient
+            self.showingAgreementSheetAfterSave = true
+            return
         }
         
         dismiss()

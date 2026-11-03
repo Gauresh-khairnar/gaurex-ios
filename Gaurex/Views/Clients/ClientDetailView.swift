@@ -23,6 +23,11 @@ public struct ClientDetailView: View {
     @State private var paymentNotes: String = ""
     @State private var selectedPaymentMethod: PaymentMethod = .bankTransfer
     
+    // Document & Agreement Attachments
+    @State private var showingAgreementBuilder = false
+    @State private var showingDocumentScanner = false
+    @State private var selectedDocForPreview: VaultDocument? = nil
+    
     public init(client: Client) {
         self.client = client
     }
@@ -33,6 +38,10 @@ public struct ClientDetailView: View {
     
     private var clientInvoices: [Invoice] {
         store.invoices.filter { $0.clientId == currentClient.id }
+    }
+    
+    private var clientDocuments: [VaultDocument] {
+        store.vaultDocuments.filter { $0.relatedEntityId == currentClient.id || $0.tags.contains(currentClient.name) }
     }
     
     public var body: some View {
@@ -221,6 +230,122 @@ public struct ClientDetailView: View {
                         }
                     }
                     
+                    // MARK: - Agreements & Attached Documents Vault Section
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Text("AGREEMENTS & SCANNED DOCUMENTS")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            
+                            Menu {
+                                Button {
+                                    showingAgreementBuilder = true
+                                } label: {
+                                    Label("Draft Agreement", systemImage: "doc.badge.plus")
+                                }
+                                
+                                Button {
+                                    showingDocumentScanner = true
+                                } label: {
+                                    Label("Scan / Attach Document", systemImage: "camera.viewfinder")
+                                }
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "plus.circle.fill")
+                                    Text("Add Document")
+                                }
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(theme.accentColor)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        
+                        if clientDocuments.isEmpty {
+                            GlassCard {
+                                VStack(spacing: 10) {
+                                    Image(systemName: "doc.text.magnifyingglass")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(Color.gaurexWarmGold)
+                                    Text("No legal agreements or scanned documents attached yet.")
+                                        .font(.system(size: 12.5))
+                                        .foregroundColor(.secondary)
+                                    
+                                    HStack(spacing: 12) {
+                                        Button {
+                                            showingAgreementBuilder = true
+                                        } label: {
+                                            HStack(spacing: 4) {
+                                                Image(systemName: "doc.plaintext.fill")
+                                                Text("Build Agreement")
+                                            }
+                                            .font(.system(size: 12, weight: .bold))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 14)
+                                            .padding(.vertical, 8)
+                                            .background(Color.gaurexDeepPlum)
+                                            .clipShape(Capsule())
+                                        }
+                                        
+                                        Button {
+                                            showingDocumentScanner = true
+                                        } label: {
+                                            HStack(spacing: 4) {
+                                                Image(systemName: "camera.fill")
+                                                Text("Camera / Scan")
+                                            }
+                                            .font(.system(size: 12, weight: .bold))
+                                            .foregroundColor(Color.gaurexDeepPlum)
+                                            .padding(.horizontal, 14)
+                                            .padding(.vertical, 8)
+                                            .background(Color.gaurexWarmGold.opacity(0.18))
+                                            .clipShape(Capsule())
+                                        }
+                                    }
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                            }
+                            .padding(.horizontal, 16)
+                        } else {
+                            VStack(spacing: 8) {
+                                ForEach(clientDocuments) { doc in
+                                    Button {
+                                        selectedDocForPreview = doc
+                                    } label: {
+                                        GlassCard(padding: 12) {
+                                            HStack(spacing: 12) {
+                                                Image(systemName: doc.category.iconName)
+                                                    .font(.system(size: 20))
+                                                    .foregroundColor(Color.gaurexWarmGold)
+                                                    .frame(width: 38, height: 38)
+                                                    .background(Color.gaurexDeepPlum.opacity(0.08))
+                                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                                
+                                                VStack(alignment: .leading, spacing: 2) {
+                                                    Text(doc.title)
+                                                        .font(.system(size: 13, weight: .bold))
+                                                        .foregroundColor(.primary)
+                                                    Text("\(doc.category.rawValue) • \(doc.createdAt, style: .date)")
+                                                        .font(.system(size: 11))
+                                                        .foregroundColor(.secondary)
+                                                }
+                                                
+                                                Spacer()
+                                                
+                                                Image(systemName: "chevron.right")
+                                                    .font(.system(size: 12, weight: .bold))
+                                                    .foregroundColor(.secondary)
+                                            }
+                                        }
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                        }
+                    }
+                    
                     // Bottom Spacer
                     Spacer().frame(height: 80)
                 }
@@ -275,6 +400,15 @@ public struct ClientDetailView: View {
         }
         .sheet(isPresented: $showingCreateInvoiceSheet) {
             CreateInvoiceView(preselectedClientId: currentClient.id)
+        }
+        .sheet(isPresented: $showingAgreementBuilder) {
+            ClientAgreementBuilderView(client: currentClient)
+        }
+        .sheet(isPresented: $showingDocumentScanner) {
+            ClientDocumentScannerSheet(client: currentClient)
+        }
+        .sheet(item: $selectedDocForPreview) { doc in
+            DocumentAttachmentPreviewModal(doc: doc)
         }
         .confirmationDialog("Archive Client?", isPresented: $showingDeleteConfirmation, titleVisibility: .visible) {
             Button("Archive Record", role: .destructive) {
