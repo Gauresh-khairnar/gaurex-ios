@@ -27,16 +27,10 @@ public final class NeoCoFounderService: NSObject, ObservableObject, AVSpeechSynt
     
     public enum BriefingLanguage: String, CaseIterable, Identifiable {
         case english = "English"
-        case hindi = "Hindi"
-        case marathi = "Marathi"
         public var id: String { rawValue }
         
         public var voiceCode: String {
-            switch self {
-            case .english: return "en-US"
-            case .hindi: return "hi-IN"
-            case .marathi: return "mr-IN"
-            }
+            return "en-US"
         }
     }
     
@@ -127,29 +121,11 @@ public final class NeoCoFounderService: NSObject, ObservableObject, AVSpeechSynt
         let topTask = store.todayTasks.first?.title ?? "Review pipeline and cash reserves"
         let sym = store.settings.currencySymbol
         
-        let briefingText: String
-        switch currentBriefingLanguage {
-        case .english:
-            let timeSalutation: String
-            if hour < 12 { timeSalutation = "Good Morning Gauresh." }
-            else if hour < 17 { timeSalutation = "Good Afternoon Gauresh." }
-            else { timeSalutation = "Good Evening Gauresh." }
-            briefingText = "\(timeSalutation) I am NEO, your AI Co-Founder. Here is your GAUREX executive briefing: We have collected \(sym)\(collected) in liquid cash, with \(activeClients) active enterprise contracts and \(sym)\(receivables) in pending receivables. Your top priority today: \(topTask)."
-            
-        case .hindi:
-            let timeSalutation: String
-            if hour < 12 { timeSalutation = "शुभ प्रभात गौणेश जी." }
-            else if hour < 17 { timeSalutation = "नमस्कार गौणेश जी." }
-            else { timeSalutation = "शुभ संध्या गौणेश जी." }
-            briefingText = "\(timeSalutation) मैं NEO हूँ, आपका AI को-फाउंडर। GAUREX कार्यकारी ब्रीफिंग: हमने \(sym)\(collected) नकद राजस्व एकत्र किया है, \(activeClients) सक्रिय ग्राहक हैं और \(sym)\(receivables) बकाया है। आज का मुख्य कार्य है: \(topTask)।"
-            
-        case .marathi:
-            let timeSalutation: String
-            if hour < 12 { timeSalutation = "शुभ सकाळ गौणेश." }
-            else if hour < 17 { timeSalutation = "नमस्कार गौणेश." }
-            else { timeSalutation = "शुभ संध्याकाळ गौणेश." }
-            briefingText = "\(timeSalutation) मी NEO, तुमचा AI को-फाउंडर. GAUREX वॉर-रूम ब्रीफिंग: आपण एकूण \(sym)\(collected) महसूल जमा केला आहे. सध्या \(activeClients) सक्रिय क्लायंट्स आणि \(sym)\(receivables) येणे बाकी आहे. आजचा महत्त्वाचा टास्क: \(topTask)."
-        }
+        let timeSalutation: String
+        if hour < 12 { timeSalutation = "Good Morning Gauresh." }
+        else if hour < 17 { timeSalutation = "Good Afternoon Gauresh." }
+        else { timeSalutation = "Good Evening Gauresh." }
+        let briefingText = "\(timeSalutation) I am NEO, your AI Co-Founder. Here is your GAUREX executive briefing: We have collected \(sym)\(collected) in liquid cash, with \(activeClients) active enterprise contracts and \(sym)\(receivables) in pending receivables. Your top priority today: \(topTask)."
         
         self.lastSpokenBriefing = briefingText
         

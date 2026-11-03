@@ -11,40 +11,20 @@ import Speech
 import AVFoundation
 
 public enum VoiceAILanguage: String, CaseIterable, Identifiable {
-    case auto = "auto"
     case english = "en"
-    case hindi = "hi"
-    case marathi = "mr"
-    case hinglish = "hi-en"
     
     public var id: String { rawValue }
     
     public var displayName: String {
-        switch self {
-        case .auto: return "Auto (स्वयंचलित)"
-        case .english: return "English"
-        case .hindi: return "हिंदी (Hindi)"
-        case .marathi: return "मराठी (Marathi)"
-        case .hinglish: return "Hinglish"
-        }
+        return "English"
     }
     
     public var speechLocaleIdentifier: String {
-        switch self {
-        case .auto, .english: return "en-IN"
-        case .hindi: return "hi-IN"
-        case .marathi: return "mr-IN"
-        case .hinglish: return "hi-IN"
-        }
+        return "en-US"
     }
     
     public var ttsVoiceIdentifier: String {
-        switch self {
-        case .auto, .english: return "en-IN"
-        case .hindi: return "hi-IN"
-        case .marathi: return "mr-IN"
-        case .hinglish: return "hi-IN"
-        }
+        return "en-US"
     }
 }
 
@@ -89,7 +69,7 @@ public final class MultilingualVoiceAIService: NSObject, ObservableObject, AVSpe
     public static let shared = MultilingualVoiceAIService()
     
     // Published State
-    @Published public var selectedLanguage: VoiceAILanguage = .auto
+    @Published public var selectedLanguage: VoiceAILanguage = .english
     @Published public var isListening: Bool = false
     @Published public var isSpeaking: Bool = false
     @Published public var isPaused: Bool = false

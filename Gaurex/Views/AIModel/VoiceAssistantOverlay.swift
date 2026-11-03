@@ -27,33 +27,20 @@ public struct VoiceAssistantOverlay: View {
                 
                 VStack(spacing: 20) {
                     
-                    // MARK: - Language Selector Bar
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(VoiceAILanguage.allCases) { lang in
-                                let isSelected = voiceAI.selectedLanguage == lang
-                                Button {
-                                    MotionTokens.selection()
-                                    voiceAI.setLanguage(lang)
-                                } label: {
-                                    Text(lang.displayName)
-                                        .font(.system(size: 11.5, weight: isSelected ? .bold : .medium))
-                                        .foregroundColor(isSelected ? .white : Color(uiColor: .label))
-                                        .padding(.horizontal, 12)
-                                        .padding(.vertical, 6)
-                                        .background(isSelected ? deepPlum : Color.white)
-                                        .clipShape(Capsule())
-                                        .overlay(
-                                            Capsule()
-                                                .stroke(isSelected ? warmGold.opacity(0.6) : Color.black.opacity(0.08), lineWidth: 1)
-                                        )
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.top, 12)
+                    // MARK: - Dedicated English Executive AI Badge
+                    HStack(spacing: 6) {
+                        Image(systemName: "waveform.circle.fill")
+                            .foregroundColor(warmGold)
+                        Text("GAUREX Executive Voice AI • English")
+                            .font(.system(size: 11.5, weight: .bold))
+                            .foregroundColor(.primary)
                     }
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 6)
+                    .background(Color.white.opacity(0.8))
+                    .clipShape(Capsule())
+                    .overlay(Capsule().stroke(warmGold.opacity(0.4), lineWidth: 1))
+                    .padding(.top, 12)
                     
                     Spacer()
                     
@@ -85,15 +72,13 @@ public struct VoiceAssistantOverlay: View {
                             Circle()
                                 .fill(voiceAI.isListening ? Color.green : warmGold)
                                 .frame(width: 8, height: 8)
-                            Text(voiceAI.isListening ? "Listening / बोलिए / ऐकत आहे..." : "Tap Mic to Speak")
+                            Text(voiceAI.isListening ? "Listening (English)..." : "Tap Mic to Speak in English")
                                 .font(.system(size: 15, weight: .bold))
                                 .foregroundColor(.primary)
                         }
                         
                         Text(voiceAI.liveTranscript.isEmpty
-                             ? (voiceAI.selectedLanguage == .hindi ? "उदा. \"आज की कमाई कितनी है?\", \"पेंडिंग बिल दिखाओ\"" :
-                                voiceAI.selectedLanguage == .marathi ? "उदा. \"आजचे एकूण उत्पन्न किती?\", \"थकबाकी दाखवा\"" :
-                                "e.g. \"Show today's revenue\", \"Check overdue payments\"")
+                             ? "e.g. \"Show today's revenue\", \"Check overdue payments\""
                              : "\"\(voiceAI.liveTranscript)\"")
                             .font(.system(size: 13, weight: .medium))
                             .foregroundColor(.secondary)
@@ -251,9 +236,9 @@ public struct VoiceAssistantOverlay: View {
                     // MARK: - Multilingual Sample Query Pills
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 8) {
-                            Button("🇮🇳 आज की कमाई") {
-                                voiceAI.setLanguage(.hindi)
-                                voiceAI.stopListeningAndProcess(explicitText: "गौरेक्स की आज की कमाई कितनी है?")
+                            Button("💰 Today's Revenue") {
+                                voiceAI.setLanguage(.english)
+                                voiceAI.stopListeningAndProcess(explicitText: "How much revenue did GAUREX collect today?")
                             }
                             .buttonStyle(.plain)
                             .font(.system(size: 11, weight: .bold))
@@ -263,21 +248,9 @@ public struct VoiceAssistantOverlay: View {
                             .clipShape(Capsule())
                             .overlay(Capsule().stroke(Color.black.opacity(0.08), lineWidth: 1))
                             
-                            Button("🚩 आजचे उत्पन्न") {
-                                voiceAI.setLanguage(.marathi)
-                                voiceAI.stopListeningAndProcess(explicitText: "गौरेक्सचे आजचे एकूण उत्पन्न किती आहे?")
-                            }
-                            .buttonStyle(.plain)
-                            .font(.system(size: 11, weight: .bold))
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 7)
-                            .background(Color.white)
-                            .clipShape(Capsule())
-                            .overlay(Capsule().stroke(Color.black.opacity(0.08), lineWidth: 1))
-                            
-                            Button("⚠️ Pending Payments") {
-                                voiceAI.setLanguage(.hinglish)
-                                voiceAI.stopListeningAndProcess(explicitText: "Gaurex ke pending invoices dikhao")
+                            Button("⚠️ Overdue Invoices") {
+                                voiceAI.setLanguage(.english)
+                                voiceAI.stopListeningAndProcess(explicitText: "Check overdue invoices and pending receivables")
                             }
                             .buttonStyle(.plain)
                             .font(.system(size: 11, weight: .bold))

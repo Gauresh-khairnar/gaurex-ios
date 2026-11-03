@@ -83,36 +83,14 @@ public struct AmbientVoiceAuraWaveform: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .frame(height: 28)
                     
-                    // Right: Language Switcher & Stop / Mute Action
+                    // Right: Stop / Mute Action
                     HStack(spacing: 8) {
-                        Menu {
-                            ForEach(NeoCoFounderService.BriefingLanguage.allCases) { lang in
-                                Button {
-                                    neo.currentBriefingLanguage = lang
-                                    neo.greetFounderOnLaunch(force: true)
-                                } label: {
-                                    HStack {
-                                        Text(lang.rawValue)
-                                        if neo.currentBriefingLanguage == lang {
-                                            Image(systemName: "checkmark")
-                                        }
-                                    }
-                                }
-                            }
-                        } label: {
-                            Image(systemName: "globe")
-                                .font(.system(size: 11, weight: .bold))
-                                .foregroundColor(goldAccent)
-                                .padding(6)
-                                .background(Circle().fill(deepPurple.opacity(0.2)))
-                        }
-                        
                         Button {
                             MotionTokens.impact(style: .medium)
                             neo.stopSpeaking()
                         } label: {
                             Image(systemName: "stop.circle.fill")
-                                .font(.system(size: 18, weight: .bold))
+                                .font(.system(size: 20, weight: .bold))
                                 .foregroundColor(deepPurple)
                         }
                     }

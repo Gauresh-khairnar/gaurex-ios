@@ -188,33 +188,17 @@ public struct AIIntelligenceView: View {
                     .padding(.top, 8)
                     .padding(.bottom, 6)
                     
-                    // MARK: - Multilingual Language Quick Selector
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 8) {
-                            ForEach(VoiceAILanguage.allCases) { lang in
-                                let isSelected = voiceAI.selectedLanguage == lang
-                                Button {
-                                    MotionTokens.selection()
-                                    voiceAI.setLanguage(lang)
-                                } label: {
-                                    Text(lang.displayName)
-                                        .font(.pjs(11, weight: isSelected ? .bold : .medium))
-                                        .foregroundColor(isSelected ? .white : Color(uiColor: .label))
-                                        .padding(.horizontal, 11)
-                                        .padding(.vertical, 5)
-                                        .background(isSelected ? deepPlum : Color.white)
-                                        .clipShape(Capsule())
-                                        .overlay(
-                                            Capsule()
-                                                .stroke(isSelected ? warmGold.opacity(0.6) : Color.black.opacity(0.06), lineWidth: 0.9)
-                                        )
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.bottom, 6)
+                    // MARK: - Dedicated English Executive AI Tag
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(Color.green)
+                            .frame(width: 7, height: 7)
+                        Text("Executive English NLP Intelligence")
+                            .font(.pjs(10.5, weight: .bold))
+                            .foregroundColor(Color(uiColor: .secondaryLabel))
                     }
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 6)
                     
                     // MARK: - Conversational Stream Area
                     ScrollViewReader { proxy in
