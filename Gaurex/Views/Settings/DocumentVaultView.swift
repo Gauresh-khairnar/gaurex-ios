@@ -40,154 +40,13 @@ public struct DocumentVaultView: View {
                 theme.backgroundColor.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // Search & Category Filters
-                    VStack(spacing: 10) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.secondary)
-                            TextField("Search documents, contracts, receipts...", text: $searchText)
-                                .textFieldStyle(.plain)
-                                .font(.system(size: 14))
-                        }
-                        .padding(10)
-                        .background(theme.cardBackground)
-                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                        
-                        // Category Pills
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                FilterChip(title: "All (\(store.vaultDocuments.count))", isSelected: selectedCategory == nil) {
-                                    selectedCategory = nil
-                                }
-                                ForEach(DocumentCategory.allCases) { cat in
-                                    let count = store.vaultDocuments.filter { $0.category == cat }.count
-                                    FilterChip(title: "\(cat.rawValue) (\(count))", isSelected: selectedCategory == cat) {
-                                        selectedCategory = cat
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
+                    searchAndFilterHeader
                     
                     Divider()
                     
-                    // Quick Action Banner for Camera & Gallery
-                    HStack(spacing: 12) {
-                        Button {
-                            showingUploadModal = true
-                        } label: {
-                            HStack(spacing: 8) {
-                                Image(systemName: "camera.fill")
-                                    .foregroundColor(.white)
-                                Text("Scan via Camera")
-                                    .font(.pjs(12.5, weight: .bold))
-                                    .foregroundColor(.white)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 11)
-                            .background(Color.gaurexDeepPlum)
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                        }
-                        .buttonStyle(.plain)
-                        
-                        Button {
-                            showingUploadModal = true
-                        } label: {
-                            HStack(spacing: 8) {
-                                Image(systemName: "photo.on.rectangle.angled")
-                                    .foregroundColor(Color.gaurexDeepPlum)
-                                Text("Upload Gallery")
-                                    .font(.pjs(12.5, weight: .bold))
-                                    .foregroundColor(Color.gaurexDeepPlum)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 11)
-                            .background(Color.gaurexWarmGold.opacity(0.18))
-                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                            .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gaurexWarmGold.opacity(0.4), lineWidth: 1))
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 10)
+                    cameraGalleryActionBanner
                     
-                    // Documents List
-                    if filteredDocuments.isEmpty {
-                        EmptyStateView(
-                            icon: "doc.text.magnifyingglass",
-                            title: "Vault is Empty",
-                            subtitle: searchText.isEmpty ? "Tap 'Scan via Camera' or 'Upload Gallery' to add business contracts, GST certificates, and receipts." : "No documents match '\(searchText)'",
-                            actionTitle: searchText.isEmpty ? "Add First Document" : nil
-                        ) {
-                            showingUploadModal = true
-                        }
-                        .frame(maxHeight: .infinity)
-                    } else {
-                        ScrollView {
-                            LazyVStack(spacing: 10) {
-                                ForEach(filteredDocuments) { doc in
-                                    Button {
-                                        selectedDocForPreview = doc
-                                    } label: {
-                                        GlassCard(padding: 12) {
-                                            HStack(spacing: 12) {
-                                                Image(systemName: doc.category.iconName)
-                                                    .font(.system(size: 20))
-                                                    .foregroundColor(Color.gaurexWarmGold)
-                                                    .frame(width: 38, height: 38)
-                                                    .background(Color.gaurexDeepPlum.opacity(0.1))
-                                                    .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                                                
-                                                VStack(alignment: .leading, spacing: 2) {
-                                                    Text(doc.title)
-                                                        .font(.system(size: 14, weight: .bold))
-                                                        .foregroundColor(.primary)
-                                                    Text("\(doc.category.rawValue) • \(doc.formattedSize)")
-                                                        .font(.system(size: 11))
-                                                        .foregroundColor(.secondary)
-                                                }
-                                                
-                                                Spacer()
-                                                
-                                                VStack(alignment: .trailing, spacing: 4) {
-                                                    Text(doc.createdAt, style: .date)
-                                                        .font(.system(size: 10))
-                                                        .foregroundColor(.secondary)
-                                                    
-                                                    Button(role: .destructive) {
-                                                        docToDelete = doc
-                                                        showingDeleteDocAlert = true
-                                                    } label: {
-                                                        Image(systemName: "trash")
-                                                            .font(.system(size: 11))
-                                                            .foregroundColor(.red.opacity(0.85))
-                                                            .padding(5)
-                                                            .background(Color.red.opacity(0.08))
-                                                            .clipShape(Circle())
-                                                    }
-                                                    .buttonStyle(.plain)
-                                                }
-                                            }
-                                        }
-                                    }
-                                    .buttonStyle(.plain)
-                                    .contextMenu {
-                                        Button(role: .destructive) {
-                                            docToDelete = doc
-                                            showingDeleteDocAlert = true
-                                        } label: {
-                                            Label("Delete Document", systemImage: "trash")
-                                        }
-                                    }
-                                }
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            Spacer().frame(height: 60)
-                        }
-                    }
+                    documentListView
                 }
             }
             .navigationTitle("Document Vault")
@@ -223,6 +82,164 @@ public struct DocumentVaultView: View {
             }
             .sheet(item: $selectedDocForPreview) { doc in
                 DocumentAttachmentPreviewModal(doc: doc)
+            }
+        }
+    }
+    
+    // MARK: - Subviews to optimize Swift compile times
+    @ViewBuilder
+    private var searchAndFilterHeader: some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.secondary)
+                TextField("Search documents, contracts, receipts...", text: $searchText)
+                    .textFieldStyle(.plain)
+                    .font(.system(size: 14))
+            }
+            .padding(10)
+            .background(theme.cardBackground)
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+            
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    FilterChip(title: "All (\(store.vaultDocuments.count))", isSelected: selectedCategory == nil) {
+                        selectedCategory = nil
+                    }
+                    ForEach(DocumentCategory.allCases) { cat in
+                        let count = store.vaultDocuments.filter { $0.category == cat }.count
+                        FilterChip(title: "\(cat.rawValue) (\(count))", isSelected: selectedCategory == cat) {
+                            selectedCategory = cat
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+    }
+    
+    @ViewBuilder
+    private var cameraGalleryActionBanner: some View {
+        HStack(spacing: 12) {
+            Button {
+                showingUploadModal = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "camera.fill")
+                        .foregroundColor(.white)
+                    Text("Scan via Camera")
+                        .font(.pjs(12.5, weight: .bold))
+                        .foregroundColor(.white)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 11)
+                .background(Color.gaurexDeepPlum)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+            
+            Button {
+                showingUploadModal = true
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "photo.on.rectangle.angled")
+                        .foregroundColor(Color.gaurexDeepPlum)
+                    Text("Upload Gallery")
+                        .font(.pjs(12.5, weight: .bold))
+                        .foregroundColor(Color.gaurexDeepPlum)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 11)
+                .background(Color.gaurexWarmGold.opacity(0.18))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gaurexWarmGold.opacity(0.4), lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+    }
+    
+    @ViewBuilder
+    private var documentListView: some View {
+        if filteredDocuments.isEmpty {
+            EmptyStateView(
+                icon: "doc.text.magnifyingglass",
+                title: "Vault is Empty",
+                subtitle: searchText.isEmpty ? "Tap 'Scan via Camera' or 'Upload Gallery' to add business contracts, GST certificates, and receipts." : "No documents match '\(searchText)'",
+                actionTitle: searchText.isEmpty ? "Add First Document" : nil
+            ) {
+                showingUploadModal = true
+            }
+            .frame(maxHeight: .infinity)
+        } else {
+            ScrollView {
+                LazyVStack(spacing: 10) {
+                    ForEach(filteredDocuments) { doc in
+                        documentCard(for: doc)
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                Spacer().frame(height: 60)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func documentCard(for doc: VaultDocument) -> some View {
+        Button {
+            selectedDocForPreview = doc
+        } label: {
+            GlassCard(padding: 12) {
+                HStack(spacing: 12) {
+                    Image(systemName: doc.category.iconName)
+                        .font(.system(size: 20))
+                        .foregroundColor(Color.gaurexWarmGold)
+                        .frame(width: 38, height: 38)
+                        .background(Color.gaurexDeepPlum.opacity(0.1))
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(doc.title)
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(.primary)
+                        Text("\(doc.category.rawValue) • \(doc.formattedSize)")
+                            .font(.system(size: 11))
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                    
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text(doc.createdAt, style: .date)
+                            .font(.system(size: 10))
+                            .foregroundColor(.secondary)
+                        
+                        Button(role: .destructive) {
+                            docToDelete = doc
+                            showingDeleteDocAlert = true
+                        } label: {
+                            Image(systemName: "trash")
+                                .font(.system(size: 11))
+                                .foregroundColor(.red.opacity(0.85))
+                                .padding(5)
+                                .background(Color.red.opacity(0.08))
+                                .clipShape(Circle())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+        }
+        .buttonStyle(.plain)
+        .contextMenu {
+            Button(role: .destructive) {
+                docToDelete = doc
+                showingDeleteDocAlert = true
+            } label: {
+                Label("Delete Document", systemImage: "trash")
             }
         }
     }

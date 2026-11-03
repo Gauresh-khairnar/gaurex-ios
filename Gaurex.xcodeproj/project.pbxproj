@@ -77,25 +77,26 @@
 		A00000000000000000000235 /* PDFPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000234 /* PDFPreviewView.swift */; };
 		A00000000000000000000237 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000236 /* MainTabView.swift */; };
 		A00000000000000000000239 /* BusinessSettingsAndAuditViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000238 /* BusinessSettingsAndAuditViews.swift */; };
-		A00000000000000000000241 /* DocumentVaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000240 /* DocumentVaultView.swift */; };
-		A00000000000000000000243 /* IntegrationsAndCurrencyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000242 /* IntegrationsAndCurrencyViews.swift */; };
-		A00000000000000000000245 /* PackageManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000244 /* PackageManagementView.swift */; };
-		A00000000000000000000247 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000246 /* SettingsView.swift */; };
-		A00000000000000000000249 /* AddEditWorkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000248 /* AddEditWorkerView.swift */; };
-		A00000000000000000000251 /* AttendanceAndLeaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000250 /* AttendanceAndLeaveView.swift */; };
-		A00000000000000000000253 /* GenerateSalarySlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000252 /* GenerateSalarySlipView.swift */; };
-		A00000000000000000000255 /* WorkerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000254 /* WorkerDetailView.swift */; };
-		A00000000000000000000257 /* WorkersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000256 /* WorkersListView.swift */; };
-		A00000000000000000000259 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000258 /* Assets.xcassets */; };
-		A00000000000000000000261 /* PlusJakartaSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000260 /* PlusJakartaSans-Bold.ttf */; };
-		A00000000000000000000263 /* PlusJakartaSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000262 /* PlusJakartaSans-ExtraBold.ttf */; };
-		A00000000000000000000265 /* PlusJakartaSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000264 /* PlusJakartaSans-Medium.ttf */; };
-		A00000000000000000000267 /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000266 /* PlusJakartaSans-Regular.ttf */; };
-		A00000000000000000000269 /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000268 /* PlusJakartaSans-SemiBold.ttf */; };
-		A00000000000000000000273 /* ExtendedModulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000272 /* ExtendedModulesTests.swift */; };
-		A00000000000000000000275 /* FinancialCalculationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000274 /* FinancialCalculationsTests.swift */; };
-		A00000000000000000000277 /* PayrollAndPDFTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000276 /* PayrollAndPDFTests.swift */; };
-		A00000000000000000000279 /* SecurityAndBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000278 /* SecurityAndBackupTests.swift */; };
+		A00000000000000000000241 /* DocumentExtractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000240 /* DocumentExtractionView.swift */; };
+		A00000000000000000000243 /* DocumentVaultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000242 /* DocumentVaultView.swift */; };
+		A00000000000000000000245 /* IntegrationsAndCurrencyViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000244 /* IntegrationsAndCurrencyViews.swift */; };
+		A00000000000000000000247 /* PackageManagementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000246 /* PackageManagementView.swift */; };
+		A00000000000000000000249 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000248 /* SettingsView.swift */; };
+		A00000000000000000000251 /* AddEditWorkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000250 /* AddEditWorkerView.swift */; };
+		A00000000000000000000253 /* AttendanceAndLeaveView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000252 /* AttendanceAndLeaveView.swift */; };
+		A00000000000000000000255 /* GenerateSalarySlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000254 /* GenerateSalarySlipView.swift */; };
+		A00000000000000000000257 /* WorkerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000256 /* WorkerDetailView.swift */; };
+		A00000000000000000000259 /* WorkersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000258 /* WorkersListView.swift */; };
+		A00000000000000000000261 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000260 /* Assets.xcassets */; };
+		A00000000000000000000263 /* PlusJakartaSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000262 /* PlusJakartaSans-Bold.ttf */; };
+		A00000000000000000000265 /* PlusJakartaSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000264 /* PlusJakartaSans-ExtraBold.ttf */; };
+		A00000000000000000000267 /* PlusJakartaSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000266 /* PlusJakartaSans-Medium.ttf */; };
+		A00000000000000000000269 /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000268 /* PlusJakartaSans-Regular.ttf */; };
+		A00000000000000000000271 /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000270 /* PlusJakartaSans-SemiBold.ttf */; };
+		A00000000000000000000275 /* ExtendedModulesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000274 /* ExtendedModulesTests.swift */; };
+		A00000000000000000000277 /* FinancialCalculationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000276 /* FinancialCalculationsTests.swift */; };
+		A00000000000000000000279 /* PayrollAndPDFTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000278 /* PayrollAndPDFTests.swift */; };
+		A00000000000000000000281 /* SecurityAndBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000280 /* SecurityAndBackupTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -169,40 +170,41 @@
 		A00000000000000000000234 /* PDFPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Invoices/PDFPreviewView.swift"; sourceTree = "<group>"; };
 		A00000000000000000000236 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/MainTabView.swift"; sourceTree = "<group>"; };
 		A00000000000000000000238 /* BusinessSettingsAndAuditViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/BusinessSettingsAndAuditViews.swift"; sourceTree = "<group>"; };
-		A00000000000000000000240 /* DocumentVaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/DocumentVaultView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000242 /* IntegrationsAndCurrencyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/IntegrationsAndCurrencyViews.swift"; sourceTree = "<group>"; };
-		A00000000000000000000244 /* PackageManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/PackageManagementView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000246 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/SettingsView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000248 /* AddEditWorkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/AddEditWorkerView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000250 /* AttendanceAndLeaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/AttendanceAndLeaveView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000252 /* GenerateSalarySlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/GenerateSalarySlipView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000254 /* WorkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkerDetailView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000256 /* WorkersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkersListView.swift"; sourceTree = "<group>"; };
-		A00000000000000000000258 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
-		A00000000000000000000260 /* PlusJakartaSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Bold.ttf"; sourceTree = "<group>"; };
-		A00000000000000000000262 /* PlusJakartaSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-ExtraBold.ttf"; sourceTree = "<group>"; };
-		A00000000000000000000264 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
-		A00000000000000000000266 /* PlusJakartaSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Regular.ttf"; sourceTree = "<group>"; };
-		A00000000000000000000268 /* PlusJakartaSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-SemiBold.ttf"; sourceTree = "<group>"; };
-		A00000000000000000000270 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
-		A00000000000000000000271 /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex.entitlements"; sourceTree = "<group>"; };
-		A00000000000000000000272 /* ExtendedModulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExtendedModulesTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000274 /* FinancialCalculationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FinancialCalculationsTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000276 /* PayrollAndPDFTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayrollAndPDFTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000278 /* SecurityAndBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecurityAndBackupTests.swift"; sourceTree = "<group>"; };
-		A00000000000000000000280 /* Gaurex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gaurex.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		A00000000000000000000281 /* GaurexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GaurexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000240 /* DocumentExtractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/DocumentExtractionView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000242 /* DocumentVaultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/DocumentVaultView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000244 /* IntegrationsAndCurrencyViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/IntegrationsAndCurrencyViews.swift"; sourceTree = "<group>"; };
+		A00000000000000000000246 /* PackageManagementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/PackageManagementView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000248 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Settings/SettingsView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000250 /* AddEditWorkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/AddEditWorkerView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000252 /* AttendanceAndLeaveView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/AttendanceAndLeaveView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000254 /* GenerateSalarySlipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/GenerateSalarySlipView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000256 /* WorkerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkerDetailView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000258 /* WorkersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Views/Workers/WorkersListView.swift"; sourceTree = "<group>"; };
+		A00000000000000000000260 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
+		A00000000000000000000262 /* PlusJakartaSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Bold.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000264 /* PlusJakartaSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-ExtraBold.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000266 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000268 /* PlusJakartaSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-Regular.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000270 /* PlusJakartaSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Resources/Fonts/PlusJakartaSans-SemiBold.ttf"; sourceTree = "<group>"; };
+		A00000000000000000000272 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info.plist"; sourceTree = "<group>"; };
+		A00000000000000000000273 /* Gaurex.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Gaurex.entitlements"; sourceTree = "<group>"; };
+		A00000000000000000000274 /* ExtendedModulesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ExtendedModulesTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000276 /* FinancialCalculationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FinancialCalculationsTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000278 /* PayrollAndPDFTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PayrollAndPDFTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000280 /* SecurityAndBackupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SecurityAndBackupTests.swift"; sourceTree = "<group>"; };
+		A00000000000000000000282 /* Gaurex.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gaurex.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000283 /* GaurexTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GaurexTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		A00000000000000000000291 /* Frameworks */ = {
+		A00000000000000000000293 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000293 /* Frameworks */ = {
+		A00000000000000000000295 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -212,16 +214,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		A00000000000000000000288 = {
+		A00000000000000000000290 = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000285 /* Gaurex */,
-				A00000000000000000000286 /* GaurexTests */,
-				A00000000000000000000287 /* Products */,
+				A00000000000000000000287 /* Gaurex */,
+				A00000000000000000000288 /* GaurexTests */,
+				A00000000000000000000289 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		A00000000000000000000285 /* Gaurex */ = {
+		A00000000000000000000287 /* Gaurex */ = {
 			isa = PBXGroup;
 			children = (
 				A00000000000000000000100 /* AppLaunchExperienceView.swift */,
@@ -294,43 +296,44 @@
 				A00000000000000000000234 /* PDFPreviewView.swift */,
 				A00000000000000000000236 /* MainTabView.swift */,
 				A00000000000000000000238 /* BusinessSettingsAndAuditViews.swift */,
-				A00000000000000000000240 /* DocumentVaultView.swift */,
-				A00000000000000000000242 /* IntegrationsAndCurrencyViews.swift */,
-				A00000000000000000000244 /* PackageManagementView.swift */,
-				A00000000000000000000246 /* SettingsView.swift */,
-				A00000000000000000000248 /* AddEditWorkerView.swift */,
-				A00000000000000000000250 /* AttendanceAndLeaveView.swift */,
-				A00000000000000000000252 /* GenerateSalarySlipView.swift */,
-				A00000000000000000000254 /* WorkerDetailView.swift */,
-				A00000000000000000000256 /* WorkersListView.swift */,
-				A00000000000000000000258 /* Assets.xcassets */,
-				A00000000000000000000260 /* PlusJakartaSans-Bold.ttf */,
-				A00000000000000000000262 /* PlusJakartaSans-ExtraBold.ttf */,
-				A00000000000000000000264 /* PlusJakartaSans-Medium.ttf */,
-				A00000000000000000000266 /* PlusJakartaSans-Regular.ttf */,
-				A00000000000000000000268 /* PlusJakartaSans-SemiBold.ttf */,
-				A00000000000000000000270 /* Info.plist */,
-				A00000000000000000000271 /* Gaurex.entitlements */,
+				A00000000000000000000240 /* DocumentExtractionView.swift */,
+				A00000000000000000000242 /* DocumentVaultView.swift */,
+				A00000000000000000000244 /* IntegrationsAndCurrencyViews.swift */,
+				A00000000000000000000246 /* PackageManagementView.swift */,
+				A00000000000000000000248 /* SettingsView.swift */,
+				A00000000000000000000250 /* AddEditWorkerView.swift */,
+				A00000000000000000000252 /* AttendanceAndLeaveView.swift */,
+				A00000000000000000000254 /* GenerateSalarySlipView.swift */,
+				A00000000000000000000256 /* WorkerDetailView.swift */,
+				A00000000000000000000258 /* WorkersListView.swift */,
+				A00000000000000000000260 /* Assets.xcassets */,
+				A00000000000000000000262 /* PlusJakartaSans-Bold.ttf */,
+				A00000000000000000000264 /* PlusJakartaSans-ExtraBold.ttf */,
+				A00000000000000000000266 /* PlusJakartaSans-Medium.ttf */,
+				A00000000000000000000268 /* PlusJakartaSans-Regular.ttf */,
+				A00000000000000000000270 /* PlusJakartaSans-SemiBold.ttf */,
+				A00000000000000000000272 /* Info.plist */,
+				A00000000000000000000273 /* Gaurex.entitlements */,
 			);
 			path = Gaurex;
 			sourceTree = "<group>";
 		};
-		A00000000000000000000286 /* GaurexTests */ = {
+		A00000000000000000000288 /* GaurexTests */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000272 /* ExtendedModulesTests.swift */,
-				A00000000000000000000274 /* FinancialCalculationsTests.swift */,
-				A00000000000000000000276 /* PayrollAndPDFTests.swift */,
-				A00000000000000000000278 /* SecurityAndBackupTests.swift */,
+				A00000000000000000000274 /* ExtendedModulesTests.swift */,
+				A00000000000000000000276 /* FinancialCalculationsTests.swift */,
+				A00000000000000000000278 /* PayrollAndPDFTests.swift */,
+				A00000000000000000000280 /* SecurityAndBackupTests.swift */,
 			);
 			path = GaurexTests;
 			sourceTree = "<group>";
 		};
-		A00000000000000000000287 /* Products */ = {
+		A00000000000000000000289 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000280 /* Gaurex.app */,
-				A00000000000000000000281 /* GaurexTests.xctest */,
+				A00000000000000000000282 /* Gaurex.app */,
+				A00000000000000000000283 /* GaurexTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -338,13 +341,13 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A00000000000000000000282 /* Gaurex */ = {
+		A00000000000000000000284 /* Gaurex */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A00000000000000000000302 /* Build configuration list for PBXNativeTarget "Gaurex" */;
+			buildConfigurationList = A00000000000000000000304 /* Build configuration list for PBXNativeTarget "Gaurex" */;
 			buildPhases = (
-				A00000000000000000000289 /* Sources */,
-				A00000000000000000000291 /* Frameworks */,
-				A00000000000000000000290 /* Resources */,
+				A00000000000000000000291 /* Sources */,
+				A00000000000000000000293 /* Frameworks */,
+				A00000000000000000000292 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -352,16 +355,16 @@
 			);
 			name = Gaurex;
 			productName = Gaurex;
-			productReference = A00000000000000000000280 /* Gaurex.app */;
+			productReference = A00000000000000000000282 /* Gaurex.app */;
 			productType = "com.apple.product-type.application";
 		};
-		A00000000000000000000283 /* GaurexTests */ = {
+		A00000000000000000000285 /* GaurexTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A00000000000000000000303 /* Build configuration list for PBXNativeTarget "GaurexTests" */;
+			buildConfigurationList = A00000000000000000000305 /* Build configuration list for PBXNativeTarget "GaurexTests" */;
 			buildPhases = (
-				A00000000000000000000292 /* Sources */,
-				A00000000000000000000293 /* Frameworks */,
-				A00000000000000000000294 /* Resources */,
+				A00000000000000000000294 /* Sources */,
+				A00000000000000000000295 /* Frameworks */,
+				A00000000000000000000296 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -369,28 +372,28 @@
 			);
 			name = GaurexTests;
 			productName = GaurexTests;
-			productReference = A00000000000000000000281 /* GaurexTests.xctest */;
+			productReference = A00000000000000000000283 /* GaurexTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A00000000000000000000284 /* Project object */ = {
+		A00000000000000000000286 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
-					A00000000000000000000282 = {
+					A00000000000000000000284 = {
 						CreatedOnToolsVersion = 15.4;
 					};
-					A00000000000000000000283 = {
+					A00000000000000000000285 = {
 						CreatedOnToolsVersion = 15.4;
-						TestTargetID = A00000000000000000000282;
+						TestTargetID = A00000000000000000000284;
 					};
 				};
 			};
-			buildConfigurationList = A00000000000000000000301 /* Build configuration list for PBXProject "Gaurex" */;
+			buildConfigurationList = A00000000000000000000303 /* Build configuration list for PBXProject "Gaurex" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -398,32 +401,32 @@
 				en,
 				Base,
 			);
-			mainGroup = A00000000000000000000288;
-			productRefGroup = A00000000000000000000287 /* Products */;
+			mainGroup = A00000000000000000000290;
+			productRefGroup = A00000000000000000000289 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A00000000000000000000282 /* Gaurex */,
-				A00000000000000000000283 /* GaurexTests */,
+				A00000000000000000000284 /* Gaurex */,
+				A00000000000000000000285 /* GaurexTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A00000000000000000000290 /* Resources */ = {
+		A00000000000000000000292 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A00000000000000000000259 /* Assets.xcassets in Resources */,
-				A00000000000000000000261 /* PlusJakartaSans-Bold.ttf in Resources */,
-				A00000000000000000000263 /* PlusJakartaSans-ExtraBold.ttf in Resources */,
-				A00000000000000000000265 /* PlusJakartaSans-Medium.ttf in Resources */,
-				A00000000000000000000267 /* PlusJakartaSans-Regular.ttf in Resources */,
-				A00000000000000000000269 /* PlusJakartaSans-SemiBold.ttf in Resources */,
+				A00000000000000000000261 /* Assets.xcassets in Resources */,
+				A00000000000000000000263 /* PlusJakartaSans-Bold.ttf in Resources */,
+				A00000000000000000000265 /* PlusJakartaSans-ExtraBold.ttf in Resources */,
+				A00000000000000000000267 /* PlusJakartaSans-Medium.ttf in Resources */,
+				A00000000000000000000269 /* PlusJakartaSans-Regular.ttf in Resources */,
+				A00000000000000000000271 /* PlusJakartaSans-SemiBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000294 /* Resources */ = {
+		A00000000000000000000296 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -433,7 +436,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A00000000000000000000289 /* Sources */ = {
+		A00000000000000000000291 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -507,33 +510,34 @@
 				A00000000000000000000235 /* PDFPreviewView.swift in Sources */,
 				A00000000000000000000237 /* MainTabView.swift in Sources */,
 				A00000000000000000000239 /* BusinessSettingsAndAuditViews.swift in Sources */,
-				A00000000000000000000241 /* DocumentVaultView.swift in Sources */,
-				A00000000000000000000243 /* IntegrationsAndCurrencyViews.swift in Sources */,
-				A00000000000000000000245 /* PackageManagementView.swift in Sources */,
-				A00000000000000000000247 /* SettingsView.swift in Sources */,
-				A00000000000000000000249 /* AddEditWorkerView.swift in Sources */,
-				A00000000000000000000251 /* AttendanceAndLeaveView.swift in Sources */,
-				A00000000000000000000253 /* GenerateSalarySlipView.swift in Sources */,
-				A00000000000000000000255 /* WorkerDetailView.swift in Sources */,
-				A00000000000000000000257 /* WorkersListView.swift in Sources */,
+				A00000000000000000000241 /* DocumentExtractionView.swift in Sources */,
+				A00000000000000000000243 /* DocumentVaultView.swift in Sources */,
+				A00000000000000000000245 /* IntegrationsAndCurrencyViews.swift in Sources */,
+				A00000000000000000000247 /* PackageManagementView.swift in Sources */,
+				A00000000000000000000249 /* SettingsView.swift in Sources */,
+				A00000000000000000000251 /* AddEditWorkerView.swift in Sources */,
+				A00000000000000000000253 /* AttendanceAndLeaveView.swift in Sources */,
+				A00000000000000000000255 /* GenerateSalarySlipView.swift in Sources */,
+				A00000000000000000000257 /* WorkerDetailView.swift in Sources */,
+				A00000000000000000000259 /* WorkersListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		A00000000000000000000292 /* Sources */ = {
+		A00000000000000000000294 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A00000000000000000000273 /* ExtendedModulesTests.swift in Sources */,
-				A00000000000000000000275 /* FinancialCalculationsTests.swift in Sources */,
-				A00000000000000000000277 /* PayrollAndPDFTests.swift in Sources */,
-				A00000000000000000000279 /* SecurityAndBackupTests.swift in Sources */,
+				A00000000000000000000275 /* ExtendedModulesTests.swift in Sources */,
+				A00000000000000000000277 /* FinancialCalculationsTests.swift in Sources */,
+				A00000000000000000000279 /* PayrollAndPDFTests.swift in Sources */,
+				A00000000000000000000281 /* SecurityAndBackupTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		A00000000000000000000299 /* Debug */ = {
+		A00000000000000000000301 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -560,7 +564,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000300 /* Release */ = {
+		A00000000000000000000302 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -582,7 +586,7 @@
 			};
 			name = Release;
 		};
-		A00000000000000000000295 /* Debug */ = {
+		A00000000000000000000297 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -605,7 +609,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000296 /* Release */ = {
+		A00000000000000000000298 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -628,7 +632,7 @@
 			};
 			name = Release;
 		};
-		A00000000000000000000297 /* Debug */ = {
+		A00000000000000000000299 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -643,7 +647,7 @@
 			};
 			name = Debug;
 		};
-		A00000000000000000000298 /* Release */ = {
+		A00000000000000000000300 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -661,25 +665,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A00000000000000000000301 /* Build configuration list for PBXProject "Gaurex" */ = {
+		A00000000000000000000303 /* Build configuration list for PBXProject "Gaurex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A00000000000000000000299 /* Debug */,
-				A00000000000000000000300 /* Release */,
+				A00000000000000000000301 /* Debug */,
+				A00000000000000000000302 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A00000000000000000000302 /* Build configuration list for PBXNativeTarget "Gaurex" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				A00000000000000000000295 /* Debug */,
-				A00000000000000000000296 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		A00000000000000000000303 /* Build configuration list for PBXNativeTarget "GaurexTests" */ = {
+		A00000000000000000000304 /* Build configuration list for PBXNativeTarget "Gaurex" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A00000000000000000000297 /* Debug */,
@@ -688,8 +683,17 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		A00000000000000000000305 /* Build configuration list for PBXNativeTarget "GaurexTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000299 /* Debug */,
+				A00000000000000000000300 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 	};
-	rootObject = A00000000000000000000284 /* Project object */;
+	rootObject = A00000000000000000000286 /* Project object */;
 }
